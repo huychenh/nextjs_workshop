@@ -17,10 +17,34 @@ namespace ProductService.Api.V1
         private ISender? _mediator;
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>();
 
-        [HttpGet("/api/v{version:apiVersion}/products")]
+        [HttpGet("/api/v{version:apiVersion}/products2")]
         public async Task<ActionResult> HandleGetProductsAsync(
-            string query,
+            [FromQuery] string? name,
+            [FromQuery] string[] sorts,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 20,
             CancellationToken cancellationToken = new())
+        {
+            var filters = !string.IsNullOrEmpty(name)
+                ? new List<FilterModel>
+                {
+                    new FilterModel("Name", "Contains", name),
+                }
+                : new List<FilterModel>();
+
+            var queryModel = new GetProducts.Query
+            {
+                Filters = filters,
+                Sorts = sorts.ToList(),
+                Page = page,
+                PageSize = pageSize,
+            };
+
+            return Ok(await Mediator.Send(queryModel, cancellationToken));
+        }
+
+        [HttpGet("/api/v{version:apiVersion}/products")]
+        public async Task<ActionResult> HandleGetProductsAsync(string query, CancellationToken cancellationToken = new())
         {
             var queryModel = HttpContext.SafeGetListQuery<GetProducts.Query, ListResultModel<ProductDto>>(query);
 
@@ -28,9 +52,7 @@ namespace ProductService.Api.V1
         }
 
         [HttpGet("/api/v{version:apiVersion}/products/{id:guid}")]
-        public async Task<ActionResult<ProductDto>> HandleGetProductByIdAsync(
-            Guid id,
-            CancellationToken cancellationToken = new())
+        public async Task<ActionResult<ProductDto>> HandleGetProductByIdAsync(Guid id, CancellationToken cancellationToken = new())
         {
             var request = new GetProductById.Query { Id = id };
 
@@ -38,9 +60,7 @@ namespace ProductService.Api.V1
         }
 
         [HttpPost("/api/v{version:apiVersion}/products")]
-        public async Task<ActionResult> HandleCreateProductAsync(
-            [FromBody] CreateProduct.Command request,
-            CancellationToken cancellationToken = new())
+        public async Task<ActionResult> HandleCreateProductAsync([FromBody] CreateProduct.Command request, CancellationToken cancellationToken = new())
         {
             return Ok(await Mediator.Send(request, cancellationToken));
         }

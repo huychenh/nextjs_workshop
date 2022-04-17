@@ -27,8 +27,8 @@ namespace N8T.Core.Specification
 
         public static void ApplySorting(this IRootSpecification gridSpec,
             string sort,
-            string orderByDescendingMethodName,
-            string groupByMethodName)
+            string orderByMethodName,
+            string orderByDescendingMethodName)
         {
             if (string.IsNullOrEmpty(sort)) return;
 
@@ -41,7 +41,7 @@ namespace N8T.Core.Specification
             var specificationType = gridSpec.GetType().BaseType;
             var targetType = specificationType?.GenericTypeArguments[0];
             var property = targetType!.GetRuntimeProperty(propertyName) ??
-                           throw new InvalidOperationException($"Because the property {propertyName} does not exist it cannot be sorted.");
+                throw new InvalidOperationException($"Because the property {propertyName} does not exist it cannot be sorted.");
 
             var lambdaParamX = Expression.Parameter(targetType, "x");
 
@@ -61,7 +61,7 @@ namespace N8T.Core.Specification
             else
             {
                 specificationType?.GetMethod(
-                        groupByMethodName,
+                        orderByMethodName,
                         BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                     ?.Invoke(gridSpec, new object[]{propertyReturningExpression});
             }
