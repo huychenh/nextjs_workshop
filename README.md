@@ -20,6 +20,17 @@ Project is created with:
 	
 ## Setup
 ### Backend
+#### Prerequisites
+- Visual Studio 2022
+- Net 6 SDK
+
+#### Steps
 - Download and install Postgresql on your local
 - Update `ConnectionStrings` in appsettings.json if needed then apply the EF migrations
 - Start the `ApiGateway` and `Service Api` projects
+
+#### High level structure
+![CQRS MediatR](/images/cqrs-mediatr.jpg)
+
+#### Details structure
+![Project structure](/images/project-structure.png)

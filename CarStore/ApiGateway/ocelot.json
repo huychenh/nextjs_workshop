@@ -9,7 +9,7 @@
           "Port": 7501
         }
       ],
-      "UpstreamPathTemplate": "/api/products",
+      "UpstreamPathTemplate": "/api/v1/products",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
     }
   ],
