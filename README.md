@@ -25,8 +25,8 @@ Project is created with:
 - Net 6 SDK
 
 #### Steps
-- Download and install Postgresql on your local
-- Update `ConnectionStrings` in appsettings.json if needed then apply the EF migrations
+- Download and install `Postgresql` on your local
+- Update `ConnectionStrings` in `appsettings.json`
 - Start the `ApiGateway` and `Service Api` projects
 
 #### High level structure

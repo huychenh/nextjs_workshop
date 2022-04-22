@@ -1,3 +1,4 @@
+using ProductService.Api;
 using ProductService.Infrastructure;
 using ApiAnchor = ProductService.Api.V1.Anchor;
 
@@ -7,4 +8,5 @@ builder.Services.AddCoreServices(builder.Configuration, builder.Environment, typ
 
 var app = builder.Build();
 app.UseCoreApplication(builder.Environment);
+app.MigrateDatabase();
 app.Run();
