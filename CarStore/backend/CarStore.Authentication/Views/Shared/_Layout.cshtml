@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>CarStore - Login Page</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/my-login.css" rel="stylesheet" />
+</head>
+<body>
+    <section class="h-100">
+        <div class="container h-100">
+            <div class="row justify-content-md-center h-100">
+                <div class="card-wrapper">
+                    <div class="brand">                        
+                        <img src="~/img/thecarstore.jpg" alt="CarStore" width="425" />
+                    </div>
+
+                    @*--- Body here ---*@
+                    @RenderBody()
+
+                    <div class="footer">
+                        <strong>Copyright &copy; @DateTime.Now.Year &mdash; CarStore</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="~/js/jquery-3.6.0.slim.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/popper.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
