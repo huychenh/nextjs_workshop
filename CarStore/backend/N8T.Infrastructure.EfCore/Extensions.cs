@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
 using N8T.Core.Domain;
-using N8T.Core.Repository;
 using N8T.Infrastructure.EfCore.Internal;
 
 namespace N8T.Infrastructure.EfCore
@@ -40,41 +39,6 @@ namespace N8T.Infrastructure.EfCore
             doMoreActions?.Invoke(services);
 
             return services;
-        }
-
-        public static IServiceCollection AddRepository(this IServiceCollection services, Type repoType)
-        {
-            services.Scan(scan => scan
-                .FromAssembliesOf(repoType)
-                .AddClasses(classes =>
-                    classes.AssignableTo(repoType)).As(typeof(IRepository<>)).WithScopedLifetime()
-                .AddClasses(classes =>
-                    classes.AssignableTo(repoType)).As(typeof(IGridRepository<>)).WithScopedLifetime()
-            );
-
-            return services;
-        }
-
-        public static void MigrateDataFromScript(this MigrationBuilder migrationBuilder)
-        {
-            var assembly = Assembly.GetCallingAssembly();
-            var files = assembly.GetManifestResourceNames();
-            var filePrefix = $"{assembly.GetName().Name}.Data.Scripts."; //IMPORTANT
-
-            foreach (var file in files
-                .Where(f => f.StartsWith(filePrefix) && f.EndsWith(".sql"))
-                .Select(f => new {PhysicalFile = f, LogicalFile = f.Replace(filePrefix, string.Empty)})
-                .OrderBy(f => f.LogicalFile))
-            {
-                using var stream = assembly.GetManifestResourceStream(file.PhysicalFile);
-                using var reader = new StreamReader(stream!);
-                var command = reader.ReadToEnd();
-
-                if (string.IsNullOrWhiteSpace(command))
-                    continue;
-
-                migrationBuilder.Sql(command);
-            }
         }
     }
 }

@@ -2,8 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using N8T.Core.Domain;
-using N8T.Infrastructure;
 using ProductService.AppCore.UseCases.Commands;
 using ProductService.AppCore.UseCases.Queries;
 
@@ -17,36 +15,10 @@ namespace ProductService.Api.V1
         private ISender? _mediator;
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>();
 
-        [HttpGet("/api/v{version:apiVersion}/products2")]
-        public async Task<ActionResult> HandleGetProductsAsync(
-            [FromQuery] string? name,
-            [FromQuery] string[] sorts,
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 20,
-            CancellationToken cancellationToken = new())
-        {
-            var filters = !string.IsNullOrEmpty(name)
-                ? new List<FilterModel>
-                {
-                    new FilterModel("Name", "Contains", name),
-                }
-                : new List<FilterModel>();
-
-            var queryModel = new GetProducts.Query
-            {
-                Filters = filters,
-                Sorts = sorts.ToList(),
-                Page = page,
-                PageSize = pageSize,
-            };
-
-            return Ok(await Mediator.Send(queryModel, cancellationToken));
-        }
-
         [HttpGet("/api/v{version:apiVersion}/products")]
-        public async Task<ActionResult> HandleGetProductsAsync(string query, CancellationToken cancellationToken = new())
+        public async Task<ActionResult> HandleGetProductsAsync(CancellationToken cancellationToken = new())
         {
-            var queryModel = HttpContext.SafeGetListQuery<GetProducts.Query, ListResultModel<ProductDto>>(query);
+            var queryModel = new GetProducts.Query();
 
             return Ok(await Mediator.Send(queryModel, cancellationToken));
         }

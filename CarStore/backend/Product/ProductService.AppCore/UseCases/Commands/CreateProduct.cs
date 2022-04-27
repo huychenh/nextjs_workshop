@@ -2,14 +2,13 @@
 using FluentValidation;
 using MediatR;
 using N8T.Core.Domain;
-using N8T.Core.Repository;
 using ProductService.AppCore.Core;
 
 namespace ProductService.AppCore.UseCases.Commands
 {
     public class CreateProduct
     {
-        public record Command : ICreateCommand<Command.CreateProductModel, ProductDto>
+        public record Command : ICreateCommand<Command.CreateProductModel, Guid>
         {
             public CreateProductModel Model { get; init; } = default!;
 
@@ -35,33 +34,21 @@ namespace ProductService.AppCore.UseCases.Commands
                 }
             }
 
-            internal class Handler : IRequestHandler<Command, ResultModel<ProductDto>>
+            internal class Handler : IRequestHandler<Command, ResultModel<Guid>>
             {
-                private readonly IRepository<Product> _productRepository;
+                private readonly IRepository _repository;
 
-                public Handler(IRepository<Product> productRepository)
+                public Handler(IRepository productRepository)
                 {
-                    _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+                    _repository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
                 }
 
-                public async Task<ResultModel<ProductDto>> Handle(Command request, CancellationToken cancellationToken)
+                public async Task<ResultModel<Guid>> Handle(Command request, CancellationToken cancellationToken)
                 {
-                    var created = await _productRepository.AddAsync(
-                        Product.Create(
-                            request.Model.Name,
-                            request.Model.Quantity,
-                            request.Model.Cost));
+                    var product = Product.Create(request.Model.Name, request.Model.Quantity,request.Model.Cost);
+                    var id = await _repository.Add(product);
 
-                    return ResultModel<ProductDto>.Create(new ProductDto
-                    {
-                        Id = created.Id,
-                        Name = created.Name,
-                        Active = created.Active,
-                        Cost = created.Cost,
-                        Quantity = created.Quantity,
-                        Created = created.Created,
-                        Updated = created.Updated,
-                    });
+                    return ResultModel<Guid>.Create(id);
                 }
             }
         }

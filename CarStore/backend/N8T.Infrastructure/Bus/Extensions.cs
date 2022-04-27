@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using N8T.Infrastructure.Bus.Dapr;
-using N8T.Infrastructure.Bus.Dapr.Internal;
 
 namespace N8T.Infrastructure.Bus
 {
@@ -13,11 +11,11 @@ namespace N8T.Infrastructure.Bus
         {
             switch (messageBrokerType)
             {
-                case "dapr":
-                    mvcBuilder.Services.Configure<DaprEventBusOptions>(config.GetSection(DaprEventBusOptions.Name));
-                    mvcBuilder.AddDapr();
-                    mvcBuilder.Services.AddScoped<IEventBus, DaprEventBus>();
-                    break;
+                //case "dapr":
+                //    mvcBuilder.Services.Configure<DaprEventBusOptions>(config.GetSection(DaprEventBusOptions.Name));
+                //    mvcBuilder.AddDapr();
+                //    mvcBuilder.Services.AddScoped<IEventBus, DaprEventBus>();
+                //    break;
             }
 
             return mvcBuilder.Services;

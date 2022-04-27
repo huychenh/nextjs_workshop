@@ -4,7 +4,7 @@ using ProductService.AppCore.Core;
 
 namespace ProductService.Infrastructure.Data
 {
-    public class MainDbContext : AppDbContextBase
+    public class MainDbContext : AppDbContextBase, IDbFacadeResolver
     {
         public MainDbContext(DbContextOptions options) : base(options)
         {
