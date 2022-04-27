@@ -28,9 +28,3 @@ Project is created with:
 - Download and install `Postgresql` on your local
 - Update `ConnectionStrings` in `appsettings.json`
 - Start the `ApiGateway` and `Service Api` projects
-
-#### High level structure
-![CQRS MediatR](/images/cqrs-mediatr.jpg)
-
-#### Details structure
-![Project structure](/images/project-structure.png)

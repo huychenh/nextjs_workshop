@@ -38,7 +38,6 @@ namespace N8T.Infrastructure
             services.AddHttpContextAccessor();
             services.AddCustomMediatR(new []{apiAnchorType});
             services.AddCustomValidators(new[] {apiAnchorType});
-            services.AddDaprClient();
             services.AddControllers().AddMessageBroker(config);
             services.AddTransactionalOutbox(config);
             services.AddSwagger(apiAnchorType);
@@ -57,11 +56,9 @@ namespace N8T.Infrastructure
 
             app.UseCors("api");
             app.UseRouting();
-            app.UseCloudEvents();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapSubscribeHandler();
                 endpoints.MapDefaultControllerRoute();
             });
 

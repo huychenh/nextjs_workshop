@@ -2,74 +2,39 @@
 using FluentValidation;
 using MediatR;
 using N8T.Core.Domain;
-using N8T.Core.Repository;
-using ProductService.AppCore.Core;
-using ProductService.AppCore.Core.Specs;
 
 namespace ProductService.AppCore.UseCases.Queries
 {
     public class GetProducts
     {
-        public class Query : IListQuery<ListResultModel<ProductDto>>
+        public class Query : IQuery<IEnumerable<ProductDto>>
         {
-            public List<string> Includes { get; init; } = new();
-            public List<FilterModel> Filters { get; init; } = new();
-            public List<string> Sorts { get; init; } = new();
-            public int Page { get; init; } = 1;
-            public int PageSize { get; init; } = 20;
-
             internal class Validator : AbstractValidator<Query>
             {
                 public Validator()
                 {
-                    RuleFor(x => x.Page)
-                        .GreaterThanOrEqualTo(1).WithMessage("Page should be at least greater than or equal to 1.");
-
-                    RuleFor(x => x.PageSize)
-                        .GreaterThanOrEqualTo(1).WithMessage("PageSize should be at least greater than or equal to 1.");
                 }
             }
 
-            internal class Handler : IRequestHandler<Query, ResultModel<ListResultModel<ProductDto>>>
+            internal class Handler : IRequestHandler<Query, ResultModel<IEnumerable<ProductDto>>>
             {
-                private readonly IGridRepository<Product> _productRepository;
+                private readonly IRepository _repository;
 
-                public Handler(IGridRepository<Product> productRepository)
+                public Handler(IRepository repository)
                 {
-                    _productRepository =
-                        productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+                    _repository = repository ?? throw new ArgumentNullException(nameof(repository));
                 }
 
-                public async Task<ResultModel<ListResultModel<ProductDto>>> Handle(
-                    Query request,
-                    CancellationToken cancellationToken)
+                public async Task<ResultModel<IEnumerable<ProductDto>>> Handle(Query request, CancellationToken cancellationToken)
                 {
-                    if (request == null) throw new ArgumentNullException(nameof(request));
-
-                    var spec = new ProductListQuerySpec<ProductDto>(request);
-
-                    var products = await _productRepository.FindAsync(spec);
-
-                    var productModels = products.Select(x => new ProductDto
+                    if (request == null)
                     {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Active = x.Active,
-                        Cost = x.Cost,
-                        Quantity = x.Quantity,
-                        Created = x.Created,
-                        Updated = x.Updated,
-                    });
+                        throw new ArgumentNullException(nameof(request));
+                    }
 
-                    var totalProducts = await _productRepository.CountAsync(spec);
+                    var products = await _repository.Get();
 
-                    var resultModel = ListResultModel<ProductDto>.Create(
-                        productModels.ToList(),
-                        totalProducts,
-                        request.Page,
-                        request.PageSize);
-
-                    return ResultModel<ListResultModel<ProductDto>>.Create(resultModel);
+                    return ResultModel<IEnumerable<ProductDto>>.Create(products);
                 }
             }
         }

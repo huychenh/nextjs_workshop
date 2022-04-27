@@ -1,8 +1,6 @@
 ﻿using CarStore.AppContracts.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using N8T.Core.Domain;
-using N8T.Infrastructure;
 using ProductService.AppCore.UseCases.Commands;
 using ProductService.AppCore.UseCases.Queries;
 
@@ -17,11 +15,9 @@ namespace ProductService.Api.V2
 
         [MapToApiVersion("2.0")]
         [HttpGet("/api/v{version:apiVersion}/products")]
-        public async Task<ActionResult> HandleGetProductsAsync(
-            string query,
-            CancellationToken cancellationToken = new())
+        public async Task<ActionResult> HandleGetProductsAsync(CancellationToken cancellationToken = new())
         {
-            var queryModel = HttpContext.SafeGetListQuery<GetProducts.Query, ListResultModel<ProductDto>>(query);
+            var queryModel = new GetProducts.Query();
 
             return Ok(await Mediator.Send(queryModel, cancellationToken));
         }

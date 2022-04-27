@@ -2,17 +2,13 @@
 using FluentValidation;
 using MediatR;
 using N8T.Core.Domain;
-using N8T.Core.Repository;
-using ProductService.AppCore.Core;
-using ProductService.AppCore.Core.Specs;
 
 namespace ProductService.AppCore.UseCases.Queries
 {
     public class GetProductById
     {
-        public record Query : IItemQuery<Guid, ProductDto>
+        public record Query : IQuery<ProductDto>
         {
-            public List<string> Includes { get; init; } = new();
             public Guid Id { get; init; }
 
             internal class Validator : AbstractValidator<Query>
@@ -27,33 +23,23 @@ namespace ProductService.AppCore.UseCases.Queries
 
             internal class Handler : IRequestHandler<Query, ResultModel<ProductDto>>
             {
-                private readonly IRepository<Product> _productRepository;
+                private readonly IRepository _repository;
 
-                public Handler(IRepository<Product> productRepository)
+                public Handler(IRepository productRepository)
                 {
-                    _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+                    _repository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
                 }
 
-                public async Task<ResultModel<ProductDto>> Handle(
-                    Query request,
-                    CancellationToken cancellationToken)
+                public async Task<ResultModel<ProductDto>> Handle(Query request, CancellationToken cancellationToken)
                 {
-                    if (request == null) throw new ArgumentNullException(nameof(request));
-
-                    var spec = new ProductByIdQuerySpec<ProductDto>(request);
-
-                    var product = await _productRepository.FindOneAsync(spec);
-
-                    return ResultModel<ProductDto>.Create(new ProductDto
+                    if (request == null)
                     {
-                        Id = product.Id,
-                        Name = product.Name,
-                        Active = product.Active,
-                        Cost = product.Cost,
-                        Quantity = product.Quantity,
-                        Created = product.Created,
-                        Updated = product.Updated,
-                    });
+                        throw new ArgumentNullException(nameof(request));
+                    }
+
+                    var product = await _repository.GetById(request.Id);
+
+                    return ResultModel<ProductDto>.Create(product);
                 }
             }
         }

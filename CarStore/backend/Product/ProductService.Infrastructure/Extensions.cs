@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +9,6 @@ using N8T.Infrastructure;
 using N8T.Infrastructure.Bus;
 using N8T.Infrastructure.EfCore;
 using N8T.Infrastructure.Swagger;
-using N8T.Infrastructure.TransactionalOutbox;
 using N8T.Infrastructure.Validator;
 using ProductService.AppCore;
 using ProductService.Infrastructure.Data;
@@ -39,15 +37,10 @@ namespace ProductService.Infrastructure
             services.AddHttpContextAccessor();
             services.AddCustomMediatR(new[] { typeof(Anchor) });
             services.AddCustomValidators(new[] { typeof(Anchor) });
-            // services.AddDaprClient();
             services.AddControllers().AddMessageBroker(config);
-            // services.AddTransactionalOutbox(config);
             services.AddSwagger(apiType);
 
-            services.AddPostgresDbContext<MainDbContext>(
-                config.GetConnectionString(DbName),
-                null,
-                svc => svc.AddRepository(typeof(Repository<>)));
+            services.AddPostgresDbContext<MainDbContext>(config.GetConnectionString(DbName));
 
             services.AddAuthentication("token")
                 .AddJwtBearer("token", options =>
@@ -95,11 +88,9 @@ namespace ProductService.Infrastructure
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseCloudEvents();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapSubscribeHandler();
                 endpoints.MapControllers()
                     .RequireAuthorization("ApiCaller");
             });
