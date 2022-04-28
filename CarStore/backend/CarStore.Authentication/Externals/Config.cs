@@ -47,7 +47,28 @@ namespace CarStore.Authentication.Externals
                     AllowedScopes = { "openid", "profile", "apis", "roles" }
 
                 },
-                    new Client
+                new Client
+                {
+                    ClientId = "nextjs_web_app",
+                    ClientName = "NextJs Web App",
+                    ClientSecrets = { new Secret(Commons.CarStoreConstants.AuthenSecretKey.Sha256()) },
+                    AllowedGrantTypes =  GrantTypes.Code,
+                    // where to redirect to after login
+                    RedirectUris = { "http://localhost:3000/api/auth/callback/identity-server4","http://localhost:3000" },
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris = { "http://localhost:3000" },
+                    AllowedCorsOrigins= { "http://localhost:3000" },
+                    RequireClientSecret = false,
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                    },
+
+                },
+                new Client
                 {
                     ClientId = "react-clients",
                     ClientName = "react-clients",

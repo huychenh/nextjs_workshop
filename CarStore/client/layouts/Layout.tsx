@@ -1,4 +1,4 @@
-import { ClassNames } from '@emotion/react'
+import { ClassNames } from "@emotion/react";
 import {
   AppBar,
   Button,
@@ -7,23 +7,24 @@ import {
   MenuItem,
   Toolbar,
   Typography,
-} from '@mui/material'
-import Head from 'next/head'
-import Link from 'next/link'
-import { useState } from 'react'
-import useStyles from './LayoutStyles'
+} from "@mui/material";
+import Head from "next/head";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import useStyles from "./LayoutStyles";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
-const Layout = ({ children }: any) => {
-  const classes = useStyles()
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+export const enum SessionStatus {
+  LOADING = "loading",
+  AUTHENTICATED = "authenticated",
+  UNAUTHENTICATED = "unauthenticated",
+}
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
+function Layout({ children }: any) {
+  const classes = useStyles();
 
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
+  const { data: session, status } = useSession();
 
   return (
     <>
@@ -43,7 +44,24 @@ const Layout = ({ children }: any) => {
                 </Link>
               </div>
               <div className={classes.loginButton}>
-                <Button color="inherit">Login</Button>
+                {status === SessionStatus.AUTHENTICATED && (
+                  <>{`${session?.user?.email}`}</>
+                )}
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => {
+                    if (status === SessionStatus.UNAUTHENTICATED) {
+                      signIn("identity-server4");
+                    } else if (status === SessionStatus.AUTHENTICATED) {
+                      signOut();
+                    }
+                  }}
+                >
+                  {status === SessionStatus.LOADING && <>loading</>}
+                  {status === SessionStatus.AUTHENTICATED && <>logout</>}
+                  {status === SessionStatus.UNAUTHENTICATED && <>login</>}
+                </Button>
               </div>
             </Toolbar>
           </Container>
@@ -54,7 +72,7 @@ const Layout = ({ children }: any) => {
         <Typography>All rights reserved. NextJS Car</Typography>
       </footer>
     </>
-  )
+  );
 }
 
-export default Layout
+export default Layout;
