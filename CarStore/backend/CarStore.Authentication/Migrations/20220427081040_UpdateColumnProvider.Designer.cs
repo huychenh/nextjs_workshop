@@ -4,6 +4,7 @@ using CarStore.Authentication.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarStore.Authentication.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220427081040_UpdateColumnProvider")]
+    partial class UpdateColumnProvider
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,14 +140,14 @@ namespace CarStore.Authentication.Migrations
                         new
                         {
                             Id = "asdfghjklmnbvcxzqwertyuio01",
-                            ConcurrencyStamp = "05704ff3-7cee-4266-ba42-f686d56c2bf8",
+                            ConcurrencyStamp = "c8585528-9221-4dd3-a0dd-5c617b6070ba",
                             Name = "SuperUser",
                             NormalizedName = "SuperUser"
                         },
                         new
                         {
                             Id = "asdfghjklmnbvcxzqwertyuio02",
-                            ConcurrencyStamp = "22ef1600-1904-46ed-9567-8185851d23d2",
+                            ConcurrencyStamp = "2f609245-5cd2-4422-8153-9a780a7fce0d",
                             Name = "User",
                             NormalizedName = "User"
                         });

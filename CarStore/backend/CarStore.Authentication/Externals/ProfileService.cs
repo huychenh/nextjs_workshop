@@ -1,6 +1,7 @@
 ﻿using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
+using System.Threading.Tasks;
 
 namespace CarStore.Authentication.Externals
 {
@@ -16,11 +17,6 @@ namespace CarStore.Authentication.Externals
             //Role
             var roleClaims = context.Subject.FindAll(JwtClaimTypes.Role);
             context.IssuedClaims.AddRange(roleClaims);
-
-            //Name
-            var emailClaims = context.Subject.FindAll(JwtClaimTypes.Email);
-            context.IssuedClaims.AddRange(emailClaims);
-
             return Task.CompletedTask;
         }
 
