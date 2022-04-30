@@ -30,14 +30,28 @@ namespace ProductService.Infrastructure.Data
 
         public async Task<IEnumerable<ProductDto>> Get()
         {
+            //Todo: get OwnerName
             return await _dbContext.Products
                 .Select(p => new ProductDto
                 {
-                    Name = p.Name,
-                    Active = p.Active,
-                    Cost = p.Cost,
                     Id = p.Id,
-                    Quantity = p.Quantity,
+                    Name = p.Name,
+                    Brand = p.Brand,
+                    Category = p.Category,
+                    Color = p.Color,
+                    Description = p.Description,
+                    FuelType = p.FuelType.ToString(),
+                    HasInstallment = p.HasInstallment,
+                    KmDriven = p.KmDriven,
+                    MadeIn = p.MadeIn,
+                    Model = p.Model,
+                    OwnerName = p.OwnerId.ToString(),
+                    Price = p.Price,
+                    SeatingCapacity = p.SeatingCapacity,
+                    Transmission = p.Transmission.ToString(),
+                    Verified = p.Verified,
+                    Year = p.Year,
+                    Active = p.Active,
                     Created = p.Created,
                     Updated = p.Updated,
                 })
@@ -55,11 +69,24 @@ namespace ProductService.Infrastructure.Data
 
             return new ProductDto
             {
-                Name = entity.Name,
-                Active = entity.Active,
-                Cost = entity.Cost,
                 Id = entity.Id,
-                Quantity = entity.Quantity,
+                Name = entity.Name,
+                Brand = entity.Brand,
+                Category = entity.Category,
+                Color = entity.Color,
+                Description = entity.Description,
+                FuelType = entity.FuelType.ToString(),
+                HasInstallment = entity.HasInstallment,
+                KmDriven = entity.KmDriven,
+                MadeIn = entity.MadeIn,
+                Model = entity.Model,
+                OwnerName = entity.OwnerId.ToString(), //Todo: get OwnerName
+                Price = entity.Price,
+                SeatingCapacity = entity.SeatingCapacity,
+                Transmission = entity.Transmission.ToString(),
+                Verified = entity.Verified,
+                Year = entity.Year,
+                Active = entity.Active,
                 Created = entity.Created,
                 Updated = entity.Updated,
             };

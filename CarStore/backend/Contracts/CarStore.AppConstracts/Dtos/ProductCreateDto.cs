@@ -1,6 +1,6 @@
 ﻿namespace CarStore.AppContracts.Dtos
 {
-    public class ProductDto
+    public class ProductCreateDto
     {
         public string Name { get; set; }
 
@@ -30,16 +30,6 @@
 
         public bool HasInstallment { get; set; }
 
-        public bool Verified { get; set; }
-
-        public string OwnerName { get; set; }
-
-        public Guid Id { get; set; }
-
-        public bool Active { get; set; }
-
-        public DateTime Created { get; set; }
-        
-        public DateTime? Updated { get; set; }
+        public Guid OwnerId { get; set; }
     }
 }
