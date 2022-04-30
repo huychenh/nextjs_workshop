@@ -28,5 +28,3 @@ Project is created with:
 - Download and install `Postgresql` on your local
 - Update `ConnectionStrings` in `appsettings.json`
 - Start the `ApiGateway` and `Service Api` projects
-- Seed products by running the following scripts in a Postges DB management tool e.g. **pgadmin4**
-  - `ProductService.Infrastructure/Scripts/SeedInitData.sql`
