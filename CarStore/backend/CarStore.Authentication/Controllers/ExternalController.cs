@@ -1,4 +1,5 @@
-﻿using CarStore.Authentication.Externals;
+﻿using CarStore.Authentication.Commons;
+using CarStore.Authentication.Externals;
 using CarStore.Authentication.Models;
 using IdentityModel;
 using IdentityServer4.Events;
@@ -27,19 +28,23 @@ namespace CarStore.Authentication.Controllers
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
         private readonly IEventService _events;
+        private readonly string _superUserEmailGroup;
 
         public ExternalController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
-            IEventService events)
+            IEventService events,
+            IConfiguration config
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _interaction = interaction;
             _clientStore = clientStore;
             _events = events;
+            _superUserEmailGroup = config.GetValue<string>("AuthenConfig:SuperUserEmailGroup");
         }
 
         /// <summary>
@@ -99,7 +104,23 @@ namespace CarStore.Authentication.Controllers
                 // this might be where you might initiate a custom workflow for user registration
                 // in this sample we don't show how that would be done, as our sample implementation
                 // simply auto-provisions new external user
-                user = await AutoProvisionUserAsync(provider, providerUserId, claims);
+                var (identityResult, identityUser) = await AutoProvisionUserAsync(provider, providerUserId, claims);
+                if (identityResult != null)
+                {
+                    if (!identityResult.Succeeded)
+                    {
+                        var errors = new List<string>();
+                        foreach (var item in identityResult.Errors)
+                        {
+                            errors.Add(item.Description);
+                        }
+                        TempData["Errors"] = errors;
+                        return RedirectToAction("Login", "Account", new { returnUrl = result.Properties.Items["returnUrl"] });
+                    }
+
+                    //Set user value
+                    user = identityUser;
+                }
             }
 
             // this allows us to collect any additonal claims or properties
@@ -205,63 +226,89 @@ namespace CarStore.Authentication.Controllers
             return (user, provider, providerUserId, claims);
         }
 
-        private async Task<ApplicationUser> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
+        private async Task<(IdentityResult, ApplicationUser)> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
         {
-            // create a list of claims that we want to transfer into our store
-            var filtered = new List<Claim>();
-
-            // user's display name
-            var name = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Name)?.Value ??
-                claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
-            if (name != null)
-            {
-                filtered.Add(new Claim(JwtClaimTypes.Name, name));
-            }
-            else
-            {
-                var first = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.GivenName)?.Value ??
-                    claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)?.Value;
-                var last = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.FamilyName)?.Value ??
-                    claims.FirstOrDefault(x => x.Type == ClaimTypes.Surname)?.Value;
-                if (first != null && last != null)
-                {
-                    filtered.Add(new Claim(JwtClaimTypes.Name, first + " " + last));
-                }
-                else if (first != null)
-                {
-                    filtered.Add(new Claim(JwtClaimTypes.Name, first));
-                }
-                else if (last != null)
-                {
-                    filtered.Add(new Claim(JwtClaimTypes.Name, last));
-                }
-            }
-
             // email
-            var email = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email)?.Value ??
-               claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-            if (email != null)
+            var email = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email)?.Value ?? claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+
+            //Add roles here
+            string role = CarStoreConstants.UserRole;
+            if (_superUserEmailGroup.Contains(email))
             {
-                filtered.Add(new Claim(JwtClaimTypes.Email, email));
+                role = CarStoreConstants.SuperUserRole;
             }
 
+            string? username = email?.Split('@')[0];
             var user = new ApplicationUser
             {
-                UserName = Guid.NewGuid().ToString(),
+                UserName = email?.Split('@')[0],
+                Email = email,
+                CreatedDate = DateTime.Now,
+                CreatedBy = username,
+                UpdatedDate = DateTime.Now,
+                UpdatedBy = username,
+                Role = role,
+                Token = CarStoreDataHelper.RandomString(),
+                Provider = provider
             };
+
             var identityResult = await _userManager.CreateAsync(user);
-            if (!identityResult.Succeeded) throw new Exception(identityResult.Errors.First().Description);
-
-            if (filtered.Any())
+            if (identityResult.Succeeded)
             {
-                identityResult = await _userManager.AddClaimsAsync(user, filtered);
-                if (!identityResult.Succeeded) throw new Exception(identityResult.Errors.First().Description);
+                //Add roles
+                identityResult = await _userManager.AddToRoleAsync(user, role);
+
+                if (identityResult.Succeeded)
+                {
+                    identityResult = await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, providerUserId, provider));
+
+                    if (identityResult.Succeeded)
+                    {
+                        //Add claims
+                        // create a list of claims that we want to transfer into our store
+                        var filtered = new List<Claim>();
+
+                        //// user's display name
+                        //var name = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Name)?.Value ??
+                        //    claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
+                        //if (name != null)
+                        //{
+                        //    filtered.Add(new Claim(JwtClaimTypes.Name, name));
+                        //}
+                        //else
+                        //{
+                        //    var first = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.GivenName)?.Value ?? claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)?.Value;
+                        //    var last = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.FamilyName)?.Value ?? claims.FirstOrDefault(x => x.Type == ClaimTypes.Surname)?.Value;
+                        //    if (first != null && last != null)
+                        //    {
+                        //        filtered.Add(new Claim(JwtClaimTypes.Name, first + " " + last));
+                        //    }
+                        //    else if (first != null)
+                        //    {
+                        //        filtered.Add(new Claim(JwtClaimTypes.Name, first));
+                        //    }
+                        //    else if (last != null)
+                        //    {
+                        //        filtered.Add(new Claim(JwtClaimTypes.Name, last));
+                        //    }
+
+                        //    if (email != null)
+                        //    {
+                        //        filtered.Add(new Claim(JwtClaimTypes.Email, email));
+                        //    }
+                        //}
+
+                        filtered.Add(new Claim(JwtClaimTypes.Email, email));
+                        filtered.Add(new Claim(JwtClaimTypes.Name, user.UserName));
+
+                        if (filtered.Any())
+                        {
+                            identityResult = await _userManager.AddClaimsAsync(user, filtered);
+                        }
+                    }
+                }
             }
-
-            identityResult = await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, providerUserId, provider));
-            if (!identityResult.Succeeded) throw new Exception(identityResult.Errors.First().Description);
-
-            return user;
+            return (identityResult, user);
         }
 
 

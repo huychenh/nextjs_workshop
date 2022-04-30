@@ -51,14 +51,14 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddAuthentication().AddGoogle(options =>
 {
-    options.ClientId = "temp.apps.googleusercontent.com";
-    options.ClientSecret = "temp";
+    options.ClientId = "1034266525664-roj66s0m2h44jd8t9k6tlg4kngvd9609.apps.googleusercontent.com";
+    options.ClientSecret = "50HdUv41oT0VvH8XJ917NwYG";
 });
 
 builder.Services.AddAuthentication().AddFacebook(options =>
 {
-    options.ClientId = "temp.apps.facebookusercontent.com";
-    options.ClientSecret = "temp";
+    options.ClientId = "357575163011483";
+    options.ClientSecret = "817f9723d8ea7a84cc1412428824e721";
 });
 
 builder.Services.ConfigureApplicationCookie(options =>

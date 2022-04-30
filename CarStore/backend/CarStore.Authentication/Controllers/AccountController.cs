@@ -68,6 +68,19 @@ namespace CarStore.Authentication.Controllers
                 return RedirectToAction("Challenge", "External", new { provider = vm.ExternalLoginScheme, returnUrl });
             }
 
+            //Process cases sending errors from external logins.
+            if(TempData["Errors"] != null)
+            {
+                var errors = TempData["Errors"];
+                if (errors != null)
+                {
+                    string[] arr = (string[])errors;
+                    foreach (var item in arr)
+                    {
+                        ModelState.AddModelError(string.Empty, item);
+                    }
+                }                
+            }
             return View(vm);
         }
 
@@ -264,7 +277,8 @@ namespace CarStore.Authentication.Controllers
                     UpdatedDate = DateTime.Now,
                     UpdatedBy = username,
                     Role = role,
-                    Token = CarStoreDataHelper.RandomString()
+                    Token = CarStoreDataHelper.RandomString(),
+                    Provider = string.Empty
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
