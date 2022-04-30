@@ -137,7 +137,7 @@ declare
 	seatCapacity int;
 	transmission int;
 begin
-	for i in 1..10 loop
+	for i in 1..100 loop
 		select random_brand() into brand;
 		select random_model() into model;
 		select random_category() into category;
