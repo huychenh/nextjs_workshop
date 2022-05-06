@@ -1,7 +1,6 @@
 ﻿using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
-using System.Collections.Generic;
 
 namespace CarStore.Authentication.Externals
 {
@@ -23,7 +22,7 @@ namespace CarStore.Authentication.Externals
         {
             return new ApiResource[]
             {
-                new ApiResource("apis","My API"),                
+                new ApiResource("apis","My API"),
                 new ApiResource("web_mvc", "Web Mvc", new [] { JwtClaimTypes.Role })
             };
         }
@@ -39,12 +38,33 @@ namespace CarStore.Authentication.Externals
                     ClientName = "Web Mvc",
                     RequireConsent = false,
                     AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
-                    ClientSecrets = { new Secret(Commons.CarStoreConstants.AuthenSecretKey.Sha256()) },                                        
+                    ClientSecrets = { new Secret(Commons.CarStoreConstants.AuthenSecretKey.Sha256()) },
                     RedirectUris = { AdminMvcUrl  + "signin-oidc" },
                     FrontChannelLogoutUri = AdminMvcUrl  + "signout-oidc",
                     PostLogoutRedirectUris = { AdminMvcUrl  + "signout-callback-oidc" },
                     AllowOfflineAccess = true,
                     AllowedScopes = { "openid", "profile", "apis", "roles" }
+
+                },
+                new Client
+                {
+                    ClientId = "nextjs_web_app",
+                    ClientName = "NextJs Web App",
+                    ClientSecrets = { new Secret(Commons.CarStoreConstants.AuthenSecretKey.Sha256()) },
+                    AllowedGrantTypes =  GrantTypes.Code,
+                    // where to redirect to after login
+                    RedirectUris = { "http://localhost:3000/api/auth/callback/identity-server4","http://localhost:3000" },
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris = { "http://localhost:3000" },
+                    AllowedCorsOrigins= { "http://localhost:3000" },
+                    RequireClientSecret = false,
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                    },
 
                 },
                     new Client
