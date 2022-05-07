@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import useStyles from "./LayoutStyles";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import ProductService from "../services/ProductService";
 
 export const enum SessionStatus {
   LOADING = "loading",
@@ -25,6 +26,10 @@ function Layout({ children }: any) {
   const classes = useStyles();
 
   const { data: session, status } = useSession();
+
+  useEffect(() => {
+    ProductService.getProducts().then(res => console.log(res))
+  })
 
   return (
     <>
