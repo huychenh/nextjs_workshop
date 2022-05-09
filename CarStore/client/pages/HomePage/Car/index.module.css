@@ -1,0 +1,16 @@
+.carImage {
+    height: 120px;
+    width: 200px;
+}
+
+.carName {
+    font-weight: bold;
+
+}
+
+.carPrice {
+    font-weight: bold;
+    color: green;
+    margin: 0;
+    padding: 0;
+}

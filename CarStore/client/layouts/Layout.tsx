@@ -27,9 +27,9 @@ function Layout({ children }: any) {
 
   const { data: session, status } = useSession();
 
-  useEffect(() => {
-    ProductService.getProducts().then(res => console.log(res))
-  })
+  // useEffect(() => {
+  //   ProductService.getProducts().then(res => console.log(res))
+  // })
 
   return (
     <>
