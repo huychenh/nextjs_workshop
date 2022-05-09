@@ -1,3 +1,4 @@
+using CarStore.Authentication;
 using CarStore.Authentication.Externals;
 using CarStore.Authentication.Models;
 using IdentityServer4.Services;
@@ -7,9 +8,8 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-//TODO: change UseSqlite to UseSqlServer
 builder.Services.AddDbContext<DatabaseContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Block 1: Add ASP.NET Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = false)
@@ -94,4 +94,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MigrateDatabase();
 app.Run();

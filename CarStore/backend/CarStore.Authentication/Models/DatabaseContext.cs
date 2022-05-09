@@ -21,13 +21,13 @@ namespace CarStore.Authentication.Models
                 {
                     Id = "asdfghjklmnbvcxzqwertyuio01",
                     Name = CarStoreConstants.SuperUserRole,
-                    NormalizedName = CarStoreConstants.SuperUserRole
+                    NormalizedName = CarStoreConstants.SuperUserRole.ToUpper()
                 },
                 new IdentityRole()
                 {
                     Id = "asdfghjklmnbvcxzqwertyuio02",
                     Name = CarStoreConstants.UserRole,
-                    NormalizedName = CarStoreConstants.UserRole
+                    NormalizedName = CarStoreConstants.UserRole.ToUpper()
                 }
             );
         }
