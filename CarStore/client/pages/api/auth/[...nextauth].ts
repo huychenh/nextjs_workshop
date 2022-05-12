@@ -35,10 +35,6 @@ export default NextAuth({
       if (!token) {
         return session;
       }
-      if (!token.access_token)
-      {
-        return session;
-        }
       const decodedIdToken = decode(token.access_token as string) as DefaultJWT;
       session.user = decodedIdToken;
       return session;
