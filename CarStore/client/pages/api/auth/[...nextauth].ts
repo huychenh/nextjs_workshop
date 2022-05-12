@@ -25,6 +25,7 @@ export default NextAuth({
         url: process.env.ID4_ISSUER,
       },
       issuer: process.env.ID4_ISSUER,
+      // @ts-ignore
       clientId: process.env.ID4_CLIENT_ID,
       clientSecret: process.env.ID4_SECRET,
     }),
@@ -34,7 +35,11 @@ export default NextAuth({
       if (!token) {
         return session;
       }
-      const decodedIdToken = decode(token.access_token) as DefaultJWT;
+      if (!token.access_token)
+      {
+        return session;
+        }
+      const decodedIdToken = decode(token.access_token as string) as DefaultJWT;
       session.user = decodedIdToken;
       return session;
     },
