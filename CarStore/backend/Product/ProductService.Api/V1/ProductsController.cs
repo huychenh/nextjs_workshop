@@ -16,11 +16,16 @@ namespace ProductService.Api.V1
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>();
 
         [HttpGet("/api/v{version:apiVersion}/products")]
-        public async Task<ActionResult> HandleGetProductsAsync(CancellationToken cancellationToken = new())
+        public async Task<ActionResult> HandleGetProductsAsync([FromQuery]string? text, CancellationToken cancellationToken = new())
         {
-            var queryModel = new GetProducts.Query();
+            var queryModel = new GetProducts.Query
+            {
+                Text = text,
+            };
 
-            return Ok(await Mediator.Send(queryModel, cancellationToken));
+            var result = await Mediator.Send(queryModel, cancellationToken);
+
+            return Ok(result);
         }
 
         [HttpGet("/api/v{version:apiVersion}/products/{id:guid}")]
