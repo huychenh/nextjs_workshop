@@ -1,8 +1,8 @@
 import { Grid, Typography, Link } from "@mui/material";
 import LanguageIcon from '@mui/icons-material/Language';
-import styles from './index.module.css';
+import styles from './Car.module.css';
 
-const Car = ({ details }) => {
+const Car = ({ details }: any) => {
     var formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
