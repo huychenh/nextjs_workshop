@@ -28,34 +28,44 @@ namespace ProductService.Infrastructure.Data
             return product.Id;
         }
 
-        public async Task<IEnumerable<ProductDto>> Get()
+        public async Task<IEnumerable<ProductDto>> Get(string text)
         {
+            IQueryable<Product> query = _dbContext.Products;
+
+            if (!string.IsNullOrEmpty(text))
+            {
+                var lowerText = text.ToLower();
+                query = query.Where(x => x.Name.ToLower().Contains(lowerText) ||
+                    x.Brand.ToLower().Contains(lowerText) ||
+                    x.Model.ToLower().Contains(lowerText) ||
+                    x.Year.ToString().Contains(lowerText));
+            }
+
             //Todo: get OwnerName
-            return await _dbContext.Products
-                .Select(p => new ProductDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Brand = p.Brand,
-                    Category = p.Category,
-                    Color = p.Color,
-                    Description = p.Description,
-                    FuelType = p.FuelType.ToString(),
-                    HasInstallment = p.HasInstallment,
-                    KmDriven = p.KmDriven,
-                    MadeIn = p.MadeIn,
-                    Model = p.Model,
-                    OwnerName = p.OwnerId.ToString(),
-                    Price = p.Price,
-                    SeatingCapacity = p.SeatingCapacity,
-                    Transmission = p.Transmission.ToString(),
-                    Verified = p.Verified,
-                    Year = p.Year,
-                    Active = p.Active,
-                    Created = p.Created,
-                    Updated = p.Updated,
-                })
-                .ToArrayAsync();
+            return await query.Select(p => new ProductDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Brand = p.Brand,
+                Category = p.Category,
+                Color = p.Color,
+                Description = p.Description,
+                FuelType = p.FuelType.ToString(),
+                HasInstallment = p.HasInstallment,
+                KmDriven = p.KmDriven,
+                MadeIn = p.MadeIn,
+                Model = p.Model,
+                OwnerName = p.OwnerId.ToString(),
+                Price = p.Price,
+                SeatingCapacity = p.SeatingCapacity,
+                Transmission = p.Transmission.ToString(),
+                Verified = p.Verified,
+                Year = p.Year,
+                Active = p.Active,
+                Created = p.Created,
+                Updated = p.Updated,
+            })
+            .ToArrayAsync();
         }
 
         public async Task<ProductDto?> GetById(Guid id)

@@ -16,6 +16,8 @@ namespace ProductService.AppCore.UseCases.Queries
                 }
             }
 
+            public string? Text { get; set; }
+
             internal class Handler : IRequestHandler<Query, ResultModel<IEnumerable<ProductDto>>>
             {
                 private readonly IRepository _repository;
@@ -32,7 +34,7 @@ namespace ProductService.AppCore.UseCases.Queries
                         throw new ArgumentNullException(nameof(request));
                     }
 
-                    var products = await _repository.Get();
+                    var products = await _repository.Get(request.Text);
 
                     return ResultModel<IEnumerable<ProductDto>>.Create(products);
                 }
