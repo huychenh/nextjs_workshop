@@ -15,7 +15,7 @@ import useStyles from "./LayoutStyles";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import ProductService from "../services/ProductService";
-import styles from '../styles/customStyles.module.css';
+import styles from "./customStyles.module.css";
 export const enum SessionStatus {
   LOADING = "loading",
   AUTHENTICATED = "authenticated",
