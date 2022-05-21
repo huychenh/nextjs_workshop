@@ -1,0 +1,12 @@
+.root{
+    flex-grow: 1;
+}
+
+.menu{
+    padding-right: 20;
+}
+
+.loginButton{
+    padding-left: 20;
+    border-left: 'solid 2px #ffffff';
+}

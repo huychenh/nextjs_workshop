@@ -15,7 +15,7 @@ import useStyles from "./LayoutStyles";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import ProductService from "../services/ProductService";
-
+import styles from '../styles/customStyles.module.css';
 export const enum SessionStatus {
   LOADING = "loading",
   AUTHENTICATED = "authenticated",
@@ -23,8 +23,6 @@ export const enum SessionStatus {
 }
 
 function Layout({ children }: any) {
-  const classes = useStyles();
-
   const { data: session, status } = useSession();
 
   // useEffect(() => {
@@ -36,19 +34,19 @@ function Layout({ children }: any) {
       <Head>
         <title>Cars</title>
       </Head>
-      <div className={classes.root}>
-        <AppBar position="static" className={classes.navbar}>
+      <div className={styles.root}>
+        <AppBar position="static" sx={useStyles.navbar}>
           <Container>
             <Toolbar>
-              <Typography variant="h5" className={classes.title}>
+              <Typography variant="h5" sx={useStyles.title}>
                 Car Store
               </Typography>
-              <div className={classes.menu}>
+              <div className={styles.menu}>
                 <Link href="#" passHref>
                   <Button color="inherit">Sell your car</Button>
                 </Link>
               </div>
-              <div className={classes.loginButton}>
+              <div className={styles.loginButton}>
                 {status === SessionStatus.AUTHENTICATED && (
                   <>{`${session?.user?.email}`}</>
                 )}
@@ -72,9 +70,11 @@ function Layout({ children }: any) {
           </Container>
         </AppBar>
       </div>
-      <Container className={classes.main}>{children}</Container>
-      <footer className={classes.footer}>
-        <Typography>All rights reserved. NextJS Car</Typography>
+      <Container sx={useStyles.main}>{children}</Container>
+      <footer>
+        <Typography sx={useStyles.footer}>
+          All rights reserved. NextJS Car
+        </Typography>
       </footer>
     </>
   );
