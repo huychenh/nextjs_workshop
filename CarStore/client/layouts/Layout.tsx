@@ -44,7 +44,8 @@ function Layout({ children }: any) {
                 Car Store
               </Typography>
               <div className={classes.menu}>
-                <Link href="#" passHref>
+                <Link
+                  href="/registerSellCar" passHref>
                   <Button color="inherit">Sell your car</Button>
                 </Link>
               </div>
