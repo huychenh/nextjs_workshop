@@ -29,6 +29,7 @@ interface SellData {
 
 const RegisterSellCar: NextPage = (props: any) => {
   const { data: session } = useSession();
+
   if (!session) {
     return (
       <Layout>
@@ -37,7 +38,6 @@ const RegisterSellCar: NextPage = (props: any) => {
       </Layout>
     )
   }
-
   const [step, setStep] = useState(0);
   const [toast, setToast] = useState({
     open: false,
@@ -53,17 +53,18 @@ const RegisterSellCar: NextPage = (props: any) => {
     madeIn: "",
     seatingCapacity: 4,
     kmDriven: 0,
-    year: 0,
+    year: 1900,
     fuelType: "Petrol",
     category: "",
     color: "Red",
     description: "",
     hasInstallment: false,
-    ownerId: "ownerId"
+    ownerId: "3fa85f64-5717-4562-b3fc-2c963f66afe8"
   });
 
   const lastStep = Object.keys(sellData).length - 1;
-  const updateData = (key: any, value: any) => {
+
+  const updateData = (key: string, value: any) => {
     setSellData({
       ...sellData,
       [key]: value
@@ -72,21 +73,28 @@ const RegisterSellCar: NextPage = (props: any) => {
 
   async function addProducts(sellData: SellData) {
     try {
-      await ProductService.addProducts(sellData);
-      setToast({
-        open: true,
-        severity: "success",
-        message: "Register sell car success!"
-      });
-      Router.push('/')
+      const result = await ProductService.addProducts(sellData);
+      console.log(result)
+      const { isError } = result;
+      if (!isError) {
+        setToast({
+          open: true,
+          severity: "success",
+          message: "Registration success!"
+        });
+        Router.push('/')
+      }
+      else {
+        throw (new Error("Something went wrong"));
+      }
     }
-    catch
-    {
+    catch {
       setToast({
         open: true,
         severity: "error",
-        message: "Register sell car fail!"
+        message: "Registration failed!"
       })
+
     }
   }
 
@@ -102,14 +110,14 @@ const RegisterSellCar: NextPage = (props: any) => {
             <p>Model: {sellData.model}</p>
             <p>Transmission: {sellData.transmission}</p>
             <p>MadeIn: {sellData.madeIn}</p>
-            <p>seatingCapacity: {sellData.seatingCapacity}</p>
+            <p>SeatingCapacity: {sellData.seatingCapacity}</p>
             <p>kmDriven: {sellData.kmDriven}</p>
-            <p>year: {sellData.year}</p>
-            <p>fuelType: {sellData.fuelType}</p>
-            <p>category: {sellData.category}</p>
-            <p>color: {sellData.madeIn}</p>
-            <p>description: {sellData.description}</p>
-            <p>hasInstallment: {sellData.hasInstallment}</p>
+            <p>Year: {sellData.year}</p>
+            <p>FuelType: {sellData.fuelType}</p>
+            <p>Category: {sellData.category}</p>
+            <p>Color: {sellData.color}</p>
+            <p>Description: {sellData.description}</p>
+            <p>HasInstallment: {sellData.hasInstallment ? "Yes" : "No"}</p>
           </div>
           < Stack direction="row" spacing={2} justifyContent="center">
             <Button

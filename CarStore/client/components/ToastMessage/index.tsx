@@ -12,7 +12,7 @@ const ToastMessage = (props: any) => {
   };
 
   return (
-    <Snackbar open={open} autoHideDuration={2000} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} onClose={handleClose}>
+    <Snackbar open={open} autoHideDuration={3000} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} onClose={handleClose}>
       <Alert severity={severity} sx={{ width: '100%' }}>
         {message}
       </Alert>
@@ -21,8 +21,3 @@ const ToastMessage = (props: any) => {
 };
 
 export default ToastMessage;
-
-
-
-
-

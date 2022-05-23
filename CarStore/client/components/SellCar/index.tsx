@@ -1,4 +1,4 @@
-import { TextField, Autocomplete, MenuItem, Select, Stack, Button, ToggleButtonGroup, ToggleButton } from "@mui/material";
+import { TextField, Autocomplete, MenuItem, Select, Stack, Button, ToggleButtonGroup, ToggleButton, Typography, FormHelperText } from "@mui/material";
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import styles from "./SellCar.module.css";
@@ -13,7 +13,7 @@ const questionData = [
     { key: "brand", type: "DropDownList", data: brands, label: "Please choose brand:" },
     { key: "model", type: "DropDownList", data: [], label: "Please choose model:" },
     { key: "transmission", type: "DropDownList", data: ["Unknown", "Manual", "Automatic", "Automanual", "CVT"], label: "Please choose transmission:" },
-    { key: "madeIn", type: "DropDownList", data: countries.map(item => item.name), label: "The car made in:" },
+    { key: "madeIn", type: "Autocomplete", data: countries.map(item => item.name), label: "The car made in:" },
     { key: "seatingCapacity", type: "DropDownList", data: [4, 7, 16, 29, 45], label: "Please choose seating capacity:" },
     { key: "kmDriven", type: "TextField", data: [], label: "Please enter kmDriven:" },
     { key: "year", type: "DatePicker", data: [], label: "Please choose manufacturing date:" },
@@ -33,7 +33,7 @@ const SellCar = (props: any) => {
 
     const question = questionData[step];
     const [fieldData, setFieldData] = useState<any>("");
-    const [sellYear, setSellYear] = useState<Date | null>(null);
+    const [sellYear, setSellYear] = useState<Date | null>(new Date());
 
     if (question.key == "model") {
         const data = car.find(x => x.brand == sellData["brand"])?.models;
@@ -42,33 +42,51 @@ const SellCar = (props: any) => {
         }
     }
 
-    const handleChange = (evt: any) => {
-        setFieldData(evt.target.value);
-    }
-
-    const datePickerChange = (newValue: any) => {
-        setSellYear(newValue);
-
-        const date = new Date(newValue);
-        setFieldData(date.getFullYear());
-    }
-
     const handleNext = () => {
-        if (fieldData != 0 || fieldData != "") {
+        const isContainValue = (question.data.length > 0) ? question.data.some(d => d == fieldData) : true;
+        const isEmpty = (question.data.length > 0) ? question.data.some(d => d == fieldData) : true;
+
+        if (isContainValue && fieldData !== "") {
+            const data = () => {
+                if (typeof sellData[question.key] === 'number') return Number(fieldData);
+                if (fieldData === "true") return true;
+                if (fieldData === "false") return false;
+                return fieldData;
+            }
+            updateData(question.key, data());
             setError({ helperText: '', error: false });
-            updateData(question.key, fieldData);
             setStep(step + 1);
         } else {
             setError({ helperText: 'Field is required', error: true });
         }
     };
     const handlePrevious = () => {
+        setError({ helperText: '', error: false });
         setStep(step - 1);
     };
 
     useEffect(() => {
-        setFieldData(sellData[question.key]);
+        let data = sellData[question.key];
+        if (typeof data == "boolean") {
+            data = data ? "true" : "false";
+        }
+        setFieldData(data);
+        setSellYear(new Date(data, 0));
     }, [step])
+
+    const handleChange = (evt: any) => {
+        setFieldData(evt.target.value);
+    }
+
+    function handleInputChange(_event: any, value: any) {
+        setFieldData(value);
+    }
+
+    const handleDatePickerChange = (newValue: any) => {
+        setSellYear(newValue);
+        const date = new Date(newValue);
+        setFieldData(date.getFullYear());
+    }
 
     const component = () => {
         switch (question.type) {
@@ -84,17 +102,21 @@ const SellCar = (props: any) => {
                     className={styles.quantity}
                 />
             case "DropDownList":
-                return <Select
+                return <><Select
                     error={error.error}
                     required
                     value={fieldData}
                     onChange={handleChange}
                     fullWidth
                 >
+
                     {question.data?.map(item => (
-                        <MenuItem key={item} value={item}>{item}</MenuItem>
+                        <MenuItem key={item} value={item}>
+                            <Typography>{item}</Typography>
+                        </MenuItem>
                     ))}
                 </Select>
+                    <FormHelperText error={error.error}>{error.helperText}</FormHelperText></>
             case "DatePicker":
                 return <div className={styles.sellCarPicker}>
                     <LocalizationProvider dateAdapter={AdapterDateFns} >
@@ -102,44 +124,38 @@ const SellCar = (props: any) => {
                             views={['year']}
                             label="Year only"
                             value={sellYear}
-                            onChange={datePickerChange}
+                            onChange={handleDatePickerChange}
                             renderInput={(params) => <TextField helperText={error.helperText} error={error.error} required {...params} />}
                         />
                     </LocalizationProvider>
                 </div>
             case "Autocomplete":
                 return <Autocomplete
-                    freeSolo
                     value={fieldData}
-                    onChange={handleChange}
-                    disableClearable
                     options={question.data}
-                    getOptionLabel={(item) => item || ""}
+                    getOptionLabel={(option) => option}
+                    id="auto-complete"
+                    autoComplete
+                    includeInputInList
+                    onChange={handleInputChange}
                     renderInput={(params) => (
-                        <TextField
-                            required
-                            helperText={error.helperText}
-                            error={error.error}
-                            name="homeTown"
-                            {...params}
-                            InputProps={{
-                                ...params.InputProps,
-                                type: 'search',
-                            }}
-                        />
+                        <TextField helperText={error.helperText} error={error.error} {...params} variant="standard" />
                     )}
                 />
             case "ToggleButtonGroup":
-                return <ToggleButtonGroup
-                    color="primary"
-                    value={fieldData}
-                    exclusive
-                    onChange={handleChange}
-                    fullWidth
-                >
-                    <ToggleButton value="true">YES</ToggleButton>
-                    <ToggleButton value="false">NO</ToggleButton>
-                </ToggleButtonGroup>
+                return <>
+                    <ToggleButtonGroup
+                        color="primary"
+                        value={fieldData}
+                        exclusive
+                        onChange={handleInputChange}
+                        fullWidth
+                    >
+                        <ToggleButton value="true">YES</ToggleButton>
+                        <ToggleButton value="false">NO</ToggleButton>
+                    </ToggleButtonGroup>
+                    <FormHelperText error={error.error}>{error.helperText}</FormHelperText>
+                </>
             default:
                 return null;
         }
@@ -157,7 +173,7 @@ const SellCar = (props: any) => {
                         Back
                     </Button>)}
                 {(step >= 0) && (
-                    <Button
+                    <Button type="submit"
                         variant="outlined"
                         onClick={handleNext}
                     >
@@ -170,8 +186,3 @@ const SellCar = (props: any) => {
 };
 
 export default SellCar;
-
-
-
-
-
