@@ -44,7 +44,7 @@ const RegisterSellCar: NextPage = (props: any) => {
     severity: "error",
     message: ""
   });
-  const [sellData, setSellData] = useState<SellData>({
+  const [carInfo, setCarInfo] = useState<SellData>({
     name: "",
     price: 0,
     brand: "Alfa Romeo",
@@ -62,11 +62,11 @@ const RegisterSellCar: NextPage = (props: any) => {
     ownerId: "3fa85f64-5717-4562-b3fc-2c963f66afe8"
   });
 
-  const lastStep = Object.keys(sellData).length - 1;
+  const lastStep = Object.keys(carInfo).length - 1;
 
-  const updateData = (key: string, value: any) => {
-    setSellData({
-      ...sellData,
+  const updateCarInfo = (key: string, value: any) => {
+    setCarInfo({
+      ...carInfo,
       [key]: value
     });
   };
@@ -74,8 +74,8 @@ const RegisterSellCar: NextPage = (props: any) => {
   async function addProducts(sellData: SellData) {
     try {
       const result = await ProductService.addProducts(sellData);
-      console.log(result)
       const { isError } = result;
+      
       if (!isError) {
         setToast({
           open: true,
@@ -100,24 +100,24 @@ const RegisterSellCar: NextPage = (props: any) => {
 
   return (
     <Layout>
-      {step < lastStep && (<SellCar setStep={setStep} step={step} sellData={sellData} updateData={updateData} />)}
+      {step < lastStep && (<SellCar setStep={setStep} step={step} carInfo={carInfo} updateCarInfo={updateCarInfo} />)}
       {step == lastStep && (
         <div>
           <div className={styles.confirm}>
-            <p>Car Name: {sellData.name}</p>
-            <p>Price: {sellData.price}</p>
-            <p>Brand: {sellData.brand}</p>
-            <p>Model: {sellData.model}</p>
-            <p>Transmission: {sellData.transmission}</p>
-            <p>MadeIn: {sellData.madeIn}</p>
-            <p>SeatingCapacity: {sellData.seatingCapacity}</p>
-            <p>kmDriven: {sellData.kmDriven}</p>
-            <p>Year: {sellData.year}</p>
-            <p>FuelType: {sellData.fuelType}</p>
-            <p>Category: {sellData.category}</p>
-            <p>Color: {sellData.color}</p>
-            <p>Description: {sellData.description}</p>
-            <p>HasInstallment: {sellData.hasInstallment ? "Yes" : "No"}</p>
+            <p>Car Name: {carInfo.name}</p>
+            <p>Price: {carInfo.price}</p>
+            <p>Brand: {carInfo.brand}</p>
+            <p>Model: {carInfo.model}</p>
+            <p>Transmission: {carInfo.transmission}</p>
+            <p>MadeIn: {carInfo.madeIn}</p>
+            <p>SeatingCapacity: {carInfo.seatingCapacity}</p>
+            <p>kmDriven: {carInfo.kmDriven}</p>
+            <p>Year: {carInfo.year}</p>
+            <p>FuelType: {carInfo.fuelType}</p>
+            <p>Category: {carInfo.category}</p>
+            <p>Color: {carInfo.color}</p>
+            <p>Description: {carInfo.description}</p>
+            <p>HasInstallment: {carInfo.hasInstallment ? "Yes" : "No"}</p>
           </div>
           < Stack direction="row" spacing={2} justifyContent="center">
             <Button
@@ -128,7 +128,7 @@ const RegisterSellCar: NextPage = (props: any) => {
             </Button>
             <Button
               variant="outlined"
-              onClick={async () => { await addProducts(sellData); }}
+              onClick={async () => { await addProducts(carInfo); }}
             >
               Submit
             </Button>
