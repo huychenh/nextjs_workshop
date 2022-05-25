@@ -7,13 +7,17 @@ const ToastMessage = (props: any) => {
   const handleClose = () => {
     setToast({
       ...toast,
-      open: false     
+      open: false
     })
   };
 
   return (
-    <Snackbar open={open} autoHideDuration={3000} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} onClose={handleClose}>
-      <Alert severity={severity} sx={{ width: '100%' }}>
+    <Snackbar open={open}
+      autoHideDuration={3000}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      onClose={handleClose}
+    >
+      <Alert variant="filled" severity={severity} sx={{ width: '100%' }}>
         {message}
       </Alert>
     </Snackbar>
