@@ -31,7 +31,7 @@ const RegisterSellCar: NextPage = (props: any) => {
   const { data: session }: any = useSession();
 
   if (!session) {
-    signIn();
+    signIn("identity-server4");
   }
   const [step, setStep] = useState(0);
   const [toast, setToast] = useState({
@@ -50,7 +50,7 @@ const RegisterSellCar: NextPage = (props: any) => {
     kmDriven: 0,
     year: 1900,
     fuelType: "Petrol",
-    category: "",
+    category: "M1",
     color: "Red",
     description: "",
     hasInstallment: false,

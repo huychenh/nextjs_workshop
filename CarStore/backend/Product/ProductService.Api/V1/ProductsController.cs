@@ -7,7 +7,6 @@ using ProductService.AppCore.UseCases.Queries;
 
 namespace ProductService.Api.V1
 {
-    [AllowAnonymous]
     [ApiController]
     [ApiVersion("1.0")]
     public class ProductsController : ControllerBase
@@ -36,6 +35,7 @@ namespace ProductService.Api.V1
             return Ok(await Mediator.Send(request, cancellationToken));
         }
 
+        [Authorize]
         [HttpPost("/api/v{version:apiVersion}/products")]
         public async Task<ActionResult> HandleCreateProductAsync([FromBody] CreateProduct.Command request, CancellationToken cancellationToken = new())
         {

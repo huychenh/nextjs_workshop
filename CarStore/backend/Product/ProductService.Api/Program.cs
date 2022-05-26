@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.IdentityModel.Tokens;
 using N8T.Infrastructure;
 using N8T.Infrastructure.Bus;
 using N8T.Infrastructure.EfCore;
@@ -28,6 +29,22 @@ services.AddControllers().AddMessageBroker(builder.Configuration);
 services.AddSwagger(typeof(ApiAnchor));
 services.AddPostgresDbContext<MainDbContext>(builder.Configuration.GetConnectionString("postgres"));
 services.AddScoped<IRepository, Repository>();
+
+services.AddAuthentication("token")
+    .AddJwtBearer("token", options =>
+    {
+        // Todo: configuration
+        options.Authority = "https://localhost:7280";
+        options.MapInboundClaims = false;
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidTypes = new[] { "at+jwt" },
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
+    });
 
 var app = builder.Build();
 if (builder.Environment.IsDevelopment())
