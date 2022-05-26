@@ -8,17 +8,24 @@ export default class ProductService {
     const queryString = `text=${text}`;
     const response = await fetchJson(
       `${process.env.NEXT_PUBLIC_URL_API}/${ProductService.ControllerUri}?${queryString}`,
-      { method: 'GET' }
+      { method: 'GET' },
     );
 
     return await response.json();
   }
 
-  public static async addProducts(model: any) {
+  public static async addProducts(accessToken: string, model: any) {
     console.log(JSON.stringify({ model }));
     const response = await fetchJson(
       `${process.env.NEXT_PUBLIC_URL_API}/${ProductService.ControllerUri}`,
-      { method: 'POST', body: JSON.stringify({ model }) }
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ model }),
+      }
     );
 
     return await response.json();

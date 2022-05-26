@@ -24,7 +24,7 @@ const SearchBox = ({ onSearch }: {onSearch: (text: string) => void}) => {
             title="Search"
             value={text}
             onChange={e => setText(e.target.value)}
-            placeholder="Search by name, brands, model, or year"
+            placeholder="Search by name, brand, model, or year"
             className={styles.searchInput}
           />
           <img src="/ic-search-home.webp" height={24} />

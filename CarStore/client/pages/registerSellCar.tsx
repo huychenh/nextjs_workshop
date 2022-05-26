@@ -6,7 +6,7 @@ import SellCar from '../components/SellCar';
 import { Stack, Button } from "@mui/material";
 import styles from "../components/SellCar/SellCar.module.css";
 import ToastMessage from "../components/ToastMessage";
-import { useSession, getSession } from "next-auth/react"
+import { useSession, getSession, signIn } from "next-auth/react"
 import Router from 'next/router'
 
 interface SellData {
@@ -28,15 +28,10 @@ interface SellData {
 };
 
 const RegisterSellCar: NextPage = (props: any) => {
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
 
   if (!session) {
-    return (
-      <Layout>
-        <h1>Protected Page</h1>
-        <p>You can view this page because you are signed in.</p>
-      </Layout>
-    )
+    signIn("identity-server4");
   }
   const [step, setStep] = useState(0);
   const [toast, setToast] = useState({
@@ -55,7 +50,7 @@ const RegisterSellCar: NextPage = (props: any) => {
     kmDriven: 0,
     year: 1900,
     fuelType: "Petrol",
-    category: "",
+    category: "M1",
     color: "Red",
     description: "",
     hasInstallment: false,
@@ -73,7 +68,7 @@ const RegisterSellCar: NextPage = (props: any) => {
 
   async function addProducts(sellData: SellData) {
     try {
-      const result = await ProductService.addProducts(sellData);
+      const result = await ProductService.addProducts(session.accessToken, sellData);
       const { isError } = result;
       
       if (!isError) {

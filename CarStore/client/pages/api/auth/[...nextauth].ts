@@ -31,10 +31,11 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, token, user }: any) {
       if (!token) {
         return session;
       }
+      session.accessToken = token.access_token;
       const decodedIdToken = decode(token.access_token as string) as DefaultJWT;
       session.user = decodedIdToken;
       return session;
