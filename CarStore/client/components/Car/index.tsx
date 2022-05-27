@@ -16,7 +16,7 @@ const Car = ({ details }: any) => {
         <Grid item md={6}>
             <Grid container xs={12}>
                 <Grid item xs={5}>
-                    <Link href="#" >
+                    <Link href={`car-detail/${details.id}`} >
                         <img className={styles.carImage} src="/HomePage/Car/ford.jpg"></img>
                     </Link>
                 </Grid>

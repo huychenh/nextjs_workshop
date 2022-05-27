@@ -1,0 +1,27 @@
+.basicInfo {
+  flex-grow: 1;
+  max-width: 752;
+}
+
+.infoItem {
+  background-color: rgb(231, 230, 227);
+}
+
+.price {
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 32px;
+  color: #61be5a;
+}
+
+.imageListRoot {
+  display: 'flex';
+  flex-wrap: 'wrap';
+  justify-content: 'space-around';
+  overflow: 'hidden';
+}
+
+.imageList {
+  flex-wrap: 'nowrap';
+  transform: 'translateZ(0)';
+}
