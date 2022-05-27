@@ -42,7 +42,7 @@ function Layout({ children }: any) {
                 Car Store
               </Typography>
               <div className={styles.menu}>
-                <Link href="#" passHref>
+                <Link href="/registerSellcar" passHref>
                   <Button color="inherit">Sell your car</Button>
                 </Link>
               </div>
