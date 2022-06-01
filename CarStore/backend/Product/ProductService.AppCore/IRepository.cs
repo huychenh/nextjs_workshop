@@ -5,7 +5,7 @@ namespace ProductService.AppCore
 {
     public interface IRepository
     {
-        Task<IEnumerable<ProductDto>> Get(string text);
+        Task<IEnumerable<ProductDto>> Get(SearchProductDto queryDto);
 
         Task<ProductDto?> GetById(Guid id);
 
