@@ -32,9 +32,9 @@ namespace ProductService.Infrastructure.Data
         {
             IQueryable<Product> query = _dbContext.Products;
 
-            if (!string.IsNullOrEmpty(queryDto.Name))
+            if (!string.IsNullOrEmpty(queryDto.SearchText))
             {
-                var lowerText = queryDto.Name.ToLower();
+                var lowerText = queryDto.SearchText.ToLower();
                 query = query.Where(x => x.Name.ToLower().Contains(lowerText) ||
                     x.Brand.ToLower().Contains(lowerText) ||
                     x.Model.ToLower().Contains(lowerText) ||
