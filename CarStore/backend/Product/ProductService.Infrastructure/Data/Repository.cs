@@ -28,19 +28,26 @@ namespace ProductService.Infrastructure.Data
             return product.Id;
         }
 
-        public async Task<IEnumerable<ProductDto>> Get(string text)
+        public async Task<IEnumerable<ProductDto>> Get(SearchProductDto queryDto)
         {
             IQueryable<Product> query = _dbContext.Products;
 
-            if (!string.IsNullOrEmpty(text))
+            if (!string.IsNullOrEmpty(queryDto.SearchText))
             {
-                var lowerText = text.ToLower();
+                var lowerText = queryDto.SearchText.ToLower();
                 query = query.Where(x => x.Name.ToLower().Contains(lowerText) ||
                     x.Brand.ToLower().Contains(lowerText) ||
                     x.Model.ToLower().Contains(lowerText) ||
                     x.Year.ToString().Contains(lowerText));
             }
-
+            if (queryDto.PriceFrom > 0 && queryDto.PriceTo > 0)
+            {
+                query = query.Where(x => x.Price >= queryDto.PriceFrom && x.Price <= queryDto.PriceTo);
+            }
+            if (queryDto.Created.HasValue)
+            {
+                query = query.Where(x => x.Created <= TimeZoneInfo.ConvertTimeToUtc(queryDto.Created.Value));
+            }
             //Todo: get OwnerName
             return await query.Select(p => new ProductDto
             {
