@@ -40,6 +40,10 @@ namespace ProductService.Infrastructure.Data
                     x.Model.ToLower().Contains(lowerText) ||
                     x.Year.ToString().Contains(lowerText));
             }
+            if (!string.IsNullOrEmpty(queryDto.CategoryName))
+            {
+                query = query.Where(x => x.Category.ToLower() == queryDto.CategoryName.ToLower());
+            }
             if (queryDto.PriceFrom > 0 && queryDto.PriceTo > 0)
             {
                 query = query.Where(x => x.Price >= queryDto.PriceFrom && x.Price <= queryDto.PriceTo);
