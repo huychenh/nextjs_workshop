@@ -31,14 +31,28 @@ namespace ProductService.Infrastructure.Data
         public async Task<IEnumerable<ProductDto>> Get(SearchProductDto queryDto)
         {
             IQueryable<Product> query = _dbContext.Products;
+            var forSpecificBrand = !string.IsNullOrEmpty(queryDto.Brand);
 
             if (!string.IsNullOrEmpty(queryDto.SearchText))
             {
                 var lowerText = queryDto.SearchText.ToLower();
-                query = query.Where(x => x.Name.ToLower().Contains(lowerText) ||
-                    x.Brand.ToLower().Contains(lowerText) ||
-                    x.Model.ToLower().Contains(lowerText) ||
-                    x.Year.ToString().Contains(lowerText));
+                if (!forSpecificBrand)
+                {
+                    query = query.Where(x => x.Name.ToLower().Contains(lowerText)
+                      || x.Brand.Name.ToLower().Contains(lowerText)
+                      || x.Model.ToLower().Contains(lowerText)
+                      || x.Year.ToString().Contains(lowerText));
+                }
+                else
+                {
+                    query = query.Where(x => x.Name.ToLower().Contains(lowerText)
+                                          || x.Model.ToLower().Contains(lowerText)
+                                          || x.Year.ToString().Contains(lowerText));
+                }
+            }
+            if (forSpecificBrand)
+            {
+                query = query.Where(x => x.Brand.Name.ToLower().Equals(queryDto.Brand.ToLower()));
             }
             if (!string.IsNullOrEmpty(queryDto.CategoryName))
             {
@@ -57,7 +71,7 @@ namespace ProductService.Infrastructure.Data
             {
                 Id = p.Id,
                 Name = p.Name,
-                Brand = p.Brand,
+                Brand = p.Brand.Name,
                 Category = p.Category,
                 Color = p.Color,
                 Description = p.Description,
@@ -81,7 +95,8 @@ namespace ProductService.Infrastructure.Data
 
         public async Task<ProductDto?> GetById(Guid id)
         {
-            var entity = await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await _dbContext.Products.Include(x => x.Brand)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity == null)
             {
@@ -92,7 +107,7 @@ namespace ProductService.Infrastructure.Data
             {
                 Id = entity.Id,
                 Name = entity.Name,
-                Brand = entity.Brand,
+                Brand = entity.Brand.Name,
                 Category = entity.Category,
                 Color = entity.Color,
                 Description = entity.Description,
