@@ -12,6 +12,7 @@ namespace ProductService.Infrastructure.Data
         }
 
         public DbSet<Product> Products { get; set; } = default!;
+        public DbSet<Brand> Brands { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +27,23 @@ namespace ProductService.Infrastructure.Data
 
             modelBuilder.Entity<Product>().HasIndex(x => x.Id).IsUnique();
             modelBuilder.Entity<Product>().Ignore(x => x.DomainEvents);
+
+            
+            // brand
+            modelBuilder.Entity<Brand>().HasKey(x => x.Id);
+            modelBuilder.Entity<Brand>().Property(x => x.Id).HasColumnType("uuid")
+                .HasDefaultValueSql(Consts.UuidAlgorithm);
+            modelBuilder.Entity<Brand>().Property(x => x.Name).HasMaxLength(20);
+            modelBuilder.Entity<Brand>().Property(x => x.Created).HasDefaultValueSql(Consts.DateAlgorithm);
+
+            modelBuilder.Entity<Brand>().HasIndex(x => x.Id).IsUnique();
+            modelBuilder.Entity<Brand>().HasIndex(x => x.Name).IsUnique();
+
+            modelBuilder.Entity<Brand>().Ignore(x => x.DomainEvents);
+            modelBuilder.Entity<Brand>()
+                .HasMany(x => x.Products)
+                .WithOne(x => x.Brand)
+                .IsRequired();
         }
     }
 }

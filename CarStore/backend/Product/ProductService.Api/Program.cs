@@ -29,6 +29,7 @@ services.AddControllers().AddMessageBroker(builder.Configuration);
 services.AddSwagger(typeof(ApiAnchor));
 services.AddPostgresDbContext<MainDbContext>(builder.Configuration.GetConnectionString("postgres"));
 services.AddScoped<IRepository, Repository>();
+services.AddScoped<IBrandRepository, BrandRepository>();
 
 services.AddAuthentication("token")
     .AddJwtBearer("token", options =>
