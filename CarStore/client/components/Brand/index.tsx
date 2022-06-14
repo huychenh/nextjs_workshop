@@ -45,8 +45,8 @@ export default function BrandSelector({ brands }: any) {
             if (index !== 0 && index % 7 === 0) prev.push([]);
             return prev;
         }, [])
-        .reduce((prev: any, current: any) => {
-            prev.push(<SwiperSlide>{current}</SwiperSlide>);
+        .reduce((prev: any, current: any, index: any) => {
+            prev.push(<SwiperSlide key={index}>{current}</SwiperSlide>);
             return prev;
         }, []);
     return (

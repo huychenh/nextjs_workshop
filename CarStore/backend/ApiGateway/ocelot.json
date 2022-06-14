@@ -23,6 +23,18 @@
       ],
       "UpstreamPathTemplate": "/api/v1/products/{id}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/brands",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7501
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/brands",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {
