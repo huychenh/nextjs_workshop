@@ -13,8 +13,17 @@ new WebHostBuilder()
             .AddJsonFile("ocelot.json")
             .AddEnvironmentVariables();
     })
-    .ConfigureServices(s => {
-        s.AddOcelot();
+    .ConfigureServices((builder, services) => {
+        var frontEndUrls = builder.Configuration.GetSection("FrontEndUrls").Get<string[]>();
+        services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy",
+                builder => builder.WithOrigins(frontEndUrls)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+        });
+        services.AddOcelot();
     })
     .ConfigureLogging((hostingContext, logging) =>
     {
@@ -23,6 +32,7 @@ new WebHostBuilder()
     .UseIISIntegration()
     .Configure(app =>
     {
+        app.UseCors("CorsPolicy");
         app.UseOcelot().Wait();
     })
     .Build()

@@ -34,8 +34,7 @@ services.AddScoped<IBrandRepository, BrandRepository>();
 services.AddAuthentication("token")
     .AddJwtBearer("token", options =>
     {
-        // Todo: configuration
-        options.Authority = "https://localhost:7280";
+        options.Authority = builder.Configuration["Auth:Authority"];
         options.MapInboundClaims = false;
 
         options.TokenValidationParameters = new TokenValidationParameters
