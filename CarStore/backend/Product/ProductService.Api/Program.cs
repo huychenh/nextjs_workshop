@@ -29,12 +29,12 @@ services.AddControllers().AddMessageBroker(builder.Configuration);
 services.AddSwagger(typeof(ApiAnchor));
 services.AddPostgresDbContext<MainDbContext>(builder.Configuration.GetConnectionString("postgres"));
 services.AddScoped<IRepository, Repository>();
+services.AddScoped<IBrandRepository, BrandRepository>();
 
 services.AddAuthentication("token")
     .AddJwtBearer("token", options =>
     {
-        // Todo: configuration
-        options.Authority = "https://localhost:7280";
+        options.Authority = builder.Configuration["Auth:Authority"];
         options.MapInboundClaims = false;
 
         options.TokenValidationParameters = new TokenValidationParameters

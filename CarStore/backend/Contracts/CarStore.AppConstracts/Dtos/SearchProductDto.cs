@@ -9,6 +9,8 @@ namespace CarStore.AppContracts.Dtos
     public class SearchProductDto
     {
         public string? SearchText { get; set; }
+        public string? CategoryName { get; set; }
+        public string? Brand { get; set; }
         public decimal PriceFrom { get; set; }
         public decimal PriceTo { get; set; }
         public DateTime? Created { get; set; }

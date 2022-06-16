@@ -13,8 +13,8 @@ export default class ProductService {
     return await response.json();
   }
 
-  public static async getProducts(text = "", page = 0) {
-    var queryString = `text=${text}&page=${page == 0 ? 1 : page}`;    
+  public static async getProducts(text = "", brand = "") {
+    const queryString = `searchText=${text}&brand=${brand}`;
     const response = await fetchJson(
       `${process.env.NEXT_PUBLIC_URL_API}/${ProductService.ControllerUri}?${queryString}`,
       { method: 'GET' },

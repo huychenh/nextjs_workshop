@@ -10,8 +10,6 @@ namespace ProductService.AppCore.Core
 
         public decimal Price { get; private set; }
 
-        public string Brand { get; private set; }
-
         public string Model { get; private set; }
 
         public Transmission Transmission { get; private set; }
@@ -40,14 +38,18 @@ namespace ProductService.AppCore.Core
 
         public Guid OwnerId { get; private set; }
 
-        public static Product Create(ProductCreateDto dto)
+        public Guid BrandId { get; private set; }
+
+        public Brand Brand { get; private set; }
+
+        public static Product Create(ProductCreateDto dto, Guid brandId)
         {
             Product product = new()
             {
                 Id = Guid.NewGuid(),
                 Name = dto.Name,
                 Price = dto.Price,
-                Brand = dto.Brand,
+                BrandId = brandId,
                 Model = dto.Model,
                 Transmission = (Transmission)Enum.Parse(typeof(Transmission), dto.Transmission),
                 MadeIn = dto.MadeIn,
