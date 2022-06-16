@@ -14,9 +14,20 @@ namespace ProductService.Api.V1
         private ISender? _mediator;
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>();
 
+        protected readonly string _pageSize;
+        public ProductsController(IConfiguration configuration)
+        {
+            _pageSize = configuration.GetValue<string>("PageSize");
+        }
+
         [HttpGet("/api/v{version:apiVersion}/products")]
         public async Task<ActionResult> HandleGetProductsAsync([FromQuery] SearchProductDto request, CancellationToken cancellationToken = new())
         {
+            if(request != null && request.Page != null && request.PageSize == null)
+            {
+                request.PageSize = Convert.ToInt32(_pageSize);
+            }
+
             GetProducts.Query queryModel = new GetProducts.Query { SearchProductModel = request };
 
             var result = await Mediator.Send(queryModel, cancellationToken);

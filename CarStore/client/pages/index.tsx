@@ -24,7 +24,7 @@ const Home: NextPage = (props: any) => {
 }
 
 export async function getStaticProps() {
-  const { data } = await ProductService.getProducts();
+  const { data } = await ProductService.getProducts();  
   return {
     props: {
       cars: data,

@@ -7,6 +7,8 @@ namespace ProductService.AppCore
     {
         Task<IEnumerable<ProductDto>> Get(SearchProductDto queryDto);
 
+        Task<IEnumerable<ProductDto>> GetWithPagination(SearchProductDto queryDto);
+
         Task<ProductDto?> GetById(Guid id);
 
         Task<Guid> Add(Product product);
