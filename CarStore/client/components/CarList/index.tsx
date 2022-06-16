@@ -29,7 +29,7 @@ function CarList(props: any) {
             router.replace('/', undefined, { shallow: true });
         }       
 
-        ProductService.getProducts("", value).then(response => {
+        ProductService.getProducts("", "", value).then(response => {
             setCars(response.data);
         });
     }

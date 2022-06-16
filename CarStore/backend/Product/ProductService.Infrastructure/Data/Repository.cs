@@ -137,7 +137,7 @@ namespace ProductService.Infrastructure.Data
             {
                 var lowerText = queryDto.SearchText.ToLower();
                 query = query.Where(x => x.Name.ToLower().Contains(lowerText) ||
-                    x.Brand.ToLower().Contains(lowerText) ||
+                    x.Brand.Name.ToLower().Contains(lowerText) ||
                     x.Model.ToLower().Contains(lowerText) ||
                     x.Year.ToString().Contains(lowerText));
             }
@@ -157,7 +157,7 @@ namespace ProductService.Infrastructure.Data
             {
                 Id = p.Id,
                 Name = p.Name,
-                Brand = p.Brand,
+                Brand = p.Brand.Name,
                 Category = p.Category,
                 Color = p.Color,
                 Description = p.Description,
