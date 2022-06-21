@@ -32,8 +32,16 @@ namespace ProductService.AppCore.UseCases.Queries
                         throw new ArgumentNullException(nameof(request));
                     }
 
-                    var products = await _repository.Get(request.SearchProductModel);
-
+                    IEnumerable<ProductDto> products;
+                    if (request.SearchProductModel.Page != null && request.SearchProductModel.PageSize != null)
+                    {
+                        products = await _repository.GetWithPagination(request.SearchProductModel);                        
+                    }
+                    else
+                    {
+                        products = await _repository.Get(request.SearchProductModel);
+                    }
+                    
                     return ResultModel<IEnumerable<ProductDto>>.Create(products);
                 }
             }

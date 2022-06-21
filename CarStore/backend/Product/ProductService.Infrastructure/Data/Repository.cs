@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProductService.AppCore;
 using ProductService.AppCore.Core;
+using System.Linq;
 
 namespace ProductService.Infrastructure.Data
 {
@@ -126,6 +127,59 @@ namespace ProductService.Infrastructure.Data
                 Created = entity.Created,
                 Updated = entity.Updated,
             };
+        }
+
+        public async Task<IEnumerable<ProductDto>> GetWithPagination(SearchProductDto queryDto)
+        {
+            IQueryable<Product> query = _dbContext.Products;
+
+            if (!string.IsNullOrEmpty(queryDto.SearchText))
+            {
+                var lowerText = queryDto.SearchText.ToLower();
+                query = query.Where(x => x.Name.ToLower().Contains(lowerText) ||
+                    x.Brand.Name.ToLower().Contains(lowerText) ||
+                    x.Model.ToLower().Contains(lowerText) ||
+                    x.Year.ToString().Contains(lowerText));
+            }
+            if (queryDto.PriceFrom > 0 && queryDto.PriceTo > 0)
+            {
+                query = query.Where(x => x.Price >= queryDto.PriceFrom && x.Price <= queryDto.PriceTo);
+            }
+            if (queryDto.Created.HasValue)
+            {
+                query = query.Where(x => x.Created <= TimeZoneInfo.ConvertTimeToUtc(queryDto.Created.Value));
+            }
+
+            var allCars = query.ToList();
+            int extend = (int)(allCars.Count % queryDto.PageSize);
+
+            return await query.Select(p => new ProductDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Brand = p.Brand.Name,
+                Category = p.Category,
+                Color = p.Color,
+                Description = p.Description,
+                FuelType = p.FuelType.ToString(),
+                HasInstallment = p.HasInstallment,
+                KmDriven = p.KmDriven,
+                MadeIn = p.MadeIn,
+                Model = p.Model,
+                OwnerName = p.OwnerId.ToString(),
+                Price = p.Price,
+                SeatingCapacity = p.SeatingCapacity,
+                Transmission = p.Transmission.ToString(),
+                Verified = p.Verified,
+                Year = p.Year,
+                Active = p.Active,
+                Created = p.Created,
+                Updated = p.Updated,
+                TotalPages = (int)(allCars.Count / queryDto.PageSize + (extend == 0 ? 0 : 1))
+            })
+                .Skip((int)((queryDto.Page - 1) * queryDto.PageSize))
+                .Take((int)queryDto.PageSize)
+                .ToArrayAsync();
         }
     }
 }
