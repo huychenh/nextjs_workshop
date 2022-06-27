@@ -22,7 +22,7 @@ export const enum SessionStatus {
   UNAUTHENTICATED = "unauthenticated",
 }
 
-function Layout({ children }: any) {
+function Layout({ children, title }: any) {
   const { data: session, status } = useSession();
 
   // useEffect(() => {
@@ -32,14 +32,14 @@ function Layout({ children }: any) {
   return (
     <>
       <Head>
-        <title>Cars</title>
+        <title>{title ?? "Cars"}</title>
       </Head>
       <div className={styles.root}>
         <AppBar position="static" sx={useStyles.navbar}>
           <Container>
             <Toolbar>
               <Typography variant="h5" sx={useStyles.title}>
-                Car Store
+                <Link href="/"><a>Car Store</a></Link>
               </Typography>
               <div className={styles.menu}>
                 <Link href="/registerSellCar" passHref>

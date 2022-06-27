@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import CarDetail from "../../components/Car/Detail/CarDetail";
@@ -7,9 +6,7 @@ import { Models } from "../../models/product";
 import ProductService from "../../services/ProductService";
 
 const Detail = () => {
-  const { data: session } = useSession()
-  const router = useRouter()
-  
+  const router = useRouter()  
   const [detail, setDetail] = useState(new Models.Product())
 
   useEffect(() => {
@@ -19,21 +16,10 @@ const Detail = () => {
       })
     }
   }, [router.query?.id]);
-
-  const renderProtectedPage = () => {
-    return <>
-      <h1>Protected Page</h1>
-      <p>You can view this page because you are signed in.</p>
-    </>
-  }
-
-  const renderContentPage = () => {
-    return <CarDetail detail={detail}></CarDetail>
-  }
   
   return (
     <Layout>
-      {session ? renderContentPage() : renderProtectedPage()}
+      <CarDetail detail={detail}></CarDetail>
     </Layout>
   )
 }

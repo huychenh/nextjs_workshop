@@ -7,7 +7,7 @@ namespace ProductService.AppCore.UseCases.Queries
 {
     public class GetProducts
     {
-        public class Query : IQuery<IEnumerable<ProductDto>>
+        public class Query : SearchProductRequestDto, IQuery<IEnumerable<ProductDto>>
         {
             internal class Validator : AbstractValidator<Query>
             {
@@ -15,8 +15,6 @@ namespace ProductService.AppCore.UseCases.Queries
                 {
                 }
             }
-
-            public string? Text { get; set; }
 
             internal class Handler : IRequestHandler<Query, ResultModel<IEnumerable<ProductDto>>>
             {
@@ -34,8 +32,16 @@ namespace ProductService.AppCore.UseCases.Queries
                         throw new ArgumentNullException(nameof(request));
                     }
 
-                    var products = await _repository.Get(request.Text);
-
+                    IEnumerable<ProductDto> products;
+                    if (request.SearchProductModel.Page != null && request.SearchProductModel.PageSize != null)
+                    {
+                        products = await _repository.GetWithPagination(request.SearchProductModel);                        
+                    }
+                    else
+                    {
+                        products = await _repository.Get(request.SearchProductModel);
+                    }
+                    
                     return ResultModel<IEnumerable<ProductDto>>.Create(products);
                 }
             }

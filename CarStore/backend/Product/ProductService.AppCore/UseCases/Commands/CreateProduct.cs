@@ -44,14 +44,27 @@ namespace ProductService.AppCore.UseCases.Commands
             {
                 private readonly IRepository _repository;
 
-                public Handler(IRepository productRepository)
+                private readonly IBrandRepository _brandRepository;
+
+                public Handler(IRepository productRepository, IBrandRepository brandRepository)
                 {
                     _repository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+                    _brandRepository = brandRepository ?? throw new ArgumentNullException(nameof(productRepository));
                 }
 
                 public async Task<ResultModel<Guid>> Handle(Command request, CancellationToken cancellationToken)
                 {
-                    var product = Product.Create(request.Model);
+                    var brandDto = await _brandRepository.GetByName(request.Model.Brand);
+
+                    var brandId = brandDto?.Id ?? Guid.Empty; 
+
+                    if (brandId == Guid.Empty)
+                    {
+                        var brand = new Brand { Name = request.Model.Brand };
+                        brandId = await _brandRepository.Add(brand);
+                    }
+
+                    var product = Product.Create(request.Model, brandId);
 
                     var id = await _repository.Add(product);
 
