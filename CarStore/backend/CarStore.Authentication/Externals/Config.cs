@@ -39,9 +39,9 @@ namespace CarStore.Authentication.Externals
                     RequireConsent = false,
                     AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
                     ClientSecrets = { new Secret(Commons.CarStoreConstants.AuthenSecretKey.Sha256()) },
-                    RedirectUris = { AdminMvcUrl  + "signin-oidc" },
-                    FrontChannelLogoutUri = AdminMvcUrl  + "signout-oidc",
-                    PostLogoutRedirectUris = { AdminMvcUrl  + "signout-callback-oidc" },
+                    RedirectUris = { AdminMvcUrl  + "/signin-oidc" },
+                    FrontChannelLogoutUri = AdminMvcUrl  + "/signout-oidc",
+                    PostLogoutRedirectUris = { AdminMvcUrl  + "/signout-callback-oidc" },
                     AllowOfflineAccess = true,
                     AllowedScopes = { "openid", "profile", "apis", "roles" }
 
@@ -53,10 +53,10 @@ namespace CarStore.Authentication.Externals
                     ClientSecrets = { new Secret(Commons.CarStoreConstants.AuthenSecretKey.Sha256()) },
                     AllowedGrantTypes =  GrantTypes.Code,
                     // where to redirect to after login
-                    RedirectUris = { "http://localhost:3000/api/auth/callback/identity-server4","http://localhost:3000" },
+                    RedirectUris = { $"{NextJsBaseUrl}/api/auth/callback/identity-server4", NextJsBaseUrl },
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = { "http://localhost:3000" },
-                    AllowedCorsOrigins= { "http://localhost:3000" },
+                    PostLogoutRedirectUris = { NextJsBaseUrl },
+                    AllowedCorsOrigins= { NextJsBaseUrl },
                     RequireClientSecret = false,
 
                     AllowedScopes = new List<string>
@@ -101,7 +101,9 @@ namespace CarStore.Authentication.Externals
         }
 
         #region Config for Authentication
-        public static string AdminMvcUrl { get; set; }
+        public static string? AdminMvcUrl { get; set; }
+
+        public static string? NextJsBaseUrl { get; set; }
         #endregion
     }
 }
