@@ -20,5 +20,6 @@ export namespace Models {
     active?: boolean;
     created?: string;
     updated?: string;
+    totalPages?: number; // todo: refactor this
   }
 }
