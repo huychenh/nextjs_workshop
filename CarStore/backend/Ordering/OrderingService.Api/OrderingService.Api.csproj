@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\N8T.Core\N8T.Core.csproj" />
+    <ProjectReference Include="..\..\N8T.Infrastructure.EfCore\N8T.Infrastructure.EfCore.csproj" />
+    <ProjectReference Include="..\..\N8T.Infrastructure\N8T.Infrastructure.csproj" />
+    <ProjectReference Include="..\OrderingService.Domain\OrderingService.AppCore.csproj" />
+  </ItemGroup>
+
+</Project>

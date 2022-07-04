@@ -27,6 +27,8 @@ builder.Services.Configure<IISOptions>(iis =>
 // Block 2: Add IdentityServer4 with InMemory Configuration
 
 Config.AdminMvcUrl = builder.Configuration["AuthenConfig:AdminMvcUrl"];
+Config.NextJsBaseUrl = builder.Configuration["AuthenConfig:NextJsBaseUrl"];
+
 builder.Services.AddIdentityServer(options =>
 {
     options.Events.RaiseErrorEvents = true;
