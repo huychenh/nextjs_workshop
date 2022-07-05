@@ -1,4 +1,5 @@
-﻿using CarStore.IntegrationEvents.Ordering;
+﻿using CarStore.AppContracts.Dtos;
+using CarStore.IntegrationEvents.Ordering;
 using N8T.Core.Domain;
 
 namespace OrderingService.AppCore.Core
@@ -27,17 +28,16 @@ namespace OrderingService.AppCore.Core
 
         public OrderStatus Status { get; private set; }
 
-        public static Order Create(int productId, string productName, string pictureUrl, int buyerId, int ownerId,
-            decimal price, string buyerEmail, string ownerEmail)
+        public static Order Create(CreateOrderDto dto, string buyerEmail, string ownerEmail)
         {
             var order = new Order
             {
-                ProductId = productId,
-                ProductName = productName,
-                Price = price,
-                BuyerId = buyerId,
-                OwnerId = ownerId,
-                PictureUrl = pictureUrl,
+                ProductId = dto.ProductId,
+                ProductName = dto.ProductName,
+                Price = dto.Price,
+                BuyerId = dto.BuyerId,
+                OwnerId = dto.OwnerId,
+                PictureUrl = dto.PictureUrl,
                 Id = Guid.NewGuid(),
                 _orderDate = DateTime.UtcNow,
                 Status = OrderStatus.Submitted,
@@ -46,7 +46,7 @@ namespace OrderingService.AppCore.Core
             order.AddDomainEvent(new OrderCreatedIntegrationEvent
             {
                 OrderId = order.Id,
-                ProductName = productName,
+                ProductName = order.ProductName,
                 BuyerEmail = buyerEmail,
                 OwnerEmail = ownerEmail,
             });

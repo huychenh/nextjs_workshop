@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.IdentityModel.Tokens;
 using N8T.Infrastructure;
 using N8T.Infrastructure.Bus;
+using N8T.Infrastructure.EfCore;
 using N8T.Infrastructure.Swagger;
 using N8T.Infrastructure.Validator;
 using OrderingService.Api;
 using OrderingService.AppCore;
+using OrderingService.Infrastructure.Data;
 
 const string CorsName = "api";
 
@@ -24,8 +26,8 @@ services.AddCustomMediatR(new[] { typeof(AppCoreAnchor) });
 services.AddCustomValidators(new[] { typeof(AppCoreAnchor) });
 services.AddControllers().AddMessageBroker(builder.Configuration);
 services.AddSwagger(typeof(ApiAnchor));
-// services.AddPostgresDbContext<MainDbContext>(builder.Configuration.GetConnectionString("postgres"));
-// services.AddScoped<IRepository, Repository>();
+services.AddPostgresDbContext<MainDbContext>(builder.Configuration.GetConnectionString("postgres"));
+services.AddScoped<IOrderRepository, Repository>();
 
 services.AddAuthentication("token")
     .AddJwtBearer("token", options =>
@@ -60,5 +62,5 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-// app.MigrateDatabase();
+app.MigrateDatabase();
 app.Run();
