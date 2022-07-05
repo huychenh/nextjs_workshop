@@ -9,6 +9,11 @@ import ToastMessage from "../components/ToastMessage";
 import { useSession, getSession, signIn } from "next-auth/react"
 import Router from 'next/router'
 
+export const enum SessionStatus {
+  LOADING = "loading",
+  AUTHENTICATED = "authenticated",
+  UNAUTHENTICATED = "unauthenticated",
+}
 interface SellData {
   name: string,
   price: number,
@@ -28,11 +33,13 @@ interface SellData {
 };
 
 const RegisterSellCar: NextPage = (props: any) => {
-  const { data: session }: any = useSession();
-
-  if (!session) {
+  const { data: session, status }: any = useSession();
+  const { sub } = session.user;
+  
+  if (status == SessionStatus.UNAUTHENTICATED) {
     signIn("identity-server4");
   }
+
   const [step, setStep] = useState(0);
   const [toast, setToast] = useState({
     open: false,
@@ -54,7 +61,7 @@ const RegisterSellCar: NextPage = (props: any) => {
     color: "Red",
     description: "",
     hasInstallment: false,
-    ownerId: "3fa85f64-5717-4562-b3fc-2c963f66afe8"
+    ownerId: sub
   });
 
   const lastStep = Object.keys(carInfo).length - 1;
@@ -70,7 +77,7 @@ const RegisterSellCar: NextPage = (props: any) => {
     try {
       const result = await ProductService.addProducts(session.accessToken, sellData);
       const { isError } = result;
-      
+
       if (!isError) {
         setToast({
           open: true,
@@ -133,14 +140,6 @@ const RegisterSellCar: NextPage = (props: any) => {
       <ToastMessage toast={toast} setToast={setToast} />
     </Layout >
   )
-}
-
-export async function getServerSideProps(context: any) {
-  return {
-    props: {
-      session: await getSession(context),
-    },
-  }
 }
 
 export default RegisterSellCar
