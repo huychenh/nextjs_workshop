@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
@@ -16,6 +20,7 @@
     <ProjectReference Include="..\..\N8T.Infrastructure.EfCore\N8T.Infrastructure.EfCore.csproj" />
     <ProjectReference Include="..\..\N8T.Infrastructure\N8T.Infrastructure.csproj" />
     <ProjectReference Include="..\OrderingService.Domain\OrderingService.AppCore.csproj" />
+    <ProjectReference Include="..\OrderingService.Infrastructure\OrderingService.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
