@@ -34,11 +34,12 @@ interface SellData {
 
 const RegisterSellCar: NextPage = (props: any) => {
   const { data: session, status }: any = useSession();
-  if(status == SessionStatus.UNAUTHENTICATED)
-  {
+  const { sub } = session.user;
+  
+  if (status == SessionStatus.UNAUTHENTICATED) {
     signIn("identity-server4");
   }
- 
+
   const [step, setStep] = useState(0);
   const [toast, setToast] = useState({
     open: false,
@@ -60,7 +61,7 @@ const RegisterSellCar: NextPage = (props: any) => {
     color: "Red",
     description: "",
     hasInstallment: false,
-    ownerId: "3fa85f64-5717-4562-b3fc-2c963f66afe8"
+    ownerId: sub
   });
 
   const lastStep = Object.keys(carInfo).length - 1;
@@ -76,7 +77,7 @@ const RegisterSellCar: NextPage = (props: any) => {
     try {
       const result = await ProductService.addProducts(session.accessToken, sellData);
       const { isError } = result;
-      
+
       if (!isError) {
         setToast({
           open: true,
@@ -140,13 +141,5 @@ const RegisterSellCar: NextPage = (props: any) => {
     </Layout >
   )
 }
-
-// export async function getServerSideProps(context: any) {
-//   return {
-//     props: {
-//       session: await getSession(context),
-//     },
-//   }
-// }
 
 export default RegisterSellCar
