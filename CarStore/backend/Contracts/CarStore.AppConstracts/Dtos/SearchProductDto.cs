@@ -13,7 +13,8 @@ namespace CarStore.AppContracts.Dtos
         public string? Brand { get; set; }
         public decimal PriceFrom { get; set; }
         public decimal PriceTo { get; set; }
-        public DateTime? Created { get; set; }
+        public bool? LatestNews { get; set; }
+        public bool? LowestPrice { get; set; }
         public int? Page { get; set; } //Page index
         public int? PageSize { get; set; } //Item size of each page
     }

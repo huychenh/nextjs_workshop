@@ -55,18 +55,24 @@ namespace ProductService.Infrastructure.Data
             {
                 query = query.Where(x => x.Brand.Name.ToLower().Equals(queryDto.Brand.ToLower()));
             }
+
             if (!string.IsNullOrEmpty(queryDto.CategoryName))
             {
-                query = query.Where(x => x.Category.ToLower() == queryDto.CategoryName.ToLower());
+                query = query.Where(x => queryDto.CategoryName.Contains(x.Category));
             }
             if (queryDto.PriceFrom > 0 && queryDto.PriceTo > 0)
             {
                 query = query.Where(x => x.Price >= queryDto.PriceFrom && x.Price <= queryDto.PriceTo);
             }
-            if (queryDto.Created.HasValue)
+            if (queryDto.LatestNews.HasValue && queryDto.LatestNews == true)
             {
-                query = query.Where(x => x.Created <= TimeZoneInfo.ConvertTimeToUtc(queryDto.Created.Value));
+                query = query.OrderByDescending(x => x.Year);
             }
+            if (queryDto.LowestPrice.HasValue && queryDto.LowestPrice == true)
+            {
+                query = query.OrderBy(x => x.Price);
+            }
+
             //Todo: get OwnerName
             return await query.Select(p => new ProductDto
             {
@@ -141,13 +147,22 @@ namespace ProductService.Infrastructure.Data
                     x.Model.ToLower().Contains(lowerText) ||
                     x.Year.ToString().Contains(lowerText));
             }
+
+            if (!string.IsNullOrEmpty(queryDto.CategoryName))
+            {
+                query = query.Where(x => queryDto.CategoryName.Contains(x.Category));
+            }
             if (queryDto.PriceFrom > 0 && queryDto.PriceTo > 0)
             {
                 query = query.Where(x => x.Price >= queryDto.PriceFrom && x.Price <= queryDto.PriceTo);
             }
-            if (queryDto.Created.HasValue)
+            if (queryDto.LatestNews.HasValue && queryDto.LatestNews == true)
             {
-                query = query.Where(x => x.Created <= TimeZoneInfo.ConvertTimeToUtc(queryDto.Created.Value));
+                query = query.OrderByDescending(x => x.Year);
+            }
+            if (queryDto.LowestPrice.HasValue && queryDto.LowestPrice == true)
+            {
+                query = query.OrderBy(x => x.Price);
             }
 
             var allCars = query.ToList();
