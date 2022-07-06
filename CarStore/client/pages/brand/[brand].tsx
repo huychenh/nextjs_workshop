@@ -5,14 +5,16 @@ import styles from "./brand-page.module.css";
 import CarList from "../../components/CarList";
 import SearchBox from "../../components/SearchBox";
 import Layout from "../../layouts/Layout";
-import BrandService from "../../services/BrandService";
 import ProductService from "../../services/ProductService";
 import { BrandIcons } from "../../components/Brand";
+import { useRouter } from "next/router";
 
-export default function BrandPage({ brand }: any) {
+export default function BrandPage() {
+    const router = useRouter()
+    const { brand } = router.query;
     const [cars, setCars] = useState([]);
     const handleSearch = (text: string) => {
-        ProductService.getProducts(text, brand)
+        ProductService.getProducts(text, brand as string)
             .then(response => {
                 setCars(response.data);
             });
@@ -22,7 +24,7 @@ export default function BrandPage({ brand }: any) {
         handleSearch("");
     }, [])
 
-    const { title, logoPath } = BrandIcons[brand];
+    const { title, logoPath } = brand ? BrandIcons[brand as string] : { title: '', logoPath: '' };
 
     return (
         <Layout title={`${title} Cars`}>
@@ -37,22 +39,4 @@ export default function BrandPage({ brand }: any) {
             <CarList cars={cars} />
         </Layout>
     );
-}
-
-export async function getStaticPaths() {
-    const { data: brands } = await BrandService.getBrands();
-
-    const paths = brands.map((brand: any) => ({
-        params: { brand: brand.name.toLowerCase() },
-    }))
-
-    return { paths, fallback: false };
-}
-
-export async function getStaticProps({ params }: any) {
-    return {
-        props: {
-            brand: params.brand
-        },
-    }
 }

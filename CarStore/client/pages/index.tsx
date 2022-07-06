@@ -17,7 +17,6 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     ProductService.getProducts().then(({ data: cars }) => {
-      console.log('cars', cars)
       setCars(cars);
     });
     BrandService.getBrands().then(({ data: brands }) => {
