@@ -29,9 +29,11 @@ const Home: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    ProductService.getProducts(searchText).then((response) => {
-      setCars(response.data);
-    });
+    ProductService.getProducts({ ...searchText, pageIndex: page }).then(
+      (response) => {
+        setCars(response.data);
+      }
+    );
   }, [searchText, page]);
 
   const handleSearchTextChanged = (model: SearchModel) => {
