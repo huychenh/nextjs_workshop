@@ -58,7 +58,6 @@ const Modal = (props: ModalProps) => {
       >
         <BootstrapDialogTitle
           id="customized-dialog-title"
-          onClose={handleOnOff}
         >
           <div style={{ textAlign: "center" }}>
             <b>{title}</b>
