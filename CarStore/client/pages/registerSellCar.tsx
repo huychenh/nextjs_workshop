@@ -34,7 +34,7 @@ interface SellData {
 
 const RegisterSellCar: NextPage = (props: any) => {
   const { data: session, status }: any = useSession();
-  const { sub } = session.user;
+  const sub = session?.user?.sub;
   
   if (status == SessionStatus.UNAUTHENTICATED) {
     signIn("identity-server4");
