@@ -20,9 +20,9 @@ namespace OrderingService.AppCore.Core
 
         public string? ProductName { get; private set; }
 
-        public int BuyerId { get; private set; }
+        public Guid BuyerId { get; private set; }
 
-        public int OwnerId { get; private set; }
+        public Guid OwnerId { get; private set; }
 
         public string? PictureUrl { get; private set; }
 

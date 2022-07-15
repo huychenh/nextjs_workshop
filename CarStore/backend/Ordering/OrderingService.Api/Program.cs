@@ -7,6 +7,7 @@ using N8T.Infrastructure.Swagger;
 using N8T.Infrastructure.Validator;
 using OrderingService.Api;
 using OrderingService.AppCore;
+using OrderingService.AppCore.Services;
 using OrderingService.Infrastructure.Data;
 
 const string CorsName = "api";
@@ -42,6 +43,13 @@ services.AddAuthentication("token")
             NameClaimType = "name",
             RoleClaimType = "role"
         };
+    });
+
+services.AddHttpClient<UserInfoService>(
+    client =>
+    {
+        var userApiUrl = builder.Configuration["Auth:Authority"];
+        client.BaseAddress = new Uri(userApiUrl);
     });
 
 var app = builder.Build();

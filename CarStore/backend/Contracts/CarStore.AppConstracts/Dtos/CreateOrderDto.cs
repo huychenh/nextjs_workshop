@@ -6,12 +6,12 @@
 
         public decimal Price { get; set; }
 
-        public string? ProductName { get; set; }
+        public string ProductName { get; set; }
 
-        public int BuyerId { get; set; }
+        public Guid BuyerId { get; set; }
 
-        public int OwnerId { get; set; }
+        public Guid OwnerId { get; set; }
 
-        public string? PictureUrl { get; set; }
+        public string PictureUrl { get; set; }
     }
 }
