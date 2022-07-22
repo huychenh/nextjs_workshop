@@ -12,7 +12,7 @@ namespace OrderingService.Api.V1
         private ISender? _mediator;
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>();
 
-        // [Authorize]
+        [Authorize]
         [HttpPost("/api/v{version:apiVersion}/orders")]
         public async Task<ActionResult> HandleCreateOrderAsync([FromBody] CreateOrder.Command request, CancellationToken cancellationToken = new())
         {

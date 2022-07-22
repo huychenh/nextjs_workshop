@@ -1,6 +1,7 @@
 ﻿using CarStore.AppContracts.Dtos;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using N8T.Core.Domain;
 using ProductService.AppCore.Core;
 
@@ -34,22 +35,20 @@ namespace ProductService.AppCore.UseCases.Commands
 
                     RuleFor(x => x.Model.FuelType)
                         .IsEnumName(typeof(FuelType));
-
-                    RuleFor(x => x.Model.OwnerId)
-                        .NotEmpty().WithMessage("OwnerId is required.");
                 }
             }
 
             internal class Handler : IRequestHandler<Command, ResultModel<Guid>>
             {
                 private readonly IRepository _repository;
-
                 private readonly IBrandRepository _brandRepository;
+                private readonly IHttpContextAccessor _httpContextAccessor;
 
-                public Handler(IRepository productRepository, IBrandRepository brandRepository)
+                public Handler(IRepository productRepository, IBrandRepository brandRepository, IHttpContextAccessor httpContextAccessor)
                 {
                     _repository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
                     _brandRepository = brandRepository ?? throw new ArgumentNullException(nameof(productRepository));
+                    _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
                 }
 
                 public async Task<ResultModel<Guid>> Handle(Command request, CancellationToken cancellationToken)
@@ -64,11 +63,28 @@ namespace ProductService.AppCore.UseCases.Commands
                         brandId = await _brandRepository.Add(brand);
                     }
 
-                    var product = Product.Create(request.Model, brandId);
+                    var userId = GetCurrentUserId();
+                    if (userId == null)
+                    {
+                        throw new UnauthorizedAccessException("Please sign in first.");
+                    }
+
+                    var product = Product.Create(request.Model, brandId, userId.Value);
 
                     var id = await _repository.Add(product);
 
                     return ResultModel<Guid>.Create(id);
+                }
+
+                private Guid? GetCurrentUserId()
+                {
+                    var idClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub");
+                    if (idClaim == null || !Guid.TryParse(idClaim.Value, out Guid id))
+                    {
+                        return null;
+                    }
+
+                    return id;
                 }
             }
         }

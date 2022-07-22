@@ -29,7 +29,5 @@
         public string Description { get; set; }
 
         public bool HasInstallment { get; set; }
-
-        public Guid OwnerId { get; set; }
     }
 }

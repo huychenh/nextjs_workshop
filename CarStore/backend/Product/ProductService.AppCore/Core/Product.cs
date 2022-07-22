@@ -42,7 +42,7 @@ namespace ProductService.AppCore.Core
 
         public Brand Brand { get; private set; }
 
-        public static Product Create(ProductCreateDto dto, Guid brandId)
+        public static Product Create(ProductCreateDto dto, Guid brandId, Guid ownerId)
         {
             Product product = new()
             {
@@ -61,7 +61,7 @@ namespace ProductService.AppCore.Core
                 Color = dto.Color,
                 Description = dto.Description,
                 HasInstallment = dto.HasInstallment,
-                OwnerId = dto.OwnerId,
+                OwnerId = ownerId,
                 Created = DateTime.UtcNow,
                 Active = false,
                 Verified = false,
