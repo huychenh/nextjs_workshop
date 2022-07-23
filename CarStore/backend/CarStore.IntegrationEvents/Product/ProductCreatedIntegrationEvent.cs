@@ -5,12 +5,9 @@ namespace CarStore.IntegrationEvents.Product
     public class ProductCreatedIntegrationEvent : EventBase
     {
         public Guid Id { get; set; }
+
         public Guid OwnerId { get; set; }
 
-        public override void Flatten()
-        {
-            MetaData.Add("ProductId", Id);
-            MetaData.Add("OwnerId", OwnerId);
-        }
+        public override string[] Topics => new[] { "product" }; 
     }
 }

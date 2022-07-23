@@ -5,18 +5,10 @@ namespace N8T.Infrastructure.Bus
 {
     public static class Extensions
     {
-        public static IServiceCollection AddMessageBroker(this IMvcBuilder mvcBuilder,
-            IConfiguration config,
-            string messageBrokerType = "dapr")
+        public static IServiceCollection AddMessageBroker(this IMvcBuilder mvcBuilder, IConfiguration configuration)
         {
-            switch (messageBrokerType)
-            {
-                //case "dapr":
-                //    mvcBuilder.Services.Configure<DaprEventBusOptions>(config.GetSection(DaprEventBusOptions.Name));
-                //    mvcBuilder.AddDapr();
-                //    mvcBuilder.Services.AddScoped<IEventBus, DaprEventBus>();
-                //    break;
-            }
+            mvcBuilder.Services.Configure<KafkaOptions>(configuration.GetSection("KafkaOptions"));
+            mvcBuilder.Services.AddSingleton<IEventBus, EventBusKafka>();
 
             return mvcBuilder.Services;
         }
