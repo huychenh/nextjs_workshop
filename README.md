@@ -28,3 +28,11 @@ Project is created with:
 - Download and install `Postgresql` on your local
 - Update `ConnectionStrings` in `appsettings.json`
 - Start the `ApiGateway` and `Service Api` projects
+
+### Kafka
+#### Prerequisites
+- Docker
+
+#### Steps
+- Start Docker
+- In the root folder which contains the `docker-compose.yml` file run `docker-compose up` to start Kafka
