@@ -12,12 +12,6 @@ namespace CarStore.IntegrationEvents.Ordering
 
         public string? ProductName { get; set; }
 
-        public override void Flatten()
-        {
-            MetaData.Add("OrderId", OrderId);
-            MetaData.Add("BuyerEmail", BuyerEmail);
-            MetaData.Add("OwnerEmail", OwnerEmail);
-            MetaData.Add("ProductName", ProductName);
-        }
+        public override string[] Topics => new[] { "order" };
     }
 }
