@@ -14,7 +14,7 @@ namespace OrderingService.AppCore.Core
     {
         private DateTime _orderDate;
 
-        public int ProductId { get; private set; }
+        public Guid ProductId { get; private set; }
 
         public decimal Price { get; private set; }
 
@@ -28,14 +28,14 @@ namespace OrderingService.AppCore.Core
 
         public OrderStatus Status { get; private set; }
 
-        public static Order Create(CreateOrderDto dto, string buyerEmail, string ownerEmail)
+        public static Order Create(CreateOrderDto dto, Guid buyerId, string buyerEmail, string ownerEmail)
         {
             var order = new Order
             {
                 ProductId = dto.ProductId,
                 ProductName = dto.ProductName,
                 Price = dto.Price,
-                BuyerId = dto.BuyerId,
+                BuyerId = buyerId,
                 OwnerId = dto.OwnerId,
                 PictureUrl = dto.PictureUrl,
                 Id = Guid.NewGuid(),

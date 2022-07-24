@@ -1,4 +1,5 @@
-import { Box, Button, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField } from "@mui/material";
+import { Box, Button, Grid, TextField } from "@mui/material";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
 import ToastMessage from "../../components/ToastMessage";
@@ -6,6 +7,12 @@ import Layout from "../../layouts/Layout";
 import { Models } from "../../models/product";
 import OrderService from "../../services/OrderService";
 import ProductService from "../../services/ProductService";
+
+export const enum SessionStatus {
+  LOADING = "loading",
+  AUTHENTICATED = "authenticated",
+  UNAUTHENTICATED = "unauthenticated",
+}
 
 export class ErrorMessage {
   public fullName: string | undefined;
@@ -15,12 +22,17 @@ export class ErrorMessage {
 }
 
 const Order = () => {
+  const { data: session, status }: any = useSession();
+  if (status == SessionStatus.UNAUTHENTICATED) {
+    signIn("identity-server4");
+  }
+
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   });
 
-  const router = useRouter()  
+  const router = useRouter()
   const [toast, setToast] = useState({
     open: false,
     severity: "error",
@@ -51,9 +63,9 @@ const Order = () => {
   }, [router.query?.id]);
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({...form, [e.target.id]: e.target.value})
+    setForm({ ...form, [e.target.id]: e.target.value })
   }
-  
+
   const getFormErrors = () => {
     let formErrors = {
       fullName: '',
@@ -83,13 +95,13 @@ const Order = () => {
     if (form.address == '') {
       formErrors.address = 'Please fill the required field'
     }
-    
+
     return formErrors
   }
 
   const hasErrors = (errors: any) => {
     for (var key in errors) {
-      if (errors[key] !== undefined)
+      if (errors[key])
         return true;
     }
 
@@ -101,8 +113,7 @@ const Order = () => {
     if (hasErrors(errors)) {
       setErrors(errors)
     }
-    else
-    {
+    else {
       setDisabledButton(true)
       const request = {
         productId: detail.id,
@@ -113,9 +124,10 @@ const Order = () => {
         address: form.address,
         phone: form.phone,
         email: form.email,
-        note: form.note
+        note: form.note,
+        pictureUrl: null, //Todo: add picture url
       }
-      const res = await OrderService.createOrder(request)
+      const res = await OrderService.createOrder(session.accessToken, request)
       if (!res.isError) {
         setToast({
           open: true,

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OrderingService.Infrastructure.Migrations
 {
-    public partial class InitOrderSchema : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,7 +17,7 @@ namespace OrderingService.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuid_generate_v4()"),
-                    product_id = table.Column<int>(type: "integer", nullable: false),
+                    product_id = table.Column<Guid>(type: "uuid", nullable: false),
                     price = table.Column<decimal>(type: "numeric", nullable: false),
                     product_name = table.Column<string>(type: "text", nullable: true),
                     buyer_id = table.Column<Guid>(type: "uuid", nullable: false),

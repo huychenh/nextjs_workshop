@@ -26,9 +26,6 @@ namespace OrderingService.AppCore.UseCases.Commands
 
                     RuleFor(v => v.Model.OwnerId)
                         .NotEmpty();
-
-                    RuleFor(v => v.Model.BuyerId)
-                        .NotEmpty();
                 }
             }
 
@@ -58,13 +55,25 @@ namespace OrderingService.AppCore.UseCases.Commands
                         ownerEmail = null;
                     }
 
+                    var buyerId = GetCurrentUserId();
                     var buyerEmail = GetCurrentUserEmail();
 
-                    var order = Order.Create(request.Model, buyerEmail, ownerEmail);
+                    var order = Order.Create(request.Model, buyerId, buyerEmail, ownerEmail);
 
                     var id = await _repository.Add(order);
 
                     return ResultModel<Guid>.Create(id);
+                }
+
+                private Guid GetCurrentUserId()
+                {
+                    var claim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub");
+                    if (claim == null)
+                    {
+                        throw new UnauthorizedAccessException("Please sign in first.");
+                    }
+                    
+                    return Guid.Parse(claim.Value);
                 }
 
                 private string GetCurrentUserEmail()
