@@ -56,9 +56,9 @@ namespace OrderingService.AppCore.UseCases.Commands
                     }
 
                     var buyerId = GetCurrentUserId();
-                    var buyerEmail = GetCurrentUserEmail();
+                    // var buyerEmail = GetCurrentUserEmail();
 
-                    var order = Order.Create(request.Model, buyerId, buyerEmail, ownerEmail);
+                    var order = Order.Create(request.Model, buyerId, ownerEmail);
 
                     var id = await _repository.Add(order);
 

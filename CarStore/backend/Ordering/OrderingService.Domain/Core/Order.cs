@@ -28,7 +28,7 @@ namespace OrderingService.AppCore.Core
 
         public OrderStatus Status { get; private set; }
 
-        public static Order Create(CreateOrderDto dto, Guid buyerId, string buyerEmail, string ownerEmail)
+        public static Order Create(CreateOrderDto dto, Guid buyerId, string ownerEmail)
         {
             var order = new Order
             {
@@ -47,7 +47,7 @@ namespace OrderingService.AppCore.Core
             {
                 OrderId = order.Id,
                 ProductName = order.ProductName,
-                BuyerEmail = buyerEmail,
+                BuyerEmail = dto.BuyerEmail,
                 OwnerEmail = ownerEmail,
             });
 

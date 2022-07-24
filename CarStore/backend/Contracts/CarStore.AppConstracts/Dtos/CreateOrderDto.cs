@@ -10,6 +10,8 @@
 
         public Guid OwnerId { get; set; }
 
+        public string BuyerEmail { get; set; }
+
         public string? PictureUrl { get; set; }
     }
 }

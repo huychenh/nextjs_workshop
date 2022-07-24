@@ -123,7 +123,7 @@ const Order = () => {
         fullName: form.fullName,
         address: form.address,
         phone: form.phone,
-        email: form.email,
+        buyerEmail: form.email,
         note: form.note,
         pictureUrl: null, //Todo: add picture url
       }
