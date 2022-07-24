@@ -8,7 +8,6 @@ export default class BrandService {
     const queryString = `searchText=${text}`;
     const response = await fetchJson(
       `${process.env.NEXT_PUBLIC_URL_API}/${BrandService.ControllerUri}?${queryString}`,
-      { method: 'GET' },
     );
 
     return await response.json();

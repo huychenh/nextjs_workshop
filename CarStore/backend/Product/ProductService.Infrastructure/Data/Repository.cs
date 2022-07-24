@@ -87,7 +87,7 @@ namespace ProductService.Infrastructure.Data
                 KmDriven = p.KmDriven,
                 MadeIn = p.MadeIn,
                 Model = p.Model,
-                OwnerName = p.OwnerId.ToString(),
+                OwnerId = p.OwnerId.ToString(),
                 Price = p.Price,
                 SeatingCapacity = p.SeatingCapacity,
                 Transmission = p.Transmission.ToString(),
@@ -123,7 +123,7 @@ namespace ProductService.Infrastructure.Data
                 KmDriven = entity.KmDriven,
                 MadeIn = entity.MadeIn,
                 Model = entity.Model,
-                OwnerName = entity.OwnerId.ToString(), //Todo: get OwnerName
+                OwnerId = entity.OwnerId.ToString(), //Todo: get OwnerName
                 Price = entity.Price,
                 SeatingCapacity = entity.SeatingCapacity,
                 Transmission = entity.Transmission.ToString(),
@@ -181,7 +181,7 @@ namespace ProductService.Infrastructure.Data
                 KmDriven = p.KmDriven,
                 MadeIn = p.MadeIn,
                 Model = p.Model,
-                OwnerName = p.OwnerId.ToString(),
+                OwnerId = p.OwnerId.ToString(),
                 Price = p.Price,
                 SeatingCapacity = p.SeatingCapacity,
                 Transmission = p.Transmission.ToString(),

@@ -1,5 +1,6 @@
-import { Avatar, Grid, IconButton, ImageList, ImageListItem, ImageListItemBar, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText } from "@material-ui/core";
+import { Avatar, Grid, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText } from "@material-ui/core";
 import { Label, LocalGasStation, Palette, Public, Speed, Today } from "@material-ui/icons";
+import { Button } from "@mui/material";
 import React from "react";
 import { Models } from "../../../models/product";
 import styles from './CarDetail.module.css';
@@ -9,7 +10,7 @@ export class CarDetailProps {
 }
 
 const CarDetail = ({detail} : CarDetailProps) => {
-  var formatter = new Intl.NumberFormat('en-US', {
+  const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   });
@@ -40,6 +41,7 @@ const CarDetail = ({detail} : CarDetailProps) => {
         <img src="/HomePage/Car/ford.jpg" />
         <h3>{detail.name}</h3>
         <p className={styles.price}>{formatter.format(detail.price!)}</p>
+        <Button variant="contained" color="secondary" href={`/order/${detail.id}`}>ORDER</Button>
         <h2>Basic Info</h2>
         <Grid container spacing={4} className={styles.basicInfo}>
           <Grid item xs={12} md={6}>

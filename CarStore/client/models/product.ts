@@ -15,7 +15,7 @@ export namespace Models {
     description?: string;
     hasInstallment?: boolean;
     verified?: boolean;
-    ownerName?: string;
+    ownerId?: string;
     id?: string;
     active?: boolean;
     created?: string;
