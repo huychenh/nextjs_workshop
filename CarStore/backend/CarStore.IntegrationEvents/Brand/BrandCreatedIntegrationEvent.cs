@@ -6,9 +6,6 @@ namespace CarStore.IntegrationEvents.Brand
     {
         public Guid Id { get; set; }
 
-        public override void Flatten()
-        {
-            MetaData.Add("BrandId", Id);
-        }
+        public override string[] Topics => new[] { "brand" };
     }
 }
