@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using N8T.Infrastructure;
 using N8T.Infrastructure.Bus;
 using N8T.Infrastructure.EfCore;
+using N8T.Infrastructure.Middlewares;
 using N8T.Infrastructure.Swagger;
 using N8T.Infrastructure.Validator;
 using OrderingService.Api;
@@ -59,6 +60,7 @@ if (builder.Environment.IsDevelopment())
 }
 
 var provider = app.Services.GetService<IApiVersionDescriptionProvider>();
+app.UseGlobalExceptionHandler();
 app.UseSwagger(provider);
 app.UseCors(CorsName);
 app.UseRouting();

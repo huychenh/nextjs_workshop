@@ -12,8 +12,8 @@ using OrderingService.Infrastructure.Data;
 namespace OrderingService.Infrastructure.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20220715135337_InitOrderSchema")]
-    partial class InitOrderSchema
+    [Migration("20220724091333_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,8 +55,8 @@ namespace OrderingService.Infrastructure.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("price");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
                         .HasColumnName("product_id");
 
                     b.Property<string>("ProductName")
