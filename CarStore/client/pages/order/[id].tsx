@@ -6,7 +6,6 @@ import Layout from "../../layouts/Layout";
 import { Models } from "../../models/product";
 import OrderService from "../../services/OrderService";
 import ProductService from "../../services/ProductService";
-import Router from 'next/router'
 
 export class ErrorMessage {
   public fullName: string | undefined;
@@ -116,23 +115,23 @@ const Order = () => {
         email: form.email,
         note: form.note
       }
-      // const res = await OrderService.createOrder(request)
-      // if (!res.isError) {
-      //   setToast({
-      //     open: true,
-      //     severity: "success",
-      //     message: "Registration success!"
-      //   });
-      //   Router.push('/')
-      // }
-      // else {
-      //   setDisabledButton(false)
-      //   setToast({
-      //     open: true,
-      //     severity: "error",
-      //     message: "Something went wrong! Please try again"
-      //   });
-      // }
+      const res = await OrderService.createOrder(request)
+      if (!res.isError) {
+        setToast({
+          open: true,
+          severity: "success",
+          message: "Registration success!"
+        });
+        router.push('/')
+      }
+      else {
+        setDisabledButton(false)
+        setToast({
+          open: true,
+          severity: "error",
+          message: "Something went wrong! Please try again"
+        });
+      }
     }
   }
 
