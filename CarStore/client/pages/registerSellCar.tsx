@@ -6,7 +6,7 @@ import SellCar from '../components/SellCar';
 import { Stack, Button } from "@mui/material";
 import styles from "../components/SellCar/SellCar.module.css";
 import ToastMessage from "../components/ToastMessage";
-import { useSession, getSession, signIn } from "next-auth/react"
+import { useSession, signIn } from "next-auth/react"
 import Router from 'next/router'
 
 export const enum SessionStatus {

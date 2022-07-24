@@ -7,7 +7,6 @@ export default class ProductService {
   public static async getProductDetail(id: any) {
     const response = await fetchJson(
       `${process.env.NEXT_PUBLIC_URL_API}/${ProductService.ControllerUri}/${id}`,
-      { method: "GET" }
     );
 
     return await response.json();
@@ -30,8 +29,7 @@ export default class ProductService {
     }&page=${model.pageIndex == 0 ? 1 : model.pageIndex}
     `;
     const response = await fetchJson(
-      `${process.env.NEXT_PUBLIC_URL_API}/${ProductService.ControllerUri}?${queryString}`,
-      { method: "GET" }
+      `${process.env.NEXT_PUBLIC_URL_API}/${ProductService.ControllerUri}?${queryString}`
     );
 
     return await response.json();
@@ -41,12 +39,9 @@ export default class ProductService {
     console.log(JSON.stringify({ model }));
     const response = await fetchJson(
       `${process.env.NEXT_PUBLIC_URL_API}/${ProductService.ControllerUri}`,
+      accessToken,
       {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ model }),
       }
     );

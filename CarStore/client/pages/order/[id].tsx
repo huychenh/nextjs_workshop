@@ -1,9 +1,12 @@
-import { Box, Button, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, Radio, RadioGroup, TextField } from "@mui/material";
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
+import ToastMessage from "../../components/ToastMessage";
 import Layout from "../../layouts/Layout";
 import { Models } from "../../models/product";
+import OrderService from "../../services/OrderService";
 import ProductService from "../../services/ProductService";
+import Router from 'next/router'
 
 export class ErrorMessage {
   public fullName: string | undefined;
@@ -19,6 +22,11 @@ const Order = () => {
   });
 
   const router = useRouter()  
+  const [toast, setToast] = useState({
+    open: false,
+    severity: "error",
+    message: ""
+  });
   const [detail, setDetail] = useState(new Models.Product())
   const [form, setForm] = useState({
     fullName: '',
@@ -33,6 +41,7 @@ const Order = () => {
     phone: '',
     address: ''
   })
+  const [disabledButton, setDisabledButton] = useState(false)
 
   useEffect(() => {
     if (router.query?.id) {
@@ -84,18 +93,52 @@ const Order = () => {
       if (errors[key] !== undefined)
         return true;
     }
+
     return false;
   }
 
-  const submitOrder = () => {
+  const submitOrder = async () => {
     const errors = getFormErrors()
     if (hasErrors(errors)) {
       setErrors(errors)
+    }
+    else
+    {
+      setDisabledButton(true)
+      const request = {
+        productId: detail.id,
+        price: detail.price,
+        productName: detail.name,
+        ownerId: detail.ownerId,
+        fullName: form.fullName,
+        address: form.address,
+        phone: form.phone,
+        email: form.email,
+        note: form.note
+      }
+      // const res = await OrderService.createOrder(request)
+      // if (!res.isError) {
+      //   setToast({
+      //     open: true,
+      //     severity: "success",
+      //     message: "Registration success!"
+      //   });
+      //   Router.push('/')
+      // }
+      // else {
+      //   setDisabledButton(false)
+      //   setToast({
+      //     open: true,
+      //     severity: "error",
+      //     message: "Something went wrong! Please try again"
+      //   });
+      // }
     }
   }
 
   return (
     <Layout>
+      <ToastMessage toast={toast} setToast={setToast} />
       <Grid container spacing={2} paddingBottom={5}>
         <Grid item xs={8}>
           <h2>Contact Info</h2>
@@ -161,20 +204,8 @@ const Order = () => {
           <img src="/HomePage/Car/ford.jpg" />
           <h3>{detail.name}</h3>
           <p>{formatter.format(detail.price!)}</p>
-          <FormControl>
-            <FormLabel id="demo-radio-buttons-group-label">Payment</FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="Cash"
-              name="radio-buttons-group"
-            >
-              <FormControlLabel value="Installment" control={<Radio />} label="Installment" />
-              <FormControlLabel value="Cash" control={<Radio />} label="Cash" />
-              <FormControlLabel value="Banking" control={<Radio />} label="Banking" />
-            </RadioGroup>
-          </FormControl>
           <div>
-            <Button variant="contained" color="success" onClick={submitOrder}>SUBMIT</Button>
+            <Button variant="contained" color="success" disabled={disabledButton} onClick={submitOrder}>SUBMIT</Button>
           </div>
         </Grid>
       </Grid>

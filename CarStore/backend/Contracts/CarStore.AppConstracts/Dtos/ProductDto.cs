@@ -32,7 +32,7 @@
 
         public bool Verified { get; set; }
 
-        public string OwnerName { get; set; }
+        public string OwnerId { get; set; }
 
         public Guid Id { get; set; }
 
