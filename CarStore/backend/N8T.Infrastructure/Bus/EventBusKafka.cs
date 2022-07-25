@@ -29,9 +29,19 @@ namespace N8T.Infrastructure.Bus
             _producer = new ProducerBuilder<Null, string>(producerConfig).Build();
         }
 
-        public async Task PublishAsync<TEvent>(TEvent @event, string[] topics!!, CancellationToken cancellationToken = default)
+        public async Task PublishAsync<TEvent>(TEvent @event, string[] topics, CancellationToken cancellationToken = default)
             where TEvent : IDomainEvent
         {
+            if (@event == null)
+            {
+                throw new ArgumentNullException(nameof(@event));
+            }
+
+            if (topics == null)
+            {
+                throw new ArgumentNullException(nameof(topics));
+            }
+
             var messageValue = JsonConvert.SerializeObject(@event);
 
             foreach (var topic in topics)
