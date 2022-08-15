@@ -31,11 +31,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarStore.TestAuthentication
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ordering", "Ordering", "{154EE4DD-15DA-4E5F-A7A3-BBCEB282A5E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderingService.AppCore", "Ordering\OrderingService.Domain\OrderingService.AppCore.csproj", "{C73CC4E8-3A35-4255-BB75-3B6DDAF5523D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderingService.AppCore", "Ordering\OrderingService.Domain\OrderingService.AppCore.csproj", "{C73CC4E8-3A35-4255-BB75-3B6DDAF5523D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderingService.Infrastructure", "Ordering\OrderingService.Infrastructure\OrderingService.Infrastructure.csproj", "{C6E6B15D-1FE0-4FD4-9F73-7A03217059F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderingService.Infrastructure", "Ordering\OrderingService.Infrastructure\OrderingService.Infrastructure.csproj", "{C6E6B15D-1FE0-4FD4-9F73-7A03217059F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderingService.Api", "Ordering\OrderingService.Api\OrderingService.Api.csproj", "{DB901F66-6836-4B64-9246-89C7E3A4DF3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderingService.Api", "Ordering\OrderingService.Api\OrderingService.Api.csproj", "{DB901F66-6836-4B64-9246-89C7E3A4DF3D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notification", "Notification", "{B5D9C87D-8594-4C0C-8E8D-8F202875000D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService.Api", "Notification\NotificationService.Api\NotificationService.Api.csproj", "{223AC08B-9C0A-4F07-BED9-75697A5BD987}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService.AppCore", "Notification\NotificationService.Domain\NotificationService.AppCore.csproj", "{73DF39D7-67E9-4E52-93FB-196B40004C4B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService.Infrastructure", "Notification\NotificationService.Infrastructure\NotificationService.Infrastructure.csproj", "{D242C90F-113B-4CDB-B5E3-206E4715F147}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +107,18 @@ Global
 		{DB901F66-6836-4B64-9246-89C7E3A4DF3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB901F66-6836-4B64-9246-89C7E3A4DF3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB901F66-6836-4B64-9246-89C7E3A4DF3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{223AC08B-9C0A-4F07-BED9-75697A5BD987}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{223AC08B-9C0A-4F07-BED9-75697A5BD987}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{223AC08B-9C0A-4F07-BED9-75697A5BD987}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{223AC08B-9C0A-4F07-BED9-75697A5BD987}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73DF39D7-67E9-4E52-93FB-196B40004C4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73DF39D7-67E9-4E52-93FB-196B40004C4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73DF39D7-67E9-4E52-93FB-196B40004C4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73DF39D7-67E9-4E52-93FB-196B40004C4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D242C90F-113B-4CDB-B5E3-206E4715F147}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D242C90F-113B-4CDB-B5E3-206E4715F147}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D242C90F-113B-4CDB-B5E3-206E4715F147}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D242C90F-113B-4CDB-B5E3-206E4715F147}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,6 +132,9 @@ Global
 		{C73CC4E8-3A35-4255-BB75-3B6DDAF5523D} = {154EE4DD-15DA-4E5F-A7A3-BBCEB282A5E0}
 		{C6E6B15D-1FE0-4FD4-9F73-7A03217059F8} = {154EE4DD-15DA-4E5F-A7A3-BBCEB282A5E0}
 		{DB901F66-6836-4B64-9246-89C7E3A4DF3D} = {154EE4DD-15DA-4E5F-A7A3-BBCEB282A5E0}
+		{223AC08B-9C0A-4F07-BED9-75697A5BD987} = {B5D9C87D-8594-4C0C-8E8D-8F202875000D}
+		{73DF39D7-67E9-4E52-93FB-196B40004C4B} = {B5D9C87D-8594-4C0C-8E8D-8F202875000D}
+		{D242C90F-113B-4CDB-B5E3-206E4715F147} = {B5D9C87D-8594-4C0C-8E8D-8F202875000D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8F5B89B2-C9F4-475F-A629-4B19E55AE3AF}

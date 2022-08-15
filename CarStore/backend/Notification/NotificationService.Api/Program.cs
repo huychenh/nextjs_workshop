@@ -2,16 +2,15 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.IdentityModel.Tokens;
 using N8T.Infrastructure;
 using N8T.Infrastructure.Bus;
-using N8T.Infrastructure.EfCore;
 using N8T.Infrastructure.Middlewares;
 using N8T.Infrastructure.Swagger;
 using N8T.Infrastructure.Validator;
-using OrderingService.Api;
-using OrderingService.Api.Services;
-using OrderingService.AppCore;
-using OrderingService.AppCore.Dtos;
-using OrderingService.AppCore.Services;
-using OrderingService.Infrastructure.Data;
+using NotificationService.Api;
+using NotificationService.Api.Services;
+using NotificationService.AppCore;
+using NotificationService.AppCore.Dtos;
+using NotificationService.Infrastructure.Data;
+using SendGrid.Extensions.DependencyInjection;
 
 const string CorsName = "api";
 
@@ -30,11 +29,10 @@ services.AddCustomMediatR(new[] { typeof(AppCoreAnchor) });
 services.AddCustomValidators(new[] { typeof(AppCoreAnchor) });
 services.AddControllers().AddMessageBroker(builder.Configuration);
 services.AddSwagger(typeof(ApiAnchor));
-services.AddPostgresDbContext<MainDbContext>(builder.Configuration.GetConnectionString("postgres"));
-services.AddScoped<IOrderRepository, Repository>();
+services.AddScoped<INotificationRepository, Repository>();
 services.Configure<BackgroundServiceOptions>(builder.Configuration.GetSection(nameof(BackgroundServiceOptions)));
-services.AddHostedService<OrderCreatedBackgroundService>();
-services.Configure<NotificationConfigOptions>(builder.Configuration.GetSection(nameof(NotificationConfigOptions)));
+services.AddHostedService<NotificationBackgroundService>();
+services.Configure<EmailConfigOptions>(builder.Configuration.GetSection(nameof(EmailConfigOptions)));
 
 services.AddAuthentication("token")
     .AddJwtBearer("token", options =>
@@ -51,12 +49,10 @@ services.AddAuthentication("token")
         };
     });
 
-services.AddHttpClient<UserInfoService>(
-    client =>
-    {
-        var userApiUrl = builder.Configuration["Auth:Authority"];
-        client.BaseAddress = new Uri(userApiUrl);
-    });
+services.AddSendGrid(options =>
+{
+    options.ApiKey = builder.Configuration[$"{nameof(EmailConfigOptions)}:APIKey"];
+});
 
 var app = builder.Build();
 if (builder.Environment.IsDevelopment())
@@ -77,5 +73,4 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-app.MigrateDatabase();
 app.Run();
