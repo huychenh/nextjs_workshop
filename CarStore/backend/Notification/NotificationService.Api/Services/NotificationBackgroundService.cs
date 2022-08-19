@@ -11,67 +11,80 @@ namespace NotificationService.Api.Services
 {
     public class NotificationBackgroundService : BackgroundService
     {
-        private readonly ILogger<NotificationBackgroundService> _logger;
-
         private readonly IEventBus _eventBus;
 
         private readonly BackgroundServiceOptions _options;
 
         private readonly ISender _mediator;
 
+        private IServiceProvider Services { get; }
+
         public NotificationBackgroundService(IEventBus eventBus
-            , ILogger<NotificationBackgroundService> logger
             , IOptions<BackgroundServiceOptions> options
-            , ISender mediator)
+            , IServiceProvider services)
         {
             _eventBus = eventBus;
-            _logger = logger;
             _options = options.Value;
-            _mediator = mediator;
+            Services = services;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            new Thread(async () => await StartConsumerLoop(_options.MilisecondsDelay, stoppingToken)).Start();
+            using var scope = Services.CreateScope();
+            var logger = scope.ServiceProvider
+                        .GetRequiredService<ILogger<NotificationBackgroundService>>();
+            var mediator = scope.ServiceProvider
+                        .GetRequiredService<ISender>();
+
+            new Thread(async () => await StartConsumerLoop(_options.MilisecondsDelay,
+                logger, mediator, stoppingToken)).Start();
 
             return Task.CompletedTask;
         }
 
-        private async Task StartConsumerLoop(int milisecondsDelay, CancellationToken stoppingToken)
+        private async Task StartConsumerLoop(int milisecondsDelay,
+            ILogger<NotificationBackgroundService> logger,
+            ISender mediator, CancellationToken stoppingToken)
         {
             stoppingToken.Register(() =>
-                _logger.LogInformation($"{nameof(NotificationBackgroundService)} background task is stopping."));
+                logger.LogInformation($"{nameof(NotificationBackgroundService)} background task is stopping."));
 
-            _logger.LogInformation($"{nameof(NotificationBackgroundService)} is starting.");
+            logger.LogInformation($"{nameof(NotificationBackgroundService)} is starting.");
 
+            //HACK: Pre-create Notification Topic
+            var notificationEvent = new NotificationIntegrationEvent();
+            await _eventBus.PublishAsync(notificationEvent, notificationEvent.Topics, stoppingToken);
+            
             _eventBus
                 .Subscribe<NotificationIntegrationEvent, IIntegrationEventHandler<NotificationIntegrationEvent>>(
-                    (new NotificationIntegrationEvent()).Topics
+                    notificationEvent.Topics
                 );
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation($"{nameof(NotificationBackgroundService)} task doing background work.");
+                logger.LogInformation($"{nameof(NotificationBackgroundService)} task doing background work.");
 
                 try
                 {
                     var msg = _eventBus.Consume<NotificationIntegrationEvent>();
-                    SendEmailCommand(msg, stoppingToken);
+                    SendEmailCommand(msg, logger, mediator, stoppingToken);
 
-                    await Task.Delay(_options.MilisecondsDelay, stoppingToken);
+                    await Task.Delay(milisecondsDelay, stoppingToken);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"{nameof(NotificationBackgroundService)} exception:{e.Message}");
+                    logger.LogError(e, $"{nameof(NotificationBackgroundService)} exception:{e.Message}");
                 }
 
-                _logger.LogInformation($"{nameof(NotificationBackgroundService)} background task is stopping.");
+                logger.LogInformation($"{nameof(NotificationBackgroundService)} background task is stopping.");
             }
         }
 
-        private void SendEmailCommand(NotificationIntegrationEvent msg, CancellationToken stoppingToken)
+        private void SendEmailCommand(NotificationIntegrationEvent msg,
+            ILogger<NotificationBackgroundService> logger,
+            ISender mediator, CancellationToken stoppingToken)
         {
-            _logger.LogInformation($"{nameof(SendEmailCommand)} for:{JsonConvert.SerializeObject(msg)}.");
+            logger.LogInformation($"{nameof(SendEmailCommand)} for:{JsonConvert.SerializeObject(msg)}.");
 
             var command = new SendEmail.Command
             {
@@ -83,7 +96,7 @@ namespace NotificationService.Api.Services
                     Body = msg.Body,
                 }
             };
-            _mediator.Send(command, stoppingToken);
+            mediator.Send(command, stoppingToken);
         }
     }
 

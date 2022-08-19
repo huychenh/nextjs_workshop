@@ -42,9 +42,13 @@ namespace OrderingService.Api.Services
 
             _logger.LogInformation($"{nameof(OrderCreatedBackgroundService)} is starting.");
 
+            //HACK: Pre-create Order Topic
+            var orderCreatedEvent = new OrderCreatedIntegrationEvent();
+            await _eventBus.PublishAsync(orderCreatedEvent, orderCreatedEvent.Topics, stoppingToken);
+
             _eventBus
                 .Subscribe<OrderCreatedIntegrationEvent, IIntegrationEventHandler<OrderCreatedIntegrationEvent>>(
-                    (new OrderCreatedIntegrationEvent()).Topics
+                    orderCreatedEvent.Topics
                 );
 
             while (!stoppingToken.IsCancellationRequested)
