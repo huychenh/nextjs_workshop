@@ -7,7 +7,9 @@ using N8T.Infrastructure.Middlewares;
 using N8T.Infrastructure.Swagger;
 using N8T.Infrastructure.Validator;
 using OrderingService.Api;
+using OrderingService.Api.Services;
 using OrderingService.AppCore;
+using OrderingService.AppCore.Dtos;
 using OrderingService.AppCore.Services;
 using OrderingService.Infrastructure.Data;
 
@@ -30,6 +32,8 @@ services.AddControllers().AddMessageBroker(builder.Configuration);
 services.AddSwagger(typeof(ApiAnchor));
 services.AddPostgresDbContext<MainDbContext>(builder.Configuration.GetConnectionString("postgres"));
 services.AddScoped<IOrderRepository, Repository>();
+services.Configure<NotificationConfigOptions>(builder.Configuration.GetSection(nameof(NotificationConfigOptions)));
+services.AddHostedService<OrderCreatedBackgroundService>();
 
 services.AddAuthentication("token")
     .AddJwtBearer("token", options =>

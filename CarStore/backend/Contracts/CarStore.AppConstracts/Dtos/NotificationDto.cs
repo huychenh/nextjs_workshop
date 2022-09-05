@@ -8,8 +8,8 @@ namespace CarStore.AppContracts.Dtos
         public string Subject { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;
         [JsonIgnore]
-        public string fromEmail { get; set; } = string.Empty;
+        public string From { get; set; } = string.Empty;
         [JsonIgnore]
-        public string fromName { get; set; } = string.Empty;
+        public string FromName { get; set; } = string.Empty;
     }
 }

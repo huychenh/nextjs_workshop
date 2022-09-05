@@ -45,8 +45,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService.AppCore
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService.Infrastructure", "Notification\NotificationService.Infrastructure\NotificationService.Infrastructure.csproj", "{77C10F0B-967F-4A07-9D99-6800E827E671}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Workers", "Notification\NotificationService.Workers\NotificationService.Workers.csproj", "{A8264F9C-2A7A-4333-B37E-B9784CBDB1EB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,10 +119,6 @@ Global
 		{77C10F0B-967F-4A07-9D99-6800E827E671}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77C10F0B-967F-4A07-9D99-6800E827E671}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77C10F0B-967F-4A07-9D99-6800E827E671}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A8264F9C-2A7A-4333-B37E-B9784CBDB1EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A8264F9C-2A7A-4333-B37E-B9784CBDB1EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A8264F9C-2A7A-4333-B37E-B9784CBDB1EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A8264F9C-2A7A-4333-B37E-B9784CBDB1EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,7 +135,6 @@ Global
 		{3AAE4BF3-F70A-45E8-ABC8-D6C4E8935A1B} = {262D7696-8DDC-4CEC-98F3-0B7198C81174}
 		{B4EB1FBB-0DD0-4CEA-83AE-5C9A0ED597E7} = {262D7696-8DDC-4CEC-98F3-0B7198C81174}
 		{77C10F0B-967F-4A07-9D99-6800E827E671} = {262D7696-8DDC-4CEC-98F3-0B7198C81174}
-		{A8264F9C-2A7A-4333-B37E-B9784CBDB1EB} = {262D7696-8DDC-4CEC-98F3-0B7198C81174}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8F5B89B2-C9F4-475F-A629-4B19E55AE3AF}

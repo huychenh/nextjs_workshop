@@ -13,23 +13,24 @@ namespace NotificationService.AppCore.UseCases.Commands
         {
             public NotificationDto Model { get; init; } = default!;
 
+            internal class Validator : AbstractValidator<Command>
+            {
+                public Validator()
+                {
+                    RuleFor(v => v.Model.To)
+                        .NotEmpty();
+
+                    RuleFor(v => v.Model.Subject)
+                        .NotEmpty();
+
+                    RuleFor(v => v.Model.Body)
+                        .NotEmpty();
+                }
+            }
+
             internal class Handler : IRequestHandler<Command, ResultModel<string>>
             {
                 private readonly ISendGridClient _sendGridClient;
-                internal class Validator : AbstractValidator<Command>
-                {
-                    public Validator()
-                    {
-                        RuleFor(v => v.Model.To)
-                            .NotEmpty();
-
-                        RuleFor(v => v.Model.Subject)
-                            .NotEmpty();
-
-                        RuleFor(v => v.Model.Body)
-                            .NotEmpty();
-                    }
-                }
 
                 public Handler(ISendGridClient sendGridClient)
                 {
@@ -38,18 +39,19 @@ namespace NotificationService.AppCore.UseCases.Commands
 
                 public async Task<ResultModel<string>> Handle(Command request, CancellationToken cancellationToken)
                 {
-                    #region sendgrid
                     var msg = new SendGridMessage()
                     {
-                        From = new EmailAddress(request.Model.fromEmail, request.Model.fromName),
+                        From = new EmailAddress(request.Model.From, request.Model.FromName),
                         Subject = request.Model.Subject,
-                        PlainTextContent = request.Model.Body
+                        HtmlContent = request.Model.Body,
                     };
                     msg.AddTo(request.Model.To);
+
                     var response = await _sendGridClient.SendEmailAsync(msg);
-                    string message = response.IsSuccessStatusCode ? "Email Send Successfully" :
-                    "Email Sending Failed";
-                    #endregion
+                    
+                    string message = response.IsSuccessStatusCode 
+                        ? "Email Send Successfully" : "Email Sending Failed";
+
                     return ResultModel<string>.Create(message);
                 }
             }

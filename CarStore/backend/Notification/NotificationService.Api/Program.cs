@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.IdentityModel.Tokens;
 using N8T.Infrastructure;
 using N8T.Infrastructure.Bus;
-using N8T.Infrastructure.EfCore;
 using N8T.Infrastructure.Middlewares;
 using N8T.Infrastructure.Swagger;
 using N8T.Infrastructure.Validator;
 using NotificationService.Api;
+using NotificationService.Api.Services;
 using NotificationService.AppCore;
 using SendGrid.Extensions.DependencyInjection;
 
@@ -35,6 +35,8 @@ services.AddCustomMediatR(new[] { typeof(AppCoreAnchor) });
 services.AddCustomValidators(new[] { typeof(AppCoreAnchor) });
 services.AddControllers().AddMessageBroker(builder.Configuration);
 services.AddSwagger(typeof(ApiAnchor));
+services.AddHostedService<NotificationBackgroundService>();
+services.Configure<KafkaOptions>(builder.Configuration.GetSection(nameof(KafkaOptions)));
 
 services.AddAuthentication("token")
     .AddJwtBearer("token", options =>

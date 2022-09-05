@@ -26,8 +26,8 @@ namespace OrderingService.Api.V1
         [HttpPost("/api/v{version:apiVersion}/notifications")]
         public async Task<ActionResult> HandleCreateOrderAsync([FromBody] SendNotification.Command request, CancellationToken cancellationToken = new())
         {
-            request.Model.fromEmail = _fromEmail;
-            request.Model.fromName = _fromName;
+            request.Model.From = _fromEmail;
+            request.Model.FromName = _fromName;
             return Ok(await Mediator.Send(request, cancellationToken));
         }
     }
