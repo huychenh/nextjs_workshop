@@ -18,17 +18,6 @@ namespace OrderingService.AppCore.UseCases.Commands
             {
                 public Validator()
                 {
-                    RuleFor(v => v.Model.BuyerEmail)
-                        .NotEmpty();
-
-                    RuleFor(v => v.Model.OwnerEmail)
-                        .NotEmpty();
-
-                    RuleFor(v => v.Model.ProductName)
-                        .NotEmpty();
-
-                    RuleFor(v => v.Model.OrderId)
-                        .NotEmpty();
                 }
             }
 
