@@ -29,5 +29,7 @@
         public string Description { get; set; }
 
         public bool HasInstallment { get; set; }
+
+        public ICollection<string> Images { get; set; }
     }
 }

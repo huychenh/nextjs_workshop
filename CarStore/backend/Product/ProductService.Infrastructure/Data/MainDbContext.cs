@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using N8T.Infrastructure.EfCore;
 using ProductService.AppCore.Core;
 
@@ -28,7 +29,14 @@ namespace ProductService.Infrastructure.Data
             modelBuilder.Entity<Product>().HasIndex(x => x.Id).IsUnique();
             modelBuilder.Entity<Product>().Ignore(x => x.DomainEvents);
 
-            
+            var splitStringConverter = new ValueConverter<ICollection<string>, string>(
+                v => string.Join(";", v),
+                v => v.Split(new[] { ';' }));
+
+            modelBuilder.Entity<Product>()
+                   .Property(nameof(Product.Images))
+                   .HasConversion(splitStringConverter);
+
             // brand
             modelBuilder.Entity<Brand>().HasKey(x => x.Id);
             modelBuilder.Entity<Brand>().Property(x => x.Id).HasColumnType("uuid")

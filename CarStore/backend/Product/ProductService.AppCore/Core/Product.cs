@@ -42,6 +42,8 @@ namespace ProductService.AppCore.Core
 
         public Brand Brand { get; private set; }
 
+        public ICollection<string>? Images { get; set; }
+
         public static Product Create(ProductCreateDto dto, Guid brandId, Guid ownerId)
         {
             Product product = new()
@@ -65,6 +67,7 @@ namespace ProductService.AppCore.Core
                 Created = DateTime.UtcNow,
                 Active = false,
                 Verified = false,
+                Images = dto.Images,
             };
 
             product.AddDomainEvent(new ProductCreatedIntegrationEvent

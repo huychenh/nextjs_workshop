@@ -11,7 +11,9 @@ using N8T.Infrastructure.EfCore;
 using N8T.Infrastructure.Swagger;
 using N8T.Infrastructure.Validator;
 using ProductService.AppCore;
+using ProductService.AppCore.Services;
 using ProductService.Infrastructure.Data;
+using ProductService.Infrastructure.Services;
 
 namespace ProductService.Infrastructure
 {
@@ -70,6 +72,9 @@ namespace ProductService.Infrastructure
                     policy.RequireClaim("sub");
                 });
             });
+
+            services.AddSingleton<IFileStorageService, FileStorageService>();
+            services.Configure<FileStorageOptions>(config.GetSection("FileStorage"));
 
             return services;
         }

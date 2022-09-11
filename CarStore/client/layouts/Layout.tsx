@@ -16,6 +16,8 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import ProductService from "../services/ProductService";
 import styles from "./customStyles.module.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 export const enum SessionStatus {
   LOADING = "loading",
   AUTHENTICATED = "authenticated",

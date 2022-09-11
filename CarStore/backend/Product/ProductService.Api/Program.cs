@@ -7,9 +7,13 @@ using N8T.Infrastructure.Middlewares;
 using N8T.Infrastructure.Swagger;
 using N8T.Infrastructure.Validator;
 using ProductService.Api;
+using ProductService.Api.V1;
 using ProductService.AppCore;
+using ProductService.AppCore.Services;
 using ProductService.Infrastructure.Data;
+using ProductService.Infrastructure.Services;
 using ApiAnchor = ProductService.Api.V1.Anchor;
+using ModelAnchor = ProductService.AppCore.Anchor;
 
 const string CorsName = "api";
 
@@ -24,13 +28,15 @@ services.AddCors(options =>
 });
 
 services.AddHttpContextAccessor();
-services.AddCustomMediatR(new[] { typeof(Anchor) });
-services.AddCustomValidators(new[] { typeof(Anchor) });
+services.AddCustomMediatR(new[] { typeof(ModelAnchor) });
+services.AddCustomValidators(new[] { typeof(ModelAnchor) });
 services.AddControllers().AddMessageBroker(builder.Configuration);
 services.AddSwagger(typeof(ApiAnchor));
 services.AddPostgresDbContext<MainDbContext>(builder.Configuration.GetConnectionString("postgres"));
 services.AddScoped<IRepository, Repository>();
 services.AddScoped<IBrandRepository, BrandRepository>();
+services.AddSingleton<IFileStorageService, FileStorageService>();
+services.Configure<FileStorageOptions>(builder.Configuration.GetSection("FileStorage"));
 
 services.AddAuthentication("token")
     .AddJwtBearer("token", options =>

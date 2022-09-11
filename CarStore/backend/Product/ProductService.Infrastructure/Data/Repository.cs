@@ -1,5 +1,6 @@
 ﻿using CarStore.AppContracts.Dtos;
 using Microsoft.EntityFrameworkCore;
+using N8T.Core.Domain;
 using ProductService.AppCore;
 using ProductService.AppCore.Core;
 using System.Linq;
@@ -132,10 +133,11 @@ namespace ProductService.Infrastructure.Data
                 Active = entity.Active,
                 Created = entity.Created,
                 Updated = entity.Updated,
+                Images = entity.Images?.ToArray(),
             };
         }
 
-        public async Task<IEnumerable<ProductDto>> GetWithPagination(SearchProductDto queryDto)
+        public async Task<ListResultModel<ProductDto>> GetWithPagination(SearchProductDto queryDto)
         {
             IQueryable<Product> query = _dbContext.Products;
 
@@ -152,23 +154,25 @@ namespace ProductService.Infrastructure.Data
             {
                 query = query.Where(x => queryDto.CategoryName.Contains(x.Category));
             }
+
             if (queryDto.PriceFrom > 0 && queryDto.PriceTo > 0)
             {
                 query = query.Where(x => x.Price >= queryDto.PriceFrom && x.Price <= queryDto.PriceTo);
             }
+
             if (queryDto.LatestNews.HasValue && queryDto.LatestNews == true)
             {
                 query = query.OrderByDescending(x => x.Year);
             }
+
             if (queryDto.LowestPrice.HasValue && queryDto.LowestPrice == true)
             {
                 query = query.OrderBy(x => x.Price);
             }
 
-            var allCars = query.ToList();
-            int extend = (int)(allCars.Count % queryDto.PageSize);
-
-            return await query.Select(p => new ProductDto
+            var totalRecords = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling((double)totalRecords / queryDto.PageSize);
+            var items = await query.Select(p => new ProductDto
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -190,11 +194,13 @@ namespace ProductService.Infrastructure.Data
                 Active = p.Active,
                 Created = p.Created,
                 Updated = p.Updated,
-                TotalPages = (int)(allCars.Count / queryDto.PageSize + (extend == 0 ? 0 : 1))
+                Images = p.Images != null ? p.Images.ToArray() : Array.Empty<string>(),
             })
-                .Skip((int)((queryDto.Page - 1) * queryDto.PageSize))
-                .Take((int)queryDto.PageSize)
+                .Skip((queryDto.Page - 1) * queryDto.PageSize)
+                .Take(queryDto.PageSize)
                 .ToArrayAsync();
+
+            return ListResultModel<ProductDto>.Create(items, totalPages, queryDto.Page, queryDto.PageSize);
         }
     }
 }

@@ -2,12 +2,13 @@
 using FluentValidation;
 using MediatR;
 using N8T.Core.Domain;
+using ProductService.AppCore.Services;
 
 namespace ProductService.AppCore.UseCases.Queries
 {
     public class GetProducts
     {
-        public class Query : SearchProductRequestDto, IQuery<IEnumerable<ProductDto>>
+        public class Query : SearchProductRequestDto, IQuery<ListResultModel<ProductDto>>
         {
             internal class Validator : AbstractValidator<Query>
             {
@@ -16,33 +17,40 @@ namespace ProductService.AppCore.UseCases.Queries
                 }
             }
 
-            internal class Handler : IRequestHandler<Query, ResultModel<IEnumerable<ProductDto>>>
+            internal class Handler : IRequestHandler<Query, ResultModel<ListResultModel<ProductDto>>>
             {
                 private readonly IRepository _repository;
+                private readonly IFileStorageService _fileStorageService;
 
-                public Handler(IRepository repository)
+                public Handler(IRepository repository, IFileStorageService fileStorageService)
                 {
                     _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+                    _fileStorageService = fileStorageService;
                 }
 
-                public async Task<ResultModel<IEnumerable<ProductDto>>> Handle(Query request, CancellationToken cancellationToken)
+                public async Task<ResultModel<ListResultModel<ProductDto>>> Handle(Query request, CancellationToken cancellationToken)
                 {
                     if (request == null)
                     {
                         throw new ArgumentNullException(nameof(request));
                     }
 
-                    IEnumerable<ProductDto> products;
-                    if (request.SearchProductModel.Page != null && request.SearchProductModel.PageSize != null)
+                    var result = await _repository.GetWithPagination(request.SearchProductModel);
+
+                    foreach (var product in result.Items)
                     {
-                        products = await _repository.GetWithPagination(request.SearchProductModel);                        
-                    }
-                    else
-                    {
-                        products = await _repository.Get(request.SearchProductModel);
+                        if (product.Images == null)
+                        {
+                            continue;
+                        }
+
+                        for (int i = 0; i < product.Images.Count(); i++)
+                        {
+                            product.Images[i] = _fileStorageService.BuildFileUrl(product.Images[i]);
+                        }
                     }
                     
-                    return ResultModel<IEnumerable<ProductDto>>.Create(products);
+                    return ResultModel<ListResultModel<ProductDto>>.Create(result);
                 }
             }
         }

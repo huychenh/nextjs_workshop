@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Layout from '../layouts/Layout';
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import ProductService from '../services/ProductService';
 import SellCar from '../components/SellCar';
 import { Stack, Button } from "@mui/material";
@@ -8,6 +8,9 @@ import styles from "../components/SellCar/SellCar.module.css";
 import ToastMessage from "../components/ToastMessage";
 import { useSession, signIn } from "next-auth/react"
 import Router from 'next/router'
+import FileUploader from '../components/UI/FileUploader/FileUploader';
+import FileStorageService from '../services/FileStorageService';
+import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
 
 export const enum SessionStatus {
   LOADING = "loading",
@@ -29,13 +32,15 @@ interface SellData {
   color: string,
   description: string,
   hasInstallment: boolean,
-  ownerId: any
+  ownerId: any,
+  images: string[],
 };
 
 const RegisterSellCar: NextPage = (props: any) => {
   const { data: session, status }: any = useSession();
-  const { sub } = session.user;
-  
+  const accessToken = session?.accessToken;
+  const sub = session?.user.sub;
+
   if (status == SessionStatus.UNAUTHENTICATED) {
     signIn("identity-server4");
   }
@@ -47,7 +52,7 @@ const RegisterSellCar: NextPage = (props: any) => {
     message: ""
   });
   const [carInfo, setCarInfo] = useState<SellData>({
-    name: "",
+    name: "abc",
     price: 0,
     brand: "Alfa Romeo",
     model: "",
@@ -55,16 +60,18 @@ const RegisterSellCar: NextPage = (props: any) => {
     madeIn: "",
     seatingCapacity: 4,
     kmDriven: 0,
-    year: 1900,
+    year: 2020,
     fuelType: "Petrol",
     category: "M1",
     color: "Red",
-    description: "",
+    description: "test",
     hasInstallment: false,
-    ownerId: sub
+    ownerId: sub,
+    images: [],
   });
+  const [files, setFiles] = useState<any[]>([]);
 
-  const lastStep = Object.keys(carInfo).length - 1;
+  const lastStep = Object.keys(carInfo).length - 2;
 
   const updateCarInfo = (key: string, value: any) => {
     setCarInfo({
@@ -72,6 +79,20 @@ const RegisterSellCar: NextPage = (props: any) => {
       [key]: value
     });
   };
+
+  const handleSubmit = async () => {
+    const imageNames = await uploadImages();
+    carInfo.images = imageNames as string[];
+    console.log('images', imageNames)
+    await addProducts(carInfo);
+  }
+
+  const uploadImages = async () => {
+    if (!files?.length) {
+      return [];
+    }
+    return await FileStorageService.uploadImages(accessToken, files);
+  }
 
   async function addProducts(sellData: SellData) {
     try {
@@ -120,7 +141,11 @@ const RegisterSellCar: NextPage = (props: any) => {
             <p>Color: {carInfo.color}</p>
             <p>Description: {carInfo.description}</p>
             <p>HasInstallment: {carInfo.hasInstallment ? "Yes" : "No"}</p>
+            <p>Images:</p>
           </div>
+          <FileUploader
+            onChange={setFiles}
+          />
           < Stack direction="row" spacing={2} justifyContent="center">
             <Button
               variant="outlined"
@@ -130,7 +155,7 @@ const RegisterSellCar: NextPage = (props: any) => {
             </Button>
             <Button
               variant="outlined"
-              onClick={async () => { await addProducts(carInfo); }}
+              onClick={handleSubmit}
             >
               Submit
             </Button>

@@ -15,8 +15,8 @@ namespace CarStore.AppContracts.Dtos
         public decimal PriceTo { get; set; }
         public bool? LatestNews { get; set; }
         public bool? LowestPrice { get; set; }
-        public int? Page { get; set; } //Page index
-        public int? PageSize { get; set; } //Item size of each page
+        public int Page { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
     }
     public class SearchProductRequestDto
     {

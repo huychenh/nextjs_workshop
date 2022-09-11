@@ -25,3 +25,7 @@
   flex-wrap: 'nowrap';
   transform: 'translateZ(0)';
 }
+
+.image {
+  max-height: 40vh;
+}

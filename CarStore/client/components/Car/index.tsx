@@ -12,12 +12,14 @@ const Car = ({ details }: any) => {
         //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
     });
 
+    const imageUrl = details.images?.length ? details.images[0] : '/HomePage/Car/ford.jpg';
+
     return (
         <Grid item md={6}>
             <Grid container>
                 <Grid item xs={5}>
                     <Link href={`car-detail/${details.id}`} >
-                        <img className={styles.carImage} src="/HomePage/Car/ford.jpg"></img>
+                        <img className={styles.carImage} src={imageUrl}></img>
                     </Link>
                 </Grid>
                 <Grid item xs={7}>
