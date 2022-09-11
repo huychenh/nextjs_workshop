@@ -1,10 +1,7 @@
 import { Grid } from '@mui/material';
 import Car from '../Car';
-import { useRouter } from "next/router";
 
 function CarList(props: any) {
-    const router = useRouter();
-
     return (
         <>
             {props.cars ? (
@@ -17,7 +14,5 @@ function CarList(props: any) {
         </>
     )
 }
-
-
 
 export default CarList;

@@ -4,16 +4,30 @@ import { Button } from "@mui/material";
 import React from "react";
 import { Models } from "../../../models/product";
 import styles from './CarDetail.module.css';
+import Slider from 'react-slick';
 
 export class CarDetailProps {
   detail?: Models.Product
 }
 
-const CarDetail = ({detail} : CarDetailProps) => {
+const CarDetail = ({ detail }: CarDetailProps) => {
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   });
+
+  // Todo: find a better image slider. May be the slider in the brand list
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    autoplay: true,
+    autoplaySpeed: 4000,
+  };
+  const images = detail && detail.images && detail.images.length ? detail.images : ['/HomePage/Car/ford.jpg']
 
   const renderInfoItem = (icon: any, label: string, info: any) => {
     return <List>
@@ -38,7 +52,19 @@ const CarDetail = ({detail} : CarDetailProps) => {
       detail &&
       <>
         <h1>Car Detail</h1>
-        <img src="/HomePage/Car/ford.jpg" />
+        <Slider {...sliderSettings}>
+          {images.map(url =>
+            <div>
+              <div style={{
+                backgroundImage: `url(${url})`,
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                height: '40vh'
+              }}></div>
+            </div>
+          )}
+        </Slider>
         <h3>{detail.name}</h3>
         <p className={styles.price}>{formatter.format(detail.price!)}</p>
         <Button variant="contained" color="secondary" href={`/order/${detail.id}`}>ORDER</Button>

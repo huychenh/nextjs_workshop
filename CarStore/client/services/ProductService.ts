@@ -23,11 +23,9 @@ export default class ProductService {
     if (model.CategoryName) {
       queryString += `&categoryName=${model.CategoryName}&`;
     }
-    queryString += `&PriceFrom=${model.PriceFrom}
-    &PriceTo=${model.PriceTo}&LatestNews=${model.LatestNews}&LowestPrice=${
-      model.LowestPrice
-    }&page=${model.pageIndex == 0 ? 1 : model.pageIndex}
-    `;
+    queryString += `&PriceFrom=${model.PriceFrom}&PriceTo=${model.PriceTo}` +
+      `&LatestNews=${model.LatestNews}&LowestPrice=${model.LowestPrice}` +
+      `&page=${model.pageIndex == 0 ? 1 : model.pageIndex}&pageSize=${model.pageSize}`;
     const response = await fetchJson(
       `${process.env.NEXT_PUBLIC_URL_API}/${ProductService.ControllerUri}?${queryString}`
     );
