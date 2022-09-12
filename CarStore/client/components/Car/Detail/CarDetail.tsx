@@ -4,7 +4,9 @@ import { Button } from "@mui/material";
 import React from "react";
 import { Models } from "../../../models/product";
 import styles from './CarDetail.module.css';
-import Slider from 'react-slick';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import { Autoplay, Pagination, Navigation } from "swiper";
 
 export class CarDetailProps {
   detail?: Models.Product
@@ -15,19 +17,6 @@ const CarDetail = ({ detail }: CarDetailProps) => {
     style: 'currency',
     currency: 'USD',
   });
-
-  // Todo: find a better image slider. May be the slider in the brand list
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: true,
-    autoplay: true,
-    autoplaySpeed: 4000,
-  };
-  const images = detail && detail.images && detail.images.length ? detail.images : ['/HomePage/Car/ford.jpg']
 
   const renderInfoItem = (icon: any, label: string, info: any) => {
     return <List>
@@ -47,14 +36,30 @@ const CarDetail = ({ detail }: CarDetailProps) => {
     </List>
   }
 
+  const images = detail && detail.images && detail.images.length ? detail.images : ['/HomePage/Car/ford.jpg']
+
   return <>
     {
       detail &&
       <>
         <h1>Car Detail</h1>
-        <Slider {...sliderSettings}>
+
+        <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          modules={[Autoplay, Pagination, Navigation]}
+          className="mySwiper"
+        >
           {images.map(url =>
-            <div>
+            <SwiperSlide key={url}>
               <div style={{
                 backgroundImage: `url(${url})`,
                 backgroundSize: 'contain',
@@ -62,9 +67,10 @@ const CarDetail = ({ detail }: CarDetailProps) => {
                 backgroundPosition: 'center',
                 height: '40vh'
               }}></div>
-            </div>
+            </SwiperSlide>
           )}
-        </Slider>
+        </Swiper>
+
         <h3>{detail.name}</h3>
         <p className={styles.price}>{formatter.format(detail.price!)}</p>
         <Button variant="contained" color="secondary" href={`/order/${detail.id}`}>ORDER</Button>

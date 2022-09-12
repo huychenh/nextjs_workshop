@@ -29,9 +29,9 @@ namespace ProductService.Infrastructure.Data
             modelBuilder.Entity<Product>().HasIndex(x => x.Id).IsUnique();
             modelBuilder.Entity<Product>().Ignore(x => x.DomainEvents);
 
-            var splitStringConverter = new ValueConverter<ICollection<string>, string>(
-                v => string.Join(";", v),
-                v => v.Split(new[] { ';' }));
+            var splitStringConverter = new ValueConverter<ICollection<string>, string?>(
+                v => v != null && v.Any() ? string.Join(";", v) : null,
+                v => !string.IsNullOrEmpty(v) ? v.Split(new[] { ';' }) : Array.Empty<string>());
 
             modelBuilder.Entity<Product>()
                    .Property(nameof(Product.Images))
