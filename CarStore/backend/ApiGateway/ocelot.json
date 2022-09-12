@@ -47,18 +47,6 @@
       ],
       "UpstreamPathTemplate": "/api/v1/orders",
       "UpstreamHttpMethod": [ "Get", "Post" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/notifications",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7031
-        }
-      ],
-      "UpstreamPathTemplate": "/api/v1/notifications",
-      "UpstreamHttpMethod": [ "Post" ]
     }
   ],
   "GlobalConfiguration": {

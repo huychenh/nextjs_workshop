@@ -1,11 +1,10 @@
-﻿using CarStore.AppContracts.Dtos;
-using CarStore.IntegrationEvents.Notification;
+﻿using CarStore.IntegrationEvents.Notification;
 using Confluent.Kafka;
-using MediatR;
 using N8T.Infrastructure.Bus;
 using N8T.Infrastructure.Validator;
 using Newtonsoft.Json;
-using NotificationService.AppCore.UseCases.Commands;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace NotificationService.Api.Services
 {
@@ -39,8 +38,8 @@ namespace NotificationService.Api.Services
         {
             using var scope = provider.CreateScope();
             var logger = scope.ServiceProvider.GetRequiredService<ILogger<NotificationBackgroundService>>();
-            var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
             using var eventBus = provider.GetRequiredService<IEventBus>();
+            var sendGridClient = provider.GetRequiredService<ISendGridClient>(); 
 
             var @event = new NotificationIntegrationEvent();
             eventBus
@@ -63,17 +62,15 @@ namespace NotificationService.Api.Services
 
                     logger.LogInformation($"{nameof(NotificationBackgroundService)}: {JsonConvert.SerializeObject(msg)}.");
 
-                    await mediator.Send(new SendNotification.Command
+                    var email = new SendGridMessage()
                     {
-                        Model = new NotificationDto
-                        {
-                            From = msg.From,
-                            FromName = msg.FromName,
-                            To = msg.To,
-                            Subject = msg.Subject,
-                            Body = msg.Body,
-                        }
-                    }, stoppingToken);
+                        From = new EmailAddress(msg.From, msg.FromName),
+                        Subject = msg.Subject,
+                        HtmlContent = msg.Body,
+                    };
+                    email.AddTo(msg.To);
+
+                    var response = await sendGridClient.SendEmailAsync(email, stoppingToken);
                 }
                 catch (OperationCanceledException)
                 {
