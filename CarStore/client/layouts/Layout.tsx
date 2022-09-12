@@ -1,23 +1,16 @@
-import { ClassNames } from "@emotion/react";
 import {
   AppBar,
   Button,
   Container,
-  Menu,
-  MenuItem,
   Toolbar,
   Typography,
 } from "@mui/material";
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import useStyles from "./LayoutStyles";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
-import ProductService from "../services/ProductService";
 import styles from "./customStyles.module.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+
 export const enum SessionStatus {
   LOADING = "loading",
   AUTHENTICATED = "authenticated",
@@ -26,10 +19,6 @@ export const enum SessionStatus {
 
 function Layout({ children, title }: any) {
   const { data: session, status } = useSession();
-
-  // useEffect(() => {
-  //   ProductService.getProducts().then(res => console.log(res))
-  // })
 
   return (
     <>
