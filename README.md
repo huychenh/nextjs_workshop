@@ -23,13 +23,17 @@ Project is created with:
 #### Prerequisites
 - Visual Studio 2022
 - Net 6 SDK
+- Azure Storage Emulator or Azurite or Azure Account
 
 #### Steps
-- Download and install `Postgresql` on your local
+- Download and install `Postgresql` on your local. Or, using docker.
 - Update `ConnectionStrings` in `appsettings.json`
+- Start Azure Storage Emulator or Azurite so that we can use the default provided Azure Storage connection string. Or create a real Azure Storage then update the `FileStorage:ConnectionString`
 - Start the `ApiGateway` and `Service Api` projects
 
 ### Kafka
+Only needed if you want to run the Notification service
+
 #### Prerequisites
 - Docker
 
