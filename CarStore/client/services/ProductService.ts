@@ -30,7 +30,7 @@ export default class ProductService {
       `${process.env.NEXT_PUBLIC_URL_API}/${ProductService.ControllerUri}?${queryString}`
     );
 
-    return await response.json();
+    return await response?.json() || [];
   }
 
   public static async addProducts(accessToken: string, model: any) {
