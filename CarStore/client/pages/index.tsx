@@ -14,15 +14,10 @@ const Home: NextPage = () => {
   const [brands, setBrands] = useState([]);
   const [cars, setCars] = useState<Models.Product[]>([]);
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalpages] = useState(0);
   const [searchText, setSearchText] = useState(modelSearchDefault);
 
   useEffect(() => {
-    ProductService.getProducts({ ...modelSearchDefault }).then(
-      ({ data: cars }) => {
-        console.log("cars", cars);
-        setCars(cars);
-      }
-    );
     BrandService.getBrands().then(({ data: brands }) => {
       setBrands(brands);
     });
@@ -31,7 +26,8 @@ const Home: NextPage = () => {
   useEffect(() => {
     ProductService.getProducts({ ...searchText, pageIndex: page }).then(
       (response) => {
-        setCars(response.data);
+        setCars(response.data.items);
+        setTotalpages(response.data.totalPages);
       }
     );
   }, [searchText, page]);
@@ -46,7 +42,7 @@ const Home: NextPage = () => {
       <SearchBox onSearch={handleSearchTextChanged} />
       <BrandSelector brands={brands} />
       <Pagination
-        count={cars && cars[0] ? cars[0].totalPages : 1}
+        count={totalPages}
         variant="outlined"
         color="primary"
         className="pagination"
@@ -56,7 +52,7 @@ const Home: NextPage = () => {
       <br />
       <CarList cars={cars} />
       <Pagination
-        count={cars && cars[0] ? cars[0].totalPages : 1}
+        count={totalPages}
         variant="outlined"
         color="primary"
         className="pagination"

@@ -4,12 +4,15 @@ import { Button } from "@mui/material";
 import React from "react";
 import { Models } from "../../../models/product";
 import styles from './CarDetail.module.css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import { Autoplay, Pagination, Navigation } from "swiper";
 
 export class CarDetailProps {
   detail?: Models.Product
 }
 
-const CarDetail = ({detail} : CarDetailProps) => {
+const CarDetail = ({ detail }: CarDetailProps) => {
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -33,12 +36,41 @@ const CarDetail = ({detail} : CarDetailProps) => {
     </List>
   }
 
+  const images = detail && detail.images && detail.images.length ? detail.images : ['/HomePage/Car/ford.jpg']
+
   return <>
     {
       detail &&
       <>
         <h1>Car Detail</h1>
-        <img src="/HomePage/Car/ford.jpg" />
+
+        <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          modules={[Autoplay, Pagination, Navigation]}
+          className="mySwiper"
+        >
+          {images.map(url =>
+            <SwiperSlide key={url}>
+              <div style={{
+                backgroundImage: `url(${url})`,
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                height: '40vh'
+              }}></div>
+            </SwiperSlide>
+          )}
+        </Swiper>
+
         <h3>{detail.name}</h3>
         <p className={styles.price}>{formatter.format(detail.price!)}</p>
         <Button variant="contained" color="secondary" href={`/order/${detail.id}`}>ORDER</Button>

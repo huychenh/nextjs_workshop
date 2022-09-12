@@ -9,15 +9,16 @@ import BrandService from "../../services/BrandService";
 import ProductService from "../../services/ProductService";
 import { BrandIcons } from "../../components/Brand";
 import { modelSearchDefault, SearchModel } from "../../components/Modal/Model";
+
 export default function BrandPage({ brand }: any) {
   const [cars, setCars] = useState([]);
   const handleSearch = (model: SearchModel) => {
-    debugger;
     ProductService.getProducts({
       ...model,
+      pageSize: 50, // Todo: apply paging instead
       brand,
     }).then((response) => {
-      setCars(response.data);
+      setCars(response.data.items);
     });
   };
   useEffect(() => {

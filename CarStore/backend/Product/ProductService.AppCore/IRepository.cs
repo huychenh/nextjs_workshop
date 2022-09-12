@@ -1,13 +1,12 @@
 ﻿using CarStore.AppContracts.Dtos;
+using N8T.Core.Domain;
 using ProductService.AppCore.Core;
 
 namespace ProductService.AppCore
 {
     public interface IRepository
     {
-        Task<IEnumerable<ProductDto>> Get(SearchProductDto queryDto);
-
-        Task<IEnumerable<ProductDto>> GetWithPagination(SearchProductDto queryDto);
+        Task<ListResultModel<ProductDto>> GetWithPagination(SearchProductDto queryDto);
 
         Task<ProductDto?> GetById(Guid id);
 
