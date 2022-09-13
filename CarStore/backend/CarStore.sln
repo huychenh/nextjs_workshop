@@ -31,11 +31,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarStore.TestAuthentication
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ordering", "Ordering", "{154EE4DD-15DA-4E5F-A7A3-BBCEB282A5E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderingService.AppCore", "Ordering\OrderingService.Domain\OrderingService.AppCore.csproj", "{C73CC4E8-3A35-4255-BB75-3B6DDAF5523D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderingService.AppCore", "Ordering\OrderingService.Domain\OrderingService.AppCore.csproj", "{C73CC4E8-3A35-4255-BB75-3B6DDAF5523D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderingService.Infrastructure", "Ordering\OrderingService.Infrastructure\OrderingService.Infrastructure.csproj", "{C6E6B15D-1FE0-4FD4-9F73-7A03217059F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderingService.Infrastructure", "Ordering\OrderingService.Infrastructure\OrderingService.Infrastructure.csproj", "{C6E6B15D-1FE0-4FD4-9F73-7A03217059F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderingService.Api", "Ordering\OrderingService.Api\OrderingService.Api.csproj", "{DB901F66-6836-4B64-9246-89C7E3A4DF3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderingService.Api", "Ordering\OrderingService.Api\OrderingService.Api.csproj", "{DB901F66-6836-4B64-9246-89C7E3A4DF3D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notification", "Notification", "{262D7696-8DDC-4CEC-98F3-0B7198C81174}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService.Api", "Notification\NotificationService.Api\NotificationService.Api.csproj", "{3AAE4BF3-F70A-45E8-ABC8-D6C4E8935A1B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService.AppCore", "Notification\NotificationService.AppCore\NotificationService.AppCore.csproj", "{B4EB1FBB-0DD0-4CEA-83AE-5C9A0ED597E7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService.Infrastructure", "Notification\NotificationService.Infrastructure\NotificationService.Infrastructure.csproj", "{77C10F0B-967F-4A07-9D99-6800E827E671}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +107,18 @@ Global
 		{DB901F66-6836-4B64-9246-89C7E3A4DF3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB901F66-6836-4B64-9246-89C7E3A4DF3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB901F66-6836-4B64-9246-89C7E3A4DF3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AAE4BF3-F70A-45E8-ABC8-D6C4E8935A1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AAE4BF3-F70A-45E8-ABC8-D6C4E8935A1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AAE4BF3-F70A-45E8-ABC8-D6C4E8935A1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AAE4BF3-F70A-45E8-ABC8-D6C4E8935A1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4EB1FBB-0DD0-4CEA-83AE-5C9A0ED597E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4EB1FBB-0DD0-4CEA-83AE-5C9A0ED597E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4EB1FBB-0DD0-4CEA-83AE-5C9A0ED597E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4EB1FBB-0DD0-4CEA-83AE-5C9A0ED597E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77C10F0B-967F-4A07-9D99-6800E827E671}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77C10F0B-967F-4A07-9D99-6800E827E671}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77C10F0B-967F-4A07-9D99-6800E827E671}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77C10F0B-967F-4A07-9D99-6800E827E671}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,6 +132,9 @@ Global
 		{C73CC4E8-3A35-4255-BB75-3B6DDAF5523D} = {154EE4DD-15DA-4E5F-A7A3-BBCEB282A5E0}
 		{C6E6B15D-1FE0-4FD4-9F73-7A03217059F8} = {154EE4DD-15DA-4E5F-A7A3-BBCEB282A5E0}
 		{DB901F66-6836-4B64-9246-89C7E3A4DF3D} = {154EE4DD-15DA-4E5F-A7A3-BBCEB282A5E0}
+		{3AAE4BF3-F70A-45E8-ABC8-D6C4E8935A1B} = {262D7696-8DDC-4CEC-98F3-0B7198C81174}
+		{B4EB1FBB-0DD0-4CEA-83AE-5C9A0ED597E7} = {262D7696-8DDC-4CEC-98F3-0B7198C81174}
+		{77C10F0B-967F-4A07-9D99-6800E827E671} = {262D7696-8DDC-4CEC-98F3-0B7198C81174}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8F5B89B2-C9F4-475F-A629-4B19E55AE3AF}

@@ -2,21 +2,26 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.IdentityModel.Tokens;
 using N8T.Infrastructure;
 using N8T.Infrastructure.Bus;
-using N8T.Infrastructure.EfCore;
 using N8T.Infrastructure.Middlewares;
 using N8T.Infrastructure.Swagger;
 using N8T.Infrastructure.Validator;
-using OrderingService.Api;
-using OrderingService.Api.Services;
-using OrderingService.AppCore;
-using OrderingService.AppCore.Dtos;
-using OrderingService.AppCore.Services;
-using OrderingService.Infrastructure.Data;
+using NotificationService.Api;
+using NotificationService.Api.Services;
+using NotificationService.AppCore;
+using SendGrid.Extensions.DependencyInjection;
 
 const string CorsName = "api";
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
+
+//sendgrid
+builder.Services.AddSendGrid(options =>
+{
+    options.ApiKey = builder.Configuration
+    .GetSection("SendGridEmailSettings").GetValue<string>("APIKey");
+});
+
 services.AddCors(options =>
 {
     options.AddPolicy(CorsName, policy =>
@@ -30,10 +35,8 @@ services.AddCustomMediatR(new[] { typeof(AppCoreAnchor) });
 services.AddCustomValidators(new[] { typeof(AppCoreAnchor) });
 services.AddControllers().AddMessageBroker(builder.Configuration);
 services.AddSwagger(typeof(ApiAnchor));
-services.AddPostgresDbContext<MainDbContext>(builder.Configuration.GetConnectionString("postgres"));
-services.AddScoped<IOrderRepository, Repository>();
-services.Configure<NotificationConfigOptions>(builder.Configuration.GetSection(nameof(NotificationConfigOptions)));
-services.AddHostedService<OrderCreatedBackgroundService>();
+services.AddHostedService<NotificationBackgroundService>();
+services.Configure<KafkaOptions>(builder.Configuration.GetSection(nameof(KafkaOptions)));
 
 services.AddAuthentication("token")
     .AddJwtBearer("token", options =>
@@ -48,13 +51,6 @@ services.AddAuthentication("token")
             NameClaimType = "name",
             RoleClaimType = "role"
         };
-    });
-
-services.AddHttpClient<UserInfoService>(
-    client =>
-    {
-        var userApiUrl = builder.Configuration["Auth:Authority"];
-        client.BaseAddress = new Uri(userApiUrl);
     });
 
 var app = builder.Build();
@@ -76,5 +72,4 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-app.MigrateDatabase();
 app.Run();
