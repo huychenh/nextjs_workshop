@@ -68,7 +68,7 @@ namespace NotificationService.Api.Services
                         Subject = msg.Subject,
                         HtmlContent = msg.Body,
                     };
-                    email.AddTo(msg.To);
+                    email.AddTo(new EmailAddress(msg.To));
 
                     var response = await sendGridClient.SendEmailAsync(email, stoppingToken);
                 }
