@@ -126,23 +126,66 @@ const RegisterSellCar: NextPage = (props: any) => {
       {step < lastStep && (<SellCar setStep={setStep} step={step} carInfo={carInfo} updateCarInfo={updateCarInfo} />)}
       {step == lastStep && (
         <div>
+          <h5>Review</h5>
           <div className={styles.confirm}>
-            <p>Car Name: {carInfo.name}</p>
-            <p>Price: {carInfo.price}</p>
-            <p>Brand: {carInfo.brand}</p>
-            <p>Model: {carInfo.model}</p>
-            <p>Transmission: {carInfo.transmission}</p>
-            <p>MadeIn: {carInfo.madeIn}</p>
-            <p>SeatingCapacity: {carInfo.seatingCapacity}</p>
-            <p>kmDriven: {carInfo.kmDriven}</p>
-            <p>Year: {carInfo.year}</p>
-            <p>FuelType: {carInfo.fuelType}</p>
-            <p>Category: {carInfo.category}</p>
-            <p>Color: {carInfo.color}</p>
-            <p>Description: {carInfo.description}</p>
-            <p>HasInstallment: {carInfo.hasInstallment ? "Yes" : "No"}</p>
-            <p>Images:</p>
+            <div className={styles.infoItem}>
+              <div>Car Name:</div>
+              <div>{carInfo.name}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Price:</div>
+              <div>{carInfo.price}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Brand:</div>
+              <div>{carInfo.brand}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Model:</div>
+              <div>{carInfo.model}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Transmission:</div>
+              <div>{carInfo.transmission}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Made In:</div>
+              <div>{carInfo.madeIn}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>SeatingCapacity:</div>
+              <div>{carInfo.seatingCapacity}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Km Driven:</div>
+              <div>{carInfo.kmDriven}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Year:</div>
+              <div>{carInfo.year}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Fuel Type:</div>
+              <div>{carInfo.fuelType}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Category:</div>
+              <div>{carInfo.category}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Color:</div>
+              <div>{carInfo.color}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Description:</div>
+              <div>{carInfo.description}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Has Installment:</div>
+              <div>{carInfo.hasInstallment ? "Yes" : "No"}</div>
+            </div>
           </div>
+          <h5>Upload Images</h5>
           <FileUploader
             onChange={setFiles}
           />
