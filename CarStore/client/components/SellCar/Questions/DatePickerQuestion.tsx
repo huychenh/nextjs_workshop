@@ -28,7 +28,7 @@ const DatePickerQuestion = (props: any) => {
                 label="Year only"
                 value={sellYear}
                 onChange={handleChange}
-                renderInput={(params) => <TextField helperText={error.helperText} error={error.error} required {...params} />}
+                renderInput={(params) => <TextField fullWidth helperText={error.helperText} error={error.error} required {...params} />}
             />
         </LocalizationProvider>
     </div>

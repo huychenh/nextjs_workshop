@@ -13,6 +13,7 @@ const AutocompleteQuestion = (props: any) => {
     }
 
     return <Autocomplete
+    disablePortal
         value={fieldData}
         options={data}
         getOptionLabel={(option) => option}
@@ -21,7 +22,7 @@ const AutocompleteQuestion = (props: any) => {
         includeInputInList
         onChange={handleChange}
         renderInput={(params) => (
-            <TextField helperText={error.helperText} error={error.error} {...params} variant="standard" />
+            <TextField helperText={error.helperText} error={error.error} {...params} />
         )}
     />
 };
