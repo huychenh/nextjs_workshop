@@ -1,5 +1,4 @@
 .carImage {
-    height: 120px;
     width: 200px;
 }
 
@@ -13,4 +12,10 @@
     color: green;
     margin: 0;
     padding: 0;
+}
+
+.imageContainer {
+    display: flex;
+    align-items: center;
+    height: 100%;
 }

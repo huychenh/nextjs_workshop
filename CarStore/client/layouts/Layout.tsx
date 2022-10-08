@@ -39,7 +39,7 @@ function Layout({ children, title }: any) {
               </div>
               <div className={styles.loginButton}>
                 {status === SessionStatus.AUTHENTICATED && (
-                  <>{`${session?.user?.email}`}</>
+                  <>{`${session?.user?.email}`}|</>
                 )}
                 <Button
                   variant="outlined"
