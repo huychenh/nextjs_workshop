@@ -71,8 +71,9 @@ export async function getStaticProps() {
     props: {
       cars: productRes.data.items,
       totalPages: productRes.data.totalPages,
-      brands
+      brands,
     },
+    revalidate: 60,
   }
 }
 
