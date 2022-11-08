@@ -38,7 +38,8 @@ const Order = () => {
     severity: "error",
     message: ""
   });
-  const [detail, setDetail] = useState(new Models.Product())
+  const [detail, setDetail] = useState(new Models.Product());
+  const [imageUrl, setImageUrl] = useState("");
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -57,7 +58,9 @@ const Order = () => {
   useEffect(() => {
     if (router.query?.id) {
       ProductService.getProductDetail(router.query.id).then(res => {
-        setDetail(res.data)
+        setDetail(res.data);
+        const images = res.data?.images?.length ? res.data.images : ['/HomePage/Car/car.png']
+        setImageUrl(images[0]);
       })
     }
   }, [router.query?.id]);
@@ -212,7 +215,7 @@ const Order = () => {
         </Grid>
         <Grid item xs={4}>
           <h2>Your Order</h2>
-          <img src="/HomePage/Car/ford.jpg" />
+          <img style={{width: 300}} src={imageUrl} />
           <h3>{detail.name}</h3>
           <p>{formatter.format(detail.price!)}</p>
           <div>

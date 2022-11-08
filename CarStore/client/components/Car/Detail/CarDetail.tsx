@@ -36,7 +36,7 @@ const CarDetail = ({ detail }: CarDetailProps) => {
     </List>
   }
 
-  const images = detail && detail.images && detail.images.length ? detail.images : ['/HomePage/Car/ford.jpg']
+  const images = detail && detail.images && detail.images.length ? detail.images : ['/HomePage/Car/car.png']
 
   return <>
     {
