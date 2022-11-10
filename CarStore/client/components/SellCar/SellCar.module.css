@@ -1,0 +1,61 @@
+.sellCarContainer {
+    margin: 1rem 0 2rem 100px;
+    padding: 1rem;
+    justify-content: center;
+    max-width: 80%;
+}
+
+.sellCarButton {
+    padding: 1rem;
+    justify-content: center;
+}
+
+.center {
+    justify-content: center;
+}
+
+.sellCarPicker {
+    display: flex;
+    justify-content: center;
+}
+
+.confirm {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0 5rem;
+}
+
+.infoItem {
+    display: flex;
+    width: 40%;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px dashed silver;
+    margin-top: 0.4rem;
+}
+
+.infoItem div:nth-child(1) {
+    font-size: small;
+}
+
+.infoItem div:nth-child(2) {
+    font-weight: bold;
+    margin-left: 2rem;
+}
+
+.confirm p {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+@media (max-width: 980px) {
+    .confirm {
+        padding: 0;
+    }
+
+    .infoItem {
+        width: 100%;
+        padding: 0 0.5rem;
+    }
+}
