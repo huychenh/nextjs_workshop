@@ -69,6 +69,7 @@ namespace OrderingService.Infrastructure.Data
                     Price = x.Price,
                     ProductName = x.ProductName,
                     PictureUrl = x.PictureUrl,
+                    Date = x.Created,
                 })
                 .ToListAsync();
 
