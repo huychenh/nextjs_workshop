@@ -7,17 +7,13 @@ import styles from './CarDetail.module.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { Autoplay, Pagination, Navigation } from "swiper";
+import { formatCurrency } from "../../../lib/formatCurrency";
 
 export class CarDetailProps {
   detail?: Models.Product
 }
 
 const CarDetail = ({ detail }: CarDetailProps) => {
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
   const renderInfoItem = (icon: any, label: string, info: any) => {
     return <List>
       <ListItem>
@@ -72,7 +68,7 @@ const CarDetail = ({ detail }: CarDetailProps) => {
         </Swiper>
 
         <h3>{detail.name}</h3>
-        <p className={styles.price}>{formatter.format(detail.price!)}</p>
+        <p className={styles.price}>{formatCurrency(detail.price!)}</p>
         <Button variant="contained" color="secondary" href={`/order/${detail.id}`}>ORDER</Button>
         <h2>Basic Info</h2>
         <Grid container spacing={4} className={styles.basicInfo}>

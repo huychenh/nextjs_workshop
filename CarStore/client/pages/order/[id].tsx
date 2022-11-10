@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
 import ToastMessage from "../../components/ToastMessage";
 import Layout from "../../layouts/Layout";
+import { formatCurrency } from "../../lib/formatCurrency";
 import { Models } from "../../models/product";
 import OrderService from "../../services/OrderService";
 import ProductService from "../../services/ProductService";
@@ -26,11 +27,6 @@ const Order = () => {
   if (status == SessionStatus.UNAUTHENTICATED) {
     signIn("identity-server4");
   }
-
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
 
   const router = useRouter()
   const [toast, setToast] = useState({
@@ -217,7 +213,7 @@ const Order = () => {
           <h2>Your Order</h2>
           <img style={{width: 300}} src={imageUrl} />
           <h3>{detail.name}</h3>
-          <p>{formatter.format(detail.price!)}</p>
+          <p>{formatCurrency(detail.price!)}</p>
           <div>
             <Button variant="contained" color="success" disabled={disabledButton} onClick={submitOrder}>SUBMIT</Button>
           </div>
