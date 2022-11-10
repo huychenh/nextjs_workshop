@@ -1,6 +1,8 @@
 ﻿using CarStore.IntegrationEvents.Notification;
 using Microsoft.Extensions.Options;
 using N8T.Infrastructure.Bus;
+using CarStore.AppContracts.Dtos;
+using Microsoft.EntityFrameworkCore;
 using OrderingService.AppCore;
 using OrderingService.AppCore.Core;
 using OrderingService.AppCore.Dtos;
@@ -52,6 +54,25 @@ namespace OrderingService.Infrastructure.Data
         public Task PublishNotificationEvent(NotificationIntegrationEvent @event)
         {
             return _eventBus.PublishAsync(@event, @event.Topics);
+        }
+
+        public async Task<IEnumerable<OrderDto>> GetOrdersByCustomerId(Guid id)
+        {
+            var orders = await _dbContext.Orders
+                .Where(x => x.BuyerId == id)
+                .Select(x => new OrderDto
+                {
+                    Id = x.Id,
+                    ProductId = x.ProductId,
+                    OwnerId = x.OwnerId,
+                    BuyerId = x.BuyerId,
+                    Price = x.Price,
+                    ProductName = x.ProductName,
+                    PictureUrl = x.PictureUrl,
+                })
+                .ToListAsync();
+
+            return orders;
         }
     }
 }

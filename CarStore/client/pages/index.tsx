@@ -66,6 +66,7 @@ const Home: NextPage = (props: any) => {
 
 export async function getStaticProps() {
   const productRes = await ProductService.getProducts({ ...modelSearchDefault, pageIndex: 1 });
+  console.log('productRes', productRes)
   const { data: brands } = await BrandService.getBrands();
   return {
     props: {

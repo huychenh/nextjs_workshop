@@ -1,4 +1,5 @@
 ﻿using CarStore.IntegrationEvents.Notification;
+using CarStore.AppContracts.Dtos;
 using OrderingService.AppCore.Core;
 
 namespace OrderingService.AppCore
@@ -20,5 +21,7 @@ namespace OrderingService.AppCore
         string GetEmailBodyForOwner();
 
         string GetEmailBodyForBuyer();
+
+        Task<IEnumerable<OrderDto>> GetOrdersByCustomerId(Guid id);
     }
 }
