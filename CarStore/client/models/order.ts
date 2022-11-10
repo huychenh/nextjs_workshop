@@ -7,5 +7,6 @@ export namespace Models {
     ownerId?: string;
     price?: number;
     pictureUrl?: string;
+    date?: Date;
   }
 }
