@@ -1,7 +1,11 @@
-﻿using CarStore.AppContracts.Dtos;
+﻿using CarStore.IntegrationEvents.Notification;
+using Microsoft.Extensions.Options;
+using N8T.Infrastructure.Bus;
+using CarStore.AppContracts.Dtos;
 using Microsoft.EntityFrameworkCore;
 using OrderingService.AppCore;
 using OrderingService.AppCore.Core;
+using OrderingService.AppCore.Dtos;
 
 namespace OrderingService.Infrastructure.Data
 {
@@ -9,9 +13,16 @@ namespace OrderingService.Infrastructure.Data
     {
         private readonly MainDbContext _dbContext;
 
-        public Repository(MainDbContext dbContext)
+        private readonly IEventBus _eventBus;
+
+        private readonly NotificationConfigOptions _notificationConfig;
+
+        public Repository(MainDbContext dbContext, IEventBus eventBus
+            , IOptions<NotificationConfigOptions> notificationConfig)
         {
             _dbContext = dbContext;
+            _eventBus = eventBus;
+            _notificationConfig = notificationConfig.Value;
         }
 
         public async Task<Guid> Add(Order order)
@@ -26,6 +37,23 @@ namespace OrderingService.Infrastructure.Data
             await _dbContext.SaveChangesAsync();
 
             return order.Id;
+        }
+
+        public string GetDefaultSenderEmail() => _notificationConfig.DefaultSenderEmail;
+
+        public string GetDefaultSender() => _notificationConfig.DefaultSender;
+
+        public string GetEmailBodyForBuyer() => _notificationConfig.EmailBodyForBuyer;
+
+        public string GetEmailBodyForOwner() => _notificationConfig.EmailBodyForOwner;
+
+        public string GetEmailSubjectForBuyer() => _notificationConfig.EmailSubjectForBuyer;
+
+        public string GetEmailSubjectForOwner() => _notificationConfig.EmailSubjectForOwner;
+
+        public Task PublishNotificationEvent(NotificationIntegrationEvent @event)
+        {
+            return _eventBus.PublishAsync(@event, @event.Topics);
         }
 
         public async Task<IEnumerable<OrderDto>> GetOrdersByCustomerId(Guid id)
@@ -43,7 +71,6 @@ namespace OrderingService.Infrastructure.Data
                     PictureUrl = x.PictureUrl,
                 })
                 .ToListAsync();
-
 
             return orders;
         }

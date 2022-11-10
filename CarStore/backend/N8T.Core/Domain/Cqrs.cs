@@ -62,11 +62,11 @@ namespace N8T.Core.Domain
         }
     }
 
-    public record ListResultModel<T>(List<T> Items, long TotalItems, int Page, int PageSize)  where T : notnull
+    public record ListResultModel<T>(IEnumerable<T> Items, int TotalPages, int Page, int PageSize)  where T : notnull
     {
-        public static ListResultModel<T> Create(List<T> items, long totalItems = 0, int page = 1, int pageSize = 20)
+        public static ListResultModel<T> Create(IEnumerable<T> items, int totalPages = 0, int page = 1, int pageSize = 20)
         {
-            return new (items, totalItems, page, pageSize);
+            return new (items, totalPages, page, pageSize);
         }
     }
 }

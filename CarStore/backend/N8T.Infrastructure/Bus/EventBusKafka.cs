@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace N8T.Infrastructure.Bus
 {
-    public class EventBusKafka : IEventBus, IDisposable
+    public class EventBusKafka : IEventBus
     {
         private readonly IProducer<Null, string> _producer;
+        private readonly IConsumer<Ignore, string> _consumer;
         private readonly ILogger<EventBusKafka> _logger;
         private readonly KafkaOptions _kafkaOptions;
         private bool _disposedValue;
@@ -27,6 +28,14 @@ namespace N8T.Infrastructure.Bus
                 ClientId = Dns.GetHostName(),
             };
             _producer = new ProducerBuilder<Null, string>(producerConfig).Build();
+
+            var consumerConfig = new ConsumerConfig
+            {
+                BootstrapServers = _kafkaOptions.BootstrapServers,
+                GroupId = _kafkaOptions.GroupId,
+                AutoOffsetReset = AutoOffsetReset.Earliest
+            };
+            _consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
         }
 
         public async Task PublishAsync<TEvent>(TEvent @event, string[] topics, CancellationToken cancellationToken = default)
@@ -51,11 +60,26 @@ namespace N8T.Infrastructure.Bus
             }
         }
 
-        public void Subscribe<TEvent, THandler>()
+        public void Subscribe<TEvent, THandler>(string[] topics)
             where TEvent : IDomainEvent
             where THandler : IIntegrationEventHandler<TEvent>
         {
-            throw new NotImplementedException();
+            if (topics == null)
+            {
+                throw new ArgumentNullException(nameof(topics));
+            }
+
+            _logger.LogInformation("Subscribe to {Topics}", topics);
+            _consumer.Subscribe(topics);
+        }
+
+        public TEvent Consume<TEvent>(CancellationToken cancellationToken = default)
+            where TEvent : class, IDomainEvent
+        {
+            var result = _consumer.Consume(cancellationToken);
+            return result.Message is null 
+                ? null
+                : JsonConvert.DeserializeObject<TEvent>(result.Message.Value);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -65,6 +89,8 @@ namespace N8T.Infrastructure.Bus
                 if (disposing)
                 {
                     _producer.Dispose();
+                    _consumer.Close();
+                    _consumer.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer

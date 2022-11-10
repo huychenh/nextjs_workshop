@@ -106,6 +106,10 @@ namespace ProductService.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("has_installment");
 
+                    b.Property<string>("Images")
+                        .HasColumnType("text")
+                        .HasColumnName("images");
+
                     b.Property<int>("KmDriven")
                         .HasColumnType("integer")
                         .HasColumnName("km_driven");

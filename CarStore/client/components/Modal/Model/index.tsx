@@ -18,6 +18,7 @@ export interface SearchModel {
   LowestPrice?: boolean;
   brand?: string;
   pageIndex?: number;
+  pageSize: number;
 }
 export const modelSearchDefault: SearchModel = {
   SearchText: "",
@@ -28,4 +29,5 @@ export const modelSearchDefault: SearchModel = {
   LowestPrice: false,
   brand: "",
   pageIndex: 0,
+  pageSize: 10,
 };

@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Layout from '../layouts/Layout';
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import ProductService from '../services/ProductService';
 import SellCar from '../components/SellCar';
 import { Stack, Button } from "@mui/material";
@@ -8,6 +8,9 @@ import styles from "../components/SellCar/SellCar.module.css";
 import ToastMessage from "../components/ToastMessage";
 import { useSession, signIn } from "next-auth/react"
 import Router from 'next/router'
+import FileUploader from '../components/UI/FileUploader/FileUploader';
+import FileStorageService from '../services/FileStorageService';
+import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
 
 export const enum SessionStatus {
   LOADING = "loading",
@@ -29,13 +32,15 @@ interface SellData {
   color: string,
   description: string,
   hasInstallment: boolean,
-  ownerId: any
+  ownerId: any,
+  images: string[],
 };
 
 const RegisterSellCar: NextPage = (props: any) => {
   const { data: session, status }: any = useSession();
-  const { sub } = session.user;
-  
+  const accessToken = session?.accessToken;
+  const sub = session?.user.sub;
+
   if (status == SessionStatus.UNAUTHENTICATED) {
     signIn("identity-server4");
   }
@@ -47,7 +52,7 @@ const RegisterSellCar: NextPage = (props: any) => {
     message: ""
   });
   const [carInfo, setCarInfo] = useState<SellData>({
-    name: "",
+    name: "abc",
     price: 0,
     brand: "Alfa Romeo",
     model: "",
@@ -55,16 +60,18 @@ const RegisterSellCar: NextPage = (props: any) => {
     madeIn: "",
     seatingCapacity: 4,
     kmDriven: 0,
-    year: 1900,
+    year: 2020,
     fuelType: "Petrol",
     category: "M1",
     color: "Red",
-    description: "",
+    description: "test",
     hasInstallment: false,
-    ownerId: sub
+    ownerId: sub,
+    images: [],
   });
+  const [files, setFiles] = useState<any[]>([]);
 
-  const lastStep = Object.keys(carInfo).length - 1;
+  const lastStep = Object.keys(carInfo).length - 2;
 
   const updateCarInfo = (key: string, value: any) => {
     setCarInfo({
@@ -72,6 +79,20 @@ const RegisterSellCar: NextPage = (props: any) => {
       [key]: value
     });
   };
+
+  const handleSubmit = async () => {
+    const imageNames = await uploadImages();
+    carInfo.images = imageNames as string[];
+    console.log('images', imageNames)
+    await addProducts(carInfo);
+  }
+
+  const uploadImages = async () => {
+    if (!files?.length) {
+      return [];
+    }
+    return await FileStorageService.uploadImages(accessToken, files);
+  }
 
   async function addProducts(sellData: SellData) {
     try {
@@ -105,22 +126,69 @@ const RegisterSellCar: NextPage = (props: any) => {
       {step < lastStep && (<SellCar setStep={setStep} step={step} carInfo={carInfo} updateCarInfo={updateCarInfo} />)}
       {step == lastStep && (
         <div>
+          <h5>Review</h5>
           <div className={styles.confirm}>
-            <p>Car Name: {carInfo.name}</p>
-            <p>Price: {carInfo.price}</p>
-            <p>Brand: {carInfo.brand}</p>
-            <p>Model: {carInfo.model}</p>
-            <p>Transmission: {carInfo.transmission}</p>
-            <p>MadeIn: {carInfo.madeIn}</p>
-            <p>SeatingCapacity: {carInfo.seatingCapacity}</p>
-            <p>kmDriven: {carInfo.kmDriven}</p>
-            <p>Year: {carInfo.year}</p>
-            <p>FuelType: {carInfo.fuelType}</p>
-            <p>Category: {carInfo.category}</p>
-            <p>Color: {carInfo.color}</p>
-            <p>Description: {carInfo.description}</p>
-            <p>HasInstallment: {carInfo.hasInstallment ? "Yes" : "No"}</p>
+            <div className={styles.infoItem}>
+              <div>Car Name:</div>
+              <div>{carInfo.name}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Price:</div>
+              <div>{carInfo.price}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Brand:</div>
+              <div>{carInfo.brand}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Model:</div>
+              <div>{carInfo.model}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Transmission:</div>
+              <div>{carInfo.transmission}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Made In:</div>
+              <div>{carInfo.madeIn}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>SeatingCapacity:</div>
+              <div>{carInfo.seatingCapacity}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Km Driven:</div>
+              <div>{carInfo.kmDriven}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Year:</div>
+              <div>{carInfo.year}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Fuel Type:</div>
+              <div>{carInfo.fuelType}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Category:</div>
+              <div>{carInfo.category}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Color:</div>
+              <div>{carInfo.color}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Description:</div>
+              <div>{carInfo.description}</div>
+            </div>
+            <div className={styles.infoItem}>
+              <div>Has Installment:</div>
+              <div>{carInfo.hasInstallment ? "Yes" : "No"}</div>
+            </div>
           </div>
+          <h5>Upload Images</h5>
+          <FileUploader
+            onChange={setFiles}
+          />
           < Stack direction="row" spacing={2} justifyContent="center">
             <Button
               variant="outlined"
@@ -130,7 +198,7 @@ const RegisterSellCar: NextPage = (props: any) => {
             </Button>
             <Button
               variant="outlined"
-              onClick={async () => { await addProducts(carInfo); }}
+              onClick={handleSubmit}
             >
               Submit
             </Button>
