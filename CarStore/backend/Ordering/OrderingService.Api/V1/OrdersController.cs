@@ -1,7 +1,10 @@
-﻿using MediatR;
+﻿using CarStore.AppContracts.Dtos;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using OrderingService.AppCore.UseCases.Commands;
+using OrderingService.AppCore.UseCases.Queries;
 
 namespace OrderingService.Api.V1
 {
@@ -16,6 +19,15 @@ namespace OrderingService.Api.V1
         [HttpPost("/api/v{version:apiVersion}/orders")]
         public async Task<ActionResult> HandleCreateOrderAsync([FromBody] CreateOrder.Command request, CancellationToken cancellationToken = new())
         {
+            return Ok(await Mediator.Send(request, cancellationToken));
+        }
+
+        [Authorize]
+        [HttpGet("/api/v{version:apiVersion}/orders/")]
+        public async Task<ActionResult<OrderDto>> HandleGetOrdersByCustomerIdAsync(CancellationToken cancellationToken = new())
+        {
+            var request = new GetOrders.Query();
+
             return Ok(await Mediator.Send(request, cancellationToken));
         }
     }

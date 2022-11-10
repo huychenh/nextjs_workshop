@@ -15,4 +15,13 @@ export default class OrderService {
 
     return await response.json();
   }
+
+  public static async getOrdersByCustomerId(accessToken: string) {
+    const response = await fetchJson(
+      `${process.env.NEXT_PUBLIC_URL_API}/${OrderService.ControllerUri}`,
+      accessToken,
+    );
+
+    return await response.json();
+  }
 }

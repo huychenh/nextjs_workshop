@@ -1,4 +1,6 @@
-﻿using OrderingService.AppCore;
+﻿using CarStore.AppContracts.Dtos;
+using Microsoft.EntityFrameworkCore;
+using OrderingService.AppCore;
 using OrderingService.AppCore.Core;
 
 namespace OrderingService.Infrastructure.Data
@@ -24,6 +26,26 @@ namespace OrderingService.Infrastructure.Data
             await _dbContext.SaveChangesAsync();
 
             return order.Id;
-        }       
+        }
+
+        public async Task<IEnumerable<OrderDto>> GetOrdersByCustomerId(Guid id)
+        {
+            var orders = await _dbContext.Orders
+                .Where(x => x.BuyerId == id)
+                .Select(x => new OrderDto
+                {
+                    Id = x.Id,
+                    ProductId = x.ProductId,
+                    OwnerId = x.OwnerId,
+                    BuyerId = x.BuyerId,
+                    Price = x.Price,
+                    ProductName = x.ProductName,
+                    PictureUrl = x.PictureUrl,
+                })
+                .ToListAsync();
+
+
+            return orders;
+        }
     }
 }

@@ -41,6 +41,13 @@ function Layout({ children, title }: any) {
               <Typography variant="h5" sx={useStyles.title}>
                 <Link href="/"><a>Car Store</a></Link>
               </Typography>
+              {status === SessionStatus.AUTHENTICATED && (
+                  <div className={styles.menu}>
+                    <Link href="/orders" passHref>
+                      <Button color="inherit">Cart</Button>
+                    </Link>
+                </div>
+              )}
               <div className={styles.menu}>
                 <Link href="/registerSellCar" passHref>
                   <Button color="inherit">Sell your car</Button>

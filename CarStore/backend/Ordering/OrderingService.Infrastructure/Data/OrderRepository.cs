@@ -1,4 +1,6 @@
-﻿using OrderingService.AppCore;
+﻿using CarStore.AppContracts.Dtos;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using OrderingService.AppCore;
 using OrderingService.AppCore.Core;
 
 namespace OrderingService.Infrastructure.Data
@@ -24,6 +26,11 @@ namespace OrderingService.Infrastructure.Data
             await _dbContext.SaveChangesAsync();
 
             return order.Id;
+        }
+
+        public Task<IEnumerable<OrderDto>> GetOrdersByCustomerId(Guid id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
