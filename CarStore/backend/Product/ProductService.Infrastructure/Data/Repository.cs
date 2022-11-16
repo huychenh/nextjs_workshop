@@ -140,14 +140,29 @@ namespace ProductService.Infrastructure.Data
         public async Task<ListResultModel<ProductDto>> GetWithPagination(SearchProductDto queryDto)
         {
             IQueryable<Product> query = _dbContext.Products;
+            var forSpecificBrand = !string.IsNullOrEmpty(queryDto.Brand);
 
             if (!string.IsNullOrEmpty(queryDto.SearchText))
             {
                 var lowerText = queryDto.SearchText.ToLower();
-                query = query.Where(x => x.Name.ToLower().Contains(lowerText) ||
-                    x.Brand.Name.ToLower().Contains(lowerText) ||
-                    x.Model.ToLower().Contains(lowerText) ||
-                    x.Year.ToString().Contains(lowerText));
+                if (!forSpecificBrand)
+                {
+                    query = query.Where(x => x.Name.ToLower().Contains(lowerText)
+                      || x.Brand.Name.ToLower().Contains(lowerText)
+                      || x.Model.ToLower().Contains(lowerText)
+                      || x.Year.ToString().Contains(lowerText));
+                }
+                else
+                {
+                    query = query.Where(x => x.Name.ToLower().Contains(lowerText)
+                                          || x.Model.ToLower().Contains(lowerText)
+                                          || x.Year.ToString().Contains(lowerText));
+                }
+            }
+
+            if (forSpecificBrand)
+            {
+                query = query.Where(x => x.Brand.Name.ToLower().Equals(queryDto.Brand.ToLower()));
             }
 
             if (!string.IsNullOrEmpty(queryDto.CategoryName))
