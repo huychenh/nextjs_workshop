@@ -1,0 +1,28 @@
+﻿@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "RegisterConfirmation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Register Confirmation</h1>
+<br />
+@if (!String.IsNullOrEmpty(Model.StatusMessage))
+{
+    if (!Model.StatusMessage.StartsWith("Error"))
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            @Model.StatusMessage
+        </div>
+        <p>
+            Please wait a moment, the website will be automatic redirected...
+            <br />
+            <a class="registered-login-redirect" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" title="Login account">Click here to login</a>
+        </p>
+}
+}
+
+@section scripts
+{
+    <script src="~/js/registered-login-redirect.js"></script>
+}

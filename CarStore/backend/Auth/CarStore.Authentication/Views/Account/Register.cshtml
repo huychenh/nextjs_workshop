@@ -1,0 +1,86 @@
+﻿@model RegisterViewModel
+
+@{ ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<div class="card fat">
+    <partial name="_ValidationSummary" />
+    <div class="card-body">
+        <h4 class="card-title">Register</h4>
+
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div class="form-group">
+                <label asp-for="@Model.Email"></label>
+                <input asp-for="@Model.Email" class="form-control" />
+                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Password"></label>
+                <input asp-for="@Model.Password" class="form-control" />
+                <span asp-validation-for="@Model.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.ConfirmPassword"></label>
+                <input asp-for="@Model.ConfirmPassword" class="form-control" />
+                <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+
+                <br />
+                <strong>Notes:</strong> The password must contain rules as following:
+                <ul>
+                    <li>Password is minimum 6 characters long</li>
+                    <li>Uppercase, lowercase characters (A-Z)</li>
+                    <li>Digits (0-9)</li>
+                    <li>Special characters (#$%...)</li>
+                </ul>
+            </div>
+
+            <div class="form-group m-0">
+                <button type="submit" class="btn btn-primary btn-block">
+                    Register
+                </button>
+            </div>
+            <div class="mt-4 text-center">
+                Already have an account?
+                <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" title="Login account">Login</a>
+            </div>
+        </form>
+
+    </div>
+
+    @if (Model.ExternalLogins.Any())
+    {
+<div class="card-body">
+    @*<h4 class="card-title">External Login</h4>*@
+    <ul class="list-inline">
+        @foreach (var provider in Model.ExternalLogins)
+        {
+            if (provider.Name.ToUpper().Equals("GOOGLE"))
+            {
+<li>
+    <a class="btn btn-default"
+       asp-controller="External"
+       asp-action="Challenge"
+       asp-route-provider="@provider.Name"
+       asp-route-returnUrl="@Model.ReturnUrl">
+        <img src="~/img/google.png" alt="@provider.DisplayName" title="@provider.DisplayName" />
+    </a>
+</li>
+ }
+
+if (provider.Name.ToUpper().Equals("FACEBOOK"))
+{
+<li>
+    <a class="btn btn-default"
+       asp-controller="External"
+       asp-action="Challenge"
+       asp-route-provider="@provider.Name"
+       asp-route-returnUrl="@Model.ReturnUrl">
+        <img src="~/img/facebook.png" alt="@provider.DisplayName" title="@provider.DisplayName" />
+    </a>
+</li>
+}
+}
+    </ul>
+</div>}
+
+</div>

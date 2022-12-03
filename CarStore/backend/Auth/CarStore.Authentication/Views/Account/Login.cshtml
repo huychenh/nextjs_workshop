@@ -1,0 +1,91 @@
+﻿@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card fat">
+    <partial name="_ValidationSummary" />
+
+    @if (Model.EnableLocalLogin)
+    {
+        <div class="card-body">
+            <h4 class="card-title">Login</h4>
+
+            <form asp-route="Login">
+                <input type="hidden" asp-for="ReturnUrl" />
+
+                <div class="form-group">
+                    <label asp-for="Username">Username/Email</label>
+                    <input class="form-control" placeholder="Username" asp-for="Username" autofocus />    
+                    <span asp-validation-for="@Model.Username" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input type="password" class="form-control" placeholder="Password" asp-for="Password" autocomplete="off" />
+                    <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                </div>
+
+                @if (Model.AllowRememberLogin)
+                {
+                    <div class="form-group custom-checkbox custom-control">
+                        <label asp-for="RememberLogin">
+                            <input asp-for="RememberLogin">
+                            <strong>Remember</strong>
+                        </label>
+                    </div>
+
+                }
+
+                <div class="form-group m-0">                    
+                    <button class="btn btn-primary btn-block" name="button" value="login">Login</button>
+                </div>
+                <div class="mt-4 text-center">
+                    Don't have an account?
+                    <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" title="Register account">Register</a>
+                </div>
+            </form>
+        </div>
+    }
+
+    @if (Model.VisibleExternalProviders.Any())
+    {
+        <div class="card-body">
+            @*<h4 class="card-title">External Login</h4>*@
+            <ul class="list-inline">
+                @foreach (var provider in Model.VisibleExternalProviders)
+                {
+                    if (provider.AuthenticationScheme.ToUpper().Equals("GOOGLE"))
+                    {
+                        <li>
+                            <a class="btn btn-default"
+                               asp-controller="External"
+                               asp-action="Challenge"
+                               asp-route-provider="@provider.AuthenticationScheme"
+                               asp-route-returnUrl="@Model.ReturnUrl">
+                                <img src="~/img/google.png" alt="@provider.DisplayName" title="@provider.DisplayName" />
+                            </a>
+                        </li>
+                    }
+
+                    if (provider.AuthenticationScheme.ToUpper().Equals("FACEBOOK"))
+                    {
+                        <li>
+                            <a class="btn btn-default"
+                               asp-controller="External"
+                               asp-action="Challenge"
+                               asp-route-provider="@provider.AuthenticationScheme"
+                               asp-route-returnUrl="@Model.ReturnUrl">
+                                <img src="~/img/facebook.png" alt="@provider.DisplayName" title="@provider.DisplayName" />
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    }
+
+
+</div>
