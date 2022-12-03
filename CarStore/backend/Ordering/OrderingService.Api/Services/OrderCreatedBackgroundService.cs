@@ -1,11 +1,11 @@
-﻿using CarStore.AppContracts.Dtos;
-using CarStore.IntegrationEvents.Ordering;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using MediatR;
 using N8T.Infrastructure.Bus;
 using N8T.Infrastructure.Validator;
 using Newtonsoft.Json;
+using NotificationService.Shared.DTO;
 using OrderingService.AppCore.UseCases.Commands;
+using OrderingService.Shared.Events;
 
 namespace OrderingService.Api.Services
 {

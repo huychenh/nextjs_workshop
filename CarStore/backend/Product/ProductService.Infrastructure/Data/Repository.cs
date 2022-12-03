@@ -1,9 +1,8 @@
-﻿using CarStore.AppContracts.Dtos;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using N8T.Core.Domain;
 using ProductService.AppCore;
 using ProductService.AppCore.Core;
-using System.Linq;
+using ProductService.Shared.DTO;
 
 namespace ProductService.Infrastructure.Data
 {

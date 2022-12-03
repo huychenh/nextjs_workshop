@@ -1,9 +1,9 @@
-﻿using CarStore.AppContracts.Dtos;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.AppCore.UseCases.Commands;
 using ProductService.AppCore.UseCases.Queries;
+using ProductService.Shared.DTO;
 
 namespace ProductService.Api.V1
 {

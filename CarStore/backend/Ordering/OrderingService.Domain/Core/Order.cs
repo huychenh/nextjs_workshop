@@ -1,6 +1,6 @@
-﻿using CarStore.AppContracts.Dtos;
-using CarStore.IntegrationEvents.Ordering;
-using N8T.Core.Domain;
+﻿using N8T.Core.Domain;
+using OrderingService.Shared.DTO;
+using OrderingService.Shared.Events;
 
 namespace OrderingService.AppCore.Core
 {

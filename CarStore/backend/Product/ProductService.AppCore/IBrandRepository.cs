@@ -1,5 +1,5 @@
-﻿using CarStore.AppContracts.Dtos;
-using ProductService.AppCore.Core;
+﻿using ProductService.AppCore.Core;
+using ProductService.Shared.DTO;
 
 namespace ProductService.AppCore
 {

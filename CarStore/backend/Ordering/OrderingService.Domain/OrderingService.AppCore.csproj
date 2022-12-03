@@ -7,14 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CarStore.IntegrationEvents\CarStore.IntegrationEvents.csproj" />
-    <ProjectReference Include="..\..\Contracts\CarStore.AppConstracts\CarStore.AppContracts.csproj" />
-    <ProjectReference Include="..\..\N8T.Core\N8T.Core.csproj" />
+    <PackageReference Include="FluentValidation" Version="10.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="10.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <ProjectReference Include="..\..\Notification\NotificationService.Shared\NotificationService.Shared.csproj" />
+    <ProjectReference Include="..\..\Shared\N8T.Core\N8T.Core.csproj" />
+    <ProjectReference Include="..\OrderingService.Shared\OrderingService.Shared.csproj" />
   </ItemGroup>
 
 </Project>

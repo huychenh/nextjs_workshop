@@ -7,21 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="V1\**" />
+    <Content Remove="V1\**" />
+    <EmbeddedResource Remove="V1\**" />
+    <None Remove="V1\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="SendGrid" Version="9.27.0" />
     <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\N8T.Core\N8T.Core.csproj" />
-    <ProjectReference Include="..\..\N8T.Infrastructure.EfCore\N8T.Infrastructure.EfCore.csproj" />
-    <ProjectReference Include="..\..\N8T.Infrastructure\N8T.Infrastructure.csproj" />
     <ProjectReference Include="..\NotificationService.AppCore\NotificationService.AppCore.csproj" />
-    <ProjectReference Include="..\NotificationService.Infrastructure\NotificationService.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="V1\" />
+    <ProjectReference Include="..\NotificationService.Shared\NotificationService.Shared.csproj" />
   </ItemGroup>
 
 </Project>

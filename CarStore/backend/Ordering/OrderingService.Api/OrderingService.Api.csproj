@@ -16,9 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\N8T.Core\N8T.Core.csproj" />
-    <ProjectReference Include="..\..\N8T.Infrastructure.EfCore\N8T.Infrastructure.EfCore.csproj" />
-    <ProjectReference Include="..\..\N8T.Infrastructure\N8T.Infrastructure.csproj" />
     <ProjectReference Include="..\OrderingService.Domain\OrderingService.AppCore.csproj" />
     <ProjectReference Include="..\OrderingService.Infrastructure\OrderingService.Infrastructure.csproj" />
   </ItemGroup>

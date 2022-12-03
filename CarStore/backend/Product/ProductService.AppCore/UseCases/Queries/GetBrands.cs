@@ -1,7 +1,7 @@
-﻿using CarStore.AppContracts.Dtos;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using N8T.Core.Domain;
+using ProductService.Shared.DTO;
 
 namespace ProductService.AppCore.UseCases.Queries
 {

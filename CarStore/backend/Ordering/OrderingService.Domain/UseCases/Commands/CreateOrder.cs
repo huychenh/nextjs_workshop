@@ -1,10 +1,10 @@
-﻿using CarStore.AppContracts.Dtos;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using N8T.Core.Domain;
 using OrderingService.AppCore.Core;
 using OrderingService.AppCore.Services;
+using OrderingService.Shared.DTO;
 
 namespace OrderingService.AppCore.UseCases.Commands
 {

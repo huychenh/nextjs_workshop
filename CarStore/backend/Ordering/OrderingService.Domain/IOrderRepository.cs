@@ -1,6 +1,6 @@
-﻿using CarStore.IntegrationEvents.Notification;
-using CarStore.AppContracts.Dtos;
-using OrderingService.AppCore.Core;
+﻿using OrderingService.AppCore.Core;
+using NotificationService.Shared.Events;
+using OrderingService.Shared.DTO;
 
 namespace OrderingService.AppCore
 {

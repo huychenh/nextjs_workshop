@@ -1,14 +1,9 @@
-﻿using CarStore.AppContracts.Dtos;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using N8T.Core.Domain;
 using OrderingService.AppCore.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OrderingService.Shared.DTO;
 
 namespace OrderingService.AppCore.UseCases.Queries
 {

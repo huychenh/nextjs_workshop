@@ -1,8 +1,8 @@
-﻿using CarStore.IntegrationEvents.Notification;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using N8T.Infrastructure.Bus;
 using N8T.Infrastructure.Validator;
 using Newtonsoft.Json;
+using NotificationService.Shared.Events;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 

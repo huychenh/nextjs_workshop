@@ -1,6 +1,6 @@
-﻿using CarStore.AppContracts.Dtos;
-using N8T.Core.Domain;
+﻿using N8T.Core.Domain;
 using ProductService.AppCore.Core;
+using ProductService.Shared.DTO;
 
 namespace ProductService.AppCore
 {

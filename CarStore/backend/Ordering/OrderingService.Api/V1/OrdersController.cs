@@ -1,10 +1,9 @@
-﻿using CarStore.AppContracts.Dtos;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using OrderingService.AppCore.UseCases.Commands;
 using OrderingService.AppCore.UseCases.Queries;
+using OrderingService.Shared.DTO;
 
 namespace OrderingService.Api.V1
 {
