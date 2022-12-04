@@ -1,20 +1,19 @@
 ﻿using N8T.Core.Domain;
-using ProductService.Shared.DTO;
 using ProductService.Shared.Events;
 
 namespace ProductService.AppCore.Core
 {
     public class Product : EntityRootBase
     {
-        public string Name { get; private set; }
+        public string Name { get; private set; } = string.Empty;
 
         public decimal Price { get; private set; }
 
-        public string Model { get; private set; }
+        public string Model { get; private set; } = string.Empty;
 
         public Transmission Transmission { get; private set; }
 
-        public string MadeIn { get; private set; }
+        public string? MadeIn { get; private set; }
 
         public int SeatingCapacity { get; private set; }
 
@@ -24,11 +23,11 @@ namespace ProductService.AppCore.Core
 
         public FuelType FuelType { get; private set; }
 
-        public string Category { get; private set; }
+        public string? Category { get; private set; }
 
-        public string Color { get; private set; }
+        public string? Color { get; private set; }
 
-        public string Description { get; private set; }
+        public string? Description { get; private set; }
 
         public bool HasInstallment { get; private set; }
 
@@ -44,30 +43,47 @@ namespace ProductService.AppCore.Core
 
         public ICollection<string>? Images { get; set; }
 
-        public static Product Create(ProductCreateDto dto, Guid brandId, Guid ownerId)
+        public static Product Create(
+            string name,
+            decimal price,
+            string model,
+            Transmission transmission,
+            string? madeIn,
+            int seatingCapacity,
+            int kmDriven,
+            int year,
+            FuelType fuelType,
+            string? category,
+            string? color,
+            string? description,
+            bool hasInstallment,
+            IEnumerable<string> images,
+            Guid brandId,
+            Guid ownerId)
         {
+            // Assume that inputs are valid because of the Validator
             Product product = new()
             {
                 Id = Guid.NewGuid(),
-                Name = dto.Name,
-                Price = dto.Price,
+                Name = name,
+                Price = price,
                 BrandId = brandId,
-                Model = dto.Model,
-                Transmission = (Transmission)Enum.Parse(typeof(Transmission), dto.Transmission),
-                MadeIn = dto.MadeIn,
-                SeatingCapacity = dto.SeatingCapacity,
-                KmDriven = dto.KmDriven,
-                Year = dto.Year,
-                FuelType = (FuelType)Enum.Parse(typeof(FuelType), dto.FuelType),
-                Category = dto.Category,
-                Color = dto.Color,
-                Description = dto.Description,
-                HasInstallment = dto.HasInstallment,
+                Model = model,
+                Transmission = transmission,
+                MadeIn = madeIn,
+                SeatingCapacity = seatingCapacity,
+                KmDriven = kmDriven,
+                Year = year,
+                FuelType = fuelType,
+                Category = category,
+                Color = color,
+                Description = description,
+                HasInstallment = hasInstallment,
                 OwnerId = ownerId,
                 Created = DateTime.UtcNow,
                 Active = false,
                 Verified = false,
-                Images = dto.Images,
+                Images = images.ToList(),
             };
 
             product.AddDomainEvent(new ProductCreatedIntegrationEvent

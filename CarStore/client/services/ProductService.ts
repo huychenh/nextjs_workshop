@@ -34,13 +34,13 @@ export default class ProductService {
   }
 
   public static async addProducts(accessToken: string, model: any) {
-    console.log(JSON.stringify({ model }));
+    console.log(JSON.stringify(model));
     const response = await fetchJson(
       `${process.env.NEXT_PUBLIC_URL_API}/${ProductService.ControllerUri}`,
       accessToken,
       {
         method: "POST",
-        body: JSON.stringify({ model }),
+        body: JSON.stringify(model),
       }
     );
 

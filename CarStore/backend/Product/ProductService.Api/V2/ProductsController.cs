@@ -36,7 +36,7 @@ namespace ProductService.Api.V2
         [MapToApiVersion("2.0")]
         [HttpPost("/api/v{version:apiVersion}/products")]
         public async Task<ActionResult> HandleCreateProductAsync(
-            [FromBody] CreateProduct.Command request,
+            [FromBody] CreateProduct request,
             CancellationToken cancellationToken = new())
         {
             return Ok(await Mediator.Send(request, cancellationToken));

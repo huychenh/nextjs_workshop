@@ -45,7 +45,7 @@ namespace ProductService.Api.V1
 
         [Authorize]
         [HttpPost("/api/v{version:apiVersion}/products")]
-        public async Task<ActionResult> HandleCreateProductAsync([FromBody] CreateProduct.Command request, CancellationToken cancellationToken = new())
+        public async Task<ActionResult> HandleCreateProductAsync([FromBody] CreateProduct request, CancellationToken cancellationToken = new())
         {
             return Ok(await Mediator.Send(request, cancellationToken));
         }
