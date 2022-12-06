@@ -2,43 +2,39 @@
 using MediatR;
 using N8T.Core.Domain;
 using ProductService.AppCore.Core;
-using ProductService.Shared.DTO;
 
 namespace ProductService.AppCore.UseCases.Commands
 {
-    public class CreateBrand
+    public class CreateBrand : ICommand<Guid>
     {
-        public record Command : ICreateCommand<BrandCreateDto, Guid>
-        {
-            public BrandCreateDto Model { get; init; } = default!;
+        public string Name { get; set; } = string.Empty;
 
-            internal class Validator : AbstractValidator<Command>
+        internal class Validator : AbstractValidator<CreateBrand>
+        {
+            public Validator()
             {
-                public Validator()
-                {
-                    RuleFor(v => v.Model.Name)
-                        .NotEmpty().WithMessage("Name is required.")
-                        .MaximumLength(20).WithMessage("Name must not exceed 20 characters.");
-                }
+                RuleFor(v => v.Name)
+                    .NotEmpty().WithMessage("Name is required.")
+                    .MaximumLength(20).WithMessage("Name must not exceed 20 characters.");
+            }
+        }
+
+        internal class Handler : IRequestHandler<CreateBrand, ResultModel<Guid>>
+        {
+            private readonly IBrandRepository _repository;
+
+            public Handler(IBrandRepository brandRepository)
+            {
+                _repository = brandRepository ?? throw new ArgumentNullException(nameof(brandRepository));
             }
 
-            internal class Handler : IRequestHandler<Command, ResultModel<Guid>>
+            public async Task<ResultModel<Guid>> Handle(CreateBrand request, CancellationToken cancellationToken)
             {
-                private readonly IBrandRepository _repository;
+                var brand = Brand.Create(request.Name);
 
-                public Handler(IBrandRepository brandRepository)
-                {
-                    _repository = brandRepository ?? throw new ArgumentNullException(nameof(brandRepository));
-                }
+                var id = await _repository.Add(brand);
 
-                public async Task<ResultModel<Guid>> Handle(Command request, CancellationToken cancellationToken)
-                {
-                    var brand = Brand.Create(request.Model);
-
-                    var id = await _repository.Add(brand);
-
-                    return ResultModel<Guid>.Create(id);
-                }
+                return ResultModel<Guid>.Create(id);
             }
         }
     }

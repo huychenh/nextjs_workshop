@@ -25,7 +25,7 @@ export default class ProductService {
     }
     queryString += `&PriceFrom=${model.PriceFrom}&PriceTo=${model.PriceTo}` +
       `&LatestNews=${model.LatestNews}&LowestPrice=${model.LowestPrice}` +
-      `&page=${model.pageIndex == 0 ? 1 : model.pageIndex}&pageSize=${model.pageSize}`;
+      `&page=${model.pageIndex == 0 ? 1 : model.pageIndex}&pageSize=${model.pageSize || 10}`;
     const response = await fetchJson(
       `${process.env.NEXT_PUBLIC_URL_API}/${ProductService.ControllerUri}?${queryString}`
     );

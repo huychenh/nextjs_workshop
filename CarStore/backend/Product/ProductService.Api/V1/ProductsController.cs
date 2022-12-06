@@ -21,25 +21,16 @@ namespace ProductService.Api.V1
         }
 
         [HttpGet("/api/v{version:apiVersion}/products")]
-        public async Task<ActionResult> HandleGetProductsAsync([FromQuery] SearchProductDto request, CancellationToken cancellationToken = new())
+        public async Task<ActionResult> HandleGetProductsAsync([FromQuery] GetProducts request, CancellationToken cancellationToken = new())
         {
-            if(request != null && request.Page != null && request.PageSize == null)
-            {
-                request.PageSize = Convert.ToInt32(_pageSize);
-            }
-
-            GetProducts.Query queryModel = new GetProducts.Query { SearchProductModel = request };
-
-            var result = await Mediator.Send(queryModel, cancellationToken);
+            var result = await Mediator.Send(request, cancellationToken);
 
             return Ok(result);
         }
 
         [HttpGet("/api/v{version:apiVersion}/products/{id:guid}")]
-        public async Task<ActionResult<ProductDto>> HandleGetProductByIdAsync(Guid id, CancellationToken cancellationToken = new())
+        public async Task<ActionResult<ProductDto>> HandleGetProductByIdAsync(GetProductById request, CancellationToken cancellationToken = new())
         {
-            var request = new GetProductById.Query { Id = id };
-
             return Ok(await Mediator.Send(request, cancellationToken));
         }
 

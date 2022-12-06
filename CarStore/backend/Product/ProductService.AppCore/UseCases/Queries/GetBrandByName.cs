@@ -5,42 +5,39 @@ using ProductService.Shared.DTO;
 
 namespace ProductService.AppCore.UseCases.Queries
 {
-    public class GetBrandByName
+    public class GetBrandByName : IQuery<BrandDto>
     {
-        public record Query : IQuery<BrandDto>
-        {
-            public string? Name { get; init; }
+        public string Name { get; init; } = string.Empty;
 
-            internal class Validator : AbstractValidator<Query>
+        internal class Validator : AbstractValidator<GetBrandByName>
+        {
+            public Validator()
             {
-                public Validator()
-                {
-                    RuleFor(x => x.Name)
-                        .NotNull()
-                        .NotEmpty().WithMessage("Name is required.");
-                }
+                RuleFor(x => x.Name)
+                    .NotNull()
+                    .NotEmpty().WithMessage("Name is required.");
+            }
+        }
+
+        internal class Handler : IRequestHandler<GetBrandByName, ResultModel<BrandDto>>
+        {
+            private readonly IBrandRepository _repository;
+
+            public Handler(IBrandRepository brandRepository)
+            {
+                _repository = brandRepository ?? throw new ArgumentNullException(nameof(brandRepository));
             }
 
-            internal class Handler : IRequestHandler<Query, ResultModel<BrandDto>>
+            public async Task<ResultModel<BrandDto>> Handle(GetBrandByName request, CancellationToken cancellationToken)
             {
-                private readonly IBrandRepository _repository;
-
-                public Handler(IBrandRepository brandRepository)
+                if (request == null)
                 {
-                    _repository = brandRepository ?? throw new ArgumentNullException(nameof(brandRepository));
+                    throw new ArgumentNullException(nameof(request));
                 }
 
-                public async Task<ResultModel<BrandDto>> Handle(Query request, CancellationToken cancellationToken)
-                {
-                    if (request == null)
-                    {
-                        throw new ArgumentNullException(nameof(request));
-                    }
+                var brand = await _repository.GetByName(request.Name);
 
-                    var brand = await _repository.GetByName(request.Name);
-
-                    return ResultModel<BrandDto>.Create(brand);
-                }
+                return ResultModel<BrandDto>.Create(brand);
             }
         }
     }
