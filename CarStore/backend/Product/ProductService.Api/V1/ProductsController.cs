@@ -29,7 +29,7 @@ namespace ProductService.Api.V1
         }
 
         [HttpGet("/api/v{version:apiVersion}/products/{id:guid}")]
-        public async Task<ActionResult<ProductDto>> HandleGetProductByIdAsync(GetProductById request, CancellationToken cancellationToken = new())
+        public async Task<ActionResult<ProductDto>> HandleGetProductByIdAsync([FromRoute] GetProductById request, CancellationToken cancellationToken = new())
         {
             return Ok(await Mediator.Send(request, cancellationToken));
         }

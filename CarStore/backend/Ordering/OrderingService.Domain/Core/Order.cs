@@ -28,7 +28,7 @@ namespace OrderingService.AppCore.Core
 
         public OrderStatus Status { get; private set; }
 
-        public static Order Create(CreateOrderDto dto, Guid buyerId, string ownerEmail)
+        public static Order Create(CreateOrderDto dto, Guid buyerId, string? ownerEmail)
         {
             var order = new Order
             {

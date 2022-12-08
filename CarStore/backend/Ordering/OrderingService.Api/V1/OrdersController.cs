@@ -16,7 +16,7 @@ namespace OrderingService.Api.V1
 
         [Authorize]
         [HttpPost("/api/v{version:apiVersion}/orders")]
-        public async Task<ActionResult> HandleCreateOrderAsync([FromBody] CreateOrder.Command request, CancellationToken cancellationToken = new())
+        public async Task<ActionResult> HandleCreateOrderAsync([FromBody] CreateOrder request, CancellationToken cancellationToken = new())
         {
             return Ok(await Mediator.Send(request, cancellationToken));
         }
@@ -25,7 +25,7 @@ namespace OrderingService.Api.V1
         [HttpGet("/api/v{version:apiVersion}/orders/")]
         public async Task<ActionResult<OrderDto>> HandleGetOrdersByCustomerIdAsync(CancellationToken cancellationToken = new())
         {
-            var request = new GetOrders.Query();
+            var request = new GetOrders();
 
             return Ok(await Mediator.Send(request, cancellationToken));
         }
