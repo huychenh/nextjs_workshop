@@ -12,9 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CarStore.IntegrationEvents\CarStore.IntegrationEvents.csproj" />
-    <ProjectReference Include="..\..\Contracts\CarStore.AppConstracts\CarStore.AppContracts.csproj" />
-    <ProjectReference Include="..\..\N8T.Core\N8T.Core.csproj" />
+    <ProjectReference Include="..\..\Shared\N8T.Core\N8T.Core.csproj" />
+    <ProjectReference Include="..\ProductService.Shared\ProductService.Shared.csproj" />
   </ItemGroup>
 
 </Project>

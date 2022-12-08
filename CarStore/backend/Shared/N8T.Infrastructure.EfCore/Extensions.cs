@@ -1,10 +1,6 @@
 using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
 using N8T.Core.Domain;
 using N8T.Infrastructure.EfCore.Internal;
@@ -13,10 +9,12 @@ namespace N8T.Infrastructure.EfCore
 {
     public static class Extensions
     {
-        public static IServiceCollection AddPostgresDbContext<TDbContext>(this IServiceCollection services,
-            string connString, Action<DbContextOptionsBuilder> doMoreDbContextOptionsConfigure = null,
+        public static IServiceCollection AddPostgresDbContext<TDbContext>(
+            this IServiceCollection services,
+            string connString, 
+            Action<DbContextOptionsBuilder> doMoreDbContextOptionsConfigure = null,
             Action<IServiceCollection> doMoreActions = null)
-                where TDbContext : DbContext, IDbFacadeResolver, IDomainEventContext
+            where TDbContext : DbContext, IDbFacadeResolver, IDomainEventContext
         {
             services.AddDbContext<TDbContext>(options =>
             {
@@ -30,6 +28,7 @@ namespace N8T.Infrastructure.EfCore
             });
 
             services.AddScoped<IDbFacadeResolver>(provider => provider.GetService<TDbContext>());
+            
             services.AddScoped<IDomainEventContext>(provider => provider.GetService<TDbContext>());
 
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TxBehavior<,>));

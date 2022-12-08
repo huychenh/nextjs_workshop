@@ -1,7 +1,8 @@
-﻿using CarStore.AppContracts.Dtos;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ProductService.AppCore;
 using ProductService.AppCore.Core;
+using ProductService.AppCore.UseCases.Queries;
+using ProductService.Shared.DTO;
 
 namespace ProductService.Infrastructure.Data
 {
@@ -28,7 +29,7 @@ namespace ProductService.Infrastructure.Data
             return brand.Id;
         }
 
-        public async Task<IEnumerable<BrandDto>> Get(SearchBrandDto queryDto)
+        public async Task<IEnumerable<BrandDto>> Get(GetBrands queryDto)
         {
             IQueryable<Brand> query = _dbContext.Brands;
 
@@ -38,12 +39,13 @@ namespace ProductService.Infrastructure.Data
                 query = query.Where(x => x.Name.Contains(searchText));
             }
 
-            return await query.Select(p => new BrandDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-            })
-            .ToArrayAsync();
+            return await query
+                .Select(p => new BrandDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                })
+                .ToArrayAsync();
         }
 
         public async Task<BrandDto?> GetByName(string name)

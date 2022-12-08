@@ -1,20 +1,19 @@
-﻿using CarStore.AppContracts.Dtos;
-using CarStore.IntegrationEvents.Brand;
-using N8T.Core.Domain;
+﻿using N8T.Core.Domain;
+using ProductService.Shared.Events;
 
 namespace ProductService.AppCore.Core
 {
     public class Brand : EntityRootBase
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public ICollection<Product> Products { get; set; }
+        public ICollection<Product> Products { get; set; } = new List<Product>();
 
-        public static Brand Create(BrandCreateDto dto)
+        public static Brand Create(string name)
         {
             var brand = new Brand
             {
-                Name = dto.Name
+                Name = name,
             };
 
             brand.AddDomainEvent(new BrandCreatedIntegrationEvent

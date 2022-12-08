@@ -1,57 +1,54 @@
-﻿using CarStore.AppContracts.Dtos;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using N8T.Core.Domain;
 using ProductService.AppCore.Services;
+using ProductService.Shared.DTO;
 
 namespace ProductService.AppCore.UseCases.Queries
 {
-    public class GetProductById
+    public class GetProductById : IQuery<ProductDto>
     {
-        public record Query : IQuery<ProductDto>
-        {
-            public Guid Id { get; init; }
+        public Guid Id { get; init; }
 
-            internal class Validator : AbstractValidator<Query>
+        internal class Validator : AbstractValidator<GetProductById>
+        {
+            public Validator()
             {
-                public Validator()
-                {
-                    RuleFor(x => x.Id)
-                        .NotNull()
-                        .NotEmpty().WithMessage("Id is required.");
-                }
+                RuleFor(x => x.Id)
+                    .NotNull()
+                    .NotEmpty().WithMessage("Id is required.");
+            }
+        }
+
+        internal class Handler : IRequestHandler<GetProductById, ResultModel<ProductDto>>
+        {
+            private readonly IRepository _repository;
+            private readonly IFileStorageService _fileStorageService;
+
+            public Handler(IRepository productRepository, IFileStorageService fileStorageService)
+            {
+                _repository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+                _fileStorageService = fileStorageService;
             }
 
-            internal class Handler : IRequestHandler<Query, ResultModel<ProductDto>>
+            public async Task<ResultModel<ProductDto>> Handle(GetProductById request, CancellationToken cancellationToken)
             {
-                private readonly IRepository _repository;
-                private readonly IFileStorageService _fileStorageService;
-
-                public Handler(IRepository productRepository, IFileStorageService fileStorageService)
+                if (request == null)
                 {
-                    _repository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
-                    _fileStorageService = fileStorageService;
+                    throw new ArgumentNullException(nameof(request));
                 }
 
-                public async Task<ResultModel<ProductDto>> Handle(Query request, CancellationToken cancellationToken)
+                var product = await _repository.GetById(request.Id);
+
+                if (product != null && product.Images != null)
                 {
-                    if (request == null)
+                    for (int i = 0; i < product.Images.Length; i++)
                     {
-                        throw new ArgumentNullException(nameof(request));
+                        product.Images[i] = _fileStorageService.BuildFileUrl(product.Images[i]);
                     }
-
-                    var product = await _repository.GetById(request.Id);
-
-                    if (product != null && product.Images != null)
-                    {
-                        for (int i = 0; i < product.Images.Length; i++)
-                        {
-                            product.Images[i] = _fileStorageService.BuildFileUrl(product.Images[i]);
-                        }
-                    }
-
-                    return ResultModel<ProductDto>.Create(product);
                 }
+
+                return ResultModel<ProductDto>.Create(product);
             }
         }
     }

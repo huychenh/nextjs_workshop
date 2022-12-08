@@ -15,10 +15,10 @@ const Home: NextPage = (props: any) => {
   const [cars, setCars] = useState<Models.Product[]>(props.cars || []);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalpages] = useState(props.totalPages || 0);
-  const [searchText, setSearchText] = useState(modelSearchDefault);
+  const [searchModel, setSearchModel] = useState(modelSearchDefault);
 
-  const getProducts = () => {
-    ProductService.getProducts({ ...searchText, pageIndex: page }).then(
+  const getProducts = (searchModel: SearchModel, page: number) => {
+    ProductService.getProducts({ ...searchModel, pageIndex: page }).then(
       (response) => {
         setCars(response.data.items);
         setTotalpages(response.data.totalPages);
@@ -27,14 +27,15 @@ const Home: NextPage = (props: any) => {
   }
 
   const handleSearchTextChanged = (model: SearchModel) => {
-    setSearchText(model);
-    setPage(1);
-    getProducts();
+    setSearchModel(model);
+    const page = 1;
+    setPage(page);
+    getProducts(model, page);
   }
 
   const handlePageChanged = (e: any, value: number) => {
     setPage(value);
-    getProducts();
+    getProducts(searchModel, value);
   }
 
   return (

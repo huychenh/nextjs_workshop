@@ -1,41 +1,40 @@
-﻿using CarStore.AppContracts.Dtos;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using N8T.Core.Domain;
+using ProductService.Shared.DTO;
 
 namespace ProductService.AppCore.UseCases.Queries
 {
-    public class GetBrands
+    public class GetBrands : IQuery<IEnumerable<BrandDto>>
     {
-        public class Query : SearchBrandRequestDto, IQuery<IEnumerable<BrandDto>>
+        public string? SearchText { get; set; }
+
+        internal class Validator : AbstractValidator<GetBrands>
         {
-            internal class Validator : AbstractValidator<Query>
+            public Validator()
             {
-                public Validator()
-                {
-                }
+            }
+        }
+
+        internal class Handler : IRequestHandler<GetBrands, ResultModel<IEnumerable<BrandDto>>>
+        {
+            private readonly IBrandRepository _repository;
+
+            public Handler(IBrandRepository brandRepository)
+            {
+                _repository = brandRepository ?? throw new ArgumentNullException(nameof(brandRepository));
             }
 
-            internal class Handler : IRequestHandler<Query, ResultModel<IEnumerable<BrandDto>>>
+            public async Task<ResultModel<IEnumerable<BrandDto>>> Handle(GetBrands request, CancellationToken cancellationToken)
             {
-                private readonly IBrandRepository _repository;
-
-                public Handler(IBrandRepository brandRepository)
+                if (request == null)
                 {
-                    _repository = brandRepository ?? throw new ArgumentNullException(nameof(brandRepository));
+                    throw new ArgumentNullException(nameof(request));
                 }
 
-                public async Task<ResultModel<IEnumerable<BrandDto>>> Handle(Query request, CancellationToken cancellationToken)
-                {
-                    if (request == null)
-                    {
-                        throw new ArgumentNullException(nameof(request));
-                    }
+                var products = await _repository.Get(request);
 
-                    var products = await _repository.Get(request.SearchBrandModel);
-
-                    return ResultModel<IEnumerable<BrandDto>>.Create(products);
-                }
+                return ResultModel<IEnumerable<BrandDto>>.Create(products);
             }
         }
     }

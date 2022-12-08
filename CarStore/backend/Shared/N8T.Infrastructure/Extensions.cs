@@ -36,8 +36,8 @@ namespace N8T.Infrastructure
             });
 
             services.AddHttpContextAccessor();
-            services.AddCustomMediatR(new []{apiAnchorType});
-            services.AddCustomValidators(new[] {apiAnchorType});
+            services.AddCustomMediatR(new[] { apiAnchorType });
+            services.AddCustomValidators(new[] { apiAnchorType });
             services.AddControllers().AddMessageBroker(config);
             services.AddTransactionalOutbox(config);
             services.AddSwagger(apiAnchorType);

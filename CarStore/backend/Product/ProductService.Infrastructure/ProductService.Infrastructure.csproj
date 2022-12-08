@@ -15,10 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Contracts\CarStore.AppConstracts\CarStore.AppContracts.csproj" />
-    <ProjectReference Include="..\..\N8T.Core\N8T.Core.csproj" />
-    <ProjectReference Include="..\..\N8T.Infrastructure.EfCore\N8T.Infrastructure.EfCore.csproj" />
-    <ProjectReference Include="..\..\N8T.Infrastructure\N8T.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Shared\N8T.Infrastructure.EfCore\N8T.Infrastructure.EfCore.csproj" />
     <ProjectReference Include="..\ProductService.AppCore\ProductService.AppCore.csproj" />
   </ItemGroup>
 

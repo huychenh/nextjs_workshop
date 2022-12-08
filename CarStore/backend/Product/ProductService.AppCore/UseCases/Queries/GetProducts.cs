@@ -1,57 +1,72 @@
-﻿using CarStore.AppContracts.Dtos;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using N8T.Core.Domain;
 using ProductService.AppCore.Services;
+using ProductService.Shared.DTO;
 
 namespace ProductService.AppCore.UseCases.Queries
 {
-    public class GetProducts
+    public class GetProducts : IQuery<ListResultModel<ProductDto>>
     {
-        public class Query : SearchProductRequestDto, IQuery<ListResultModel<ProductDto>>
+        public string? SearchText { get; set; }
+
+        public string? CategoryName { get; set; }
+
+        public string? Brand { get; set; }
+
+        public decimal PriceFrom { get; set; }
+
+        public decimal PriceTo { get; set; }
+
+        public bool? LatestNews { get; set; }
+
+        public bool? LowestPrice { get; set; }
+
+        public int Page { get; set; } = 1;
+
+        public int PageSize { get; set; } = 10;
+
+        internal class Validator : AbstractValidator<GetProducts>
         {
-            internal class Validator : AbstractValidator<Query>
+            public Validator()
             {
-                public Validator()
-                {
-                }
+            }
+        }
+
+        internal class Handler : IRequestHandler<GetProducts, ResultModel<ListResultModel<ProductDto>>>
+        {
+            private readonly IRepository _repository;
+            private readonly IFileStorageService _fileStorageService;
+
+            public Handler(IRepository repository, IFileStorageService fileStorageService)
+            {
+                _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+                _fileStorageService = fileStorageService;
             }
 
-            internal class Handler : IRequestHandler<Query, ResultModel<ListResultModel<ProductDto>>>
+            public async Task<ResultModel<ListResultModel<ProductDto>>> Handle(GetProducts request, CancellationToken cancellationToken)
             {
-                private readonly IRepository _repository;
-                private readonly IFileStorageService _fileStorageService;
-
-                public Handler(IRepository repository, IFileStorageService fileStorageService)
+                if (request == null)
                 {
-                    _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-                    _fileStorageService = fileStorageService;
+                    throw new ArgumentNullException(nameof(request));
                 }
 
-                public async Task<ResultModel<ListResultModel<ProductDto>>> Handle(Query request, CancellationToken cancellationToken)
+                var result = await _repository.GetWithPagination(request);
+
+                foreach (var product in result.Items)
                 {
-                    if (request == null)
+                    if (product.Images == null)
                     {
-                        throw new ArgumentNullException(nameof(request));
+                        continue;
                     }
 
-                    var result = await _repository.GetWithPagination(request.SearchProductModel);
-
-                    foreach (var product in result.Items)
+                    for (int i = 0; i < product.Images.Count(); i++)
                     {
-                        if (product.Images == null)
-                        {
-                            continue;
-                        }
-
-                        for (int i = 0; i < product.Images.Count(); i++)
-                        {
-                            product.Images[i] = _fileStorageService.BuildFileUrl(product.Images[i]);
-                        }
+                        product.Images[i] = _fileStorageService.BuildFileUrl(product.Images[i]);
                     }
-                    
-                    return ResultModel<ListResultModel<ProductDto>>.Create(result);
                 }
+
+                return ResultModel<ListResultModel<ProductDto>>.Create(result);
             }
         }
     }

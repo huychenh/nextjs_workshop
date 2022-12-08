@@ -1,11 +1,11 @@
-﻿using CarStore.IntegrationEvents.Notification;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using N8T.Infrastructure.Bus;
-using CarStore.AppContracts.Dtos;
 using Microsoft.EntityFrameworkCore;
 using OrderingService.AppCore;
 using OrderingService.AppCore.Core;
 using OrderingService.AppCore.Dtos;
+using OrderingService.Shared.DTO;
+using NotificationService.Shared.Events;
 
 namespace OrderingService.Infrastructure.Data
 {

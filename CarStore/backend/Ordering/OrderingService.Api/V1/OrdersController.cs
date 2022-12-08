@@ -1,10 +1,9 @@
-﻿using CarStore.AppContracts.Dtos;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using OrderingService.AppCore.UseCases.Commands;
 using OrderingService.AppCore.UseCases.Queries;
+using OrderingService.Shared.DTO;
 
 namespace OrderingService.Api.V1
 {
@@ -17,7 +16,7 @@ namespace OrderingService.Api.V1
 
         [Authorize]
         [HttpPost("/api/v{version:apiVersion}/orders")]
-        public async Task<ActionResult> HandleCreateOrderAsync([FromBody] CreateOrder.Command request, CancellationToken cancellationToken = new())
+        public async Task<ActionResult> HandleCreateOrderAsync([FromBody] CreateOrder request, CancellationToken cancellationToken = new())
         {
             return Ok(await Mediator.Send(request, cancellationToken));
         }
@@ -26,7 +25,7 @@ namespace OrderingService.Api.V1
         [HttpGet("/api/v{version:apiVersion}/orders/")]
         public async Task<ActionResult<OrderDto>> HandleGetOrdersByCustomerIdAsync(CancellationToken cancellationToken = new())
         {
-            var request = new GetOrders.Query();
+            var request = new GetOrders();
 
             return Ok(await Mediator.Send(request, cancellationToken));
         }

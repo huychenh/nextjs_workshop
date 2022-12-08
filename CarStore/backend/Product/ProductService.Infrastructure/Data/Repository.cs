@@ -1,9 +1,9 @@
-﻿using CarStore.AppContracts.Dtos;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using N8T.Core.Domain;
 using ProductService.AppCore;
 using ProductService.AppCore.Core;
-using System.Linq;
+using ProductService.AppCore.UseCases.Queries;
+using ProductService.Shared.DTO;
 
 namespace ProductService.Infrastructure.Data
 {
@@ -30,14 +30,14 @@ namespace ProductService.Infrastructure.Data
             return product.Id;
         }
 
-        public async Task<IEnumerable<ProductDto>> Get(SearchProductDto queryDto)
+        public async Task<IEnumerable<ProductDto>> Get(GetProducts request)
         {
             IQueryable<Product> query = _dbContext.Products;
-            var forSpecificBrand = !string.IsNullOrEmpty(queryDto.Brand);
+            var forSpecificBrand = !string.IsNullOrEmpty(request.Brand);
 
-            if (!string.IsNullOrEmpty(queryDto.SearchText))
+            if (!string.IsNullOrEmpty(request.SearchText))
             {
-                var lowerText = queryDto.SearchText.ToLower();
+                var lowerText = request.SearchText.ToLower();
                 if (!forSpecificBrand)
                 {
                     query = query.Where(x => x.Name.ToLower().Contains(lowerText)
@@ -54,22 +54,22 @@ namespace ProductService.Infrastructure.Data
             }
             if (forSpecificBrand)
             {
-                query = query.Where(x => x.Brand.Name.ToLower().Equals(queryDto.Brand.ToLower()));
+                query = query.Where(x => x.Brand.Name.ToLower().Equals(request.Brand.ToLower()));
             }
 
-            if (!string.IsNullOrEmpty(queryDto.CategoryName))
+            if (!string.IsNullOrEmpty(request.CategoryName))
             {
-                query = query.Where(x => queryDto.CategoryName.Contains(x.Category));
+                query = query.Where(x => request.CategoryName.Contains(x.Category));
             }
-            if (queryDto.PriceFrom > 0 && queryDto.PriceTo > 0)
+            if (request.PriceFrom > 0 && request.PriceTo > 0)
             {
-                query = query.Where(x => x.Price >= queryDto.PriceFrom && x.Price <= queryDto.PriceTo);
+                query = query.Where(x => x.Price >= request.PriceFrom && x.Price <= request.PriceTo);
             }
-            if (queryDto.LatestNews.HasValue && queryDto.LatestNews == true)
+            if (request.LatestNews.HasValue && request.LatestNews == true)
             {
                 query = query.OrderByDescending(x => x.Year);
             }
-            if (queryDto.LowestPrice.HasValue && queryDto.LowestPrice == true)
+            if (request.LowestPrice.HasValue && request.LowestPrice == true)
             {
                 query = query.OrderBy(x => x.Price);
             }
@@ -137,14 +137,14 @@ namespace ProductService.Infrastructure.Data
             };
         }
 
-        public async Task<ListResultModel<ProductDto>> GetWithPagination(SearchProductDto queryDto)
+        public async Task<ListResultModel<ProductDto>> GetWithPagination(GetProducts request)
         {
             IQueryable<Product> query = _dbContext.Products;
-            var forSpecificBrand = !string.IsNullOrEmpty(queryDto.Brand);
+            var forSpecificBrand = !string.IsNullOrEmpty(request.Brand);
 
-            if (!string.IsNullOrEmpty(queryDto.SearchText))
+            if (!string.IsNullOrEmpty(request.SearchText))
             {
-                var lowerText = queryDto.SearchText.ToLower();
+                var lowerText = request.SearchText.ToLower();
                 if (!forSpecificBrand)
                 {
                     query = query.Where(x => x.Name.ToLower().Contains(lowerText)
@@ -162,60 +162,61 @@ namespace ProductService.Infrastructure.Data
 
             if (forSpecificBrand)
             {
-                query = query.Where(x => x.Brand.Name.ToLower().Equals(queryDto.Brand.ToLower()));
+                query = query.Where(x => x.Brand.Name.ToLower().Equals(request.Brand.ToLower()));
             }
 
-            if (!string.IsNullOrEmpty(queryDto.CategoryName))
+            if (!string.IsNullOrEmpty(request.CategoryName))
             {
-                query = query.Where(x => queryDto.CategoryName.Contains(x.Category));
+                query = query.Where(x => request.CategoryName.Contains(x.Category));
             }
 
-            if (queryDto.PriceFrom > 0 && queryDto.PriceTo > 0)
+            if (request.PriceFrom > 0 && request.PriceTo > 0)
             {
-                query = query.Where(x => x.Price >= queryDto.PriceFrom && x.Price <= queryDto.PriceTo);
+                query = query.Where(x => x.Price >= request.PriceFrom && x.Price <= request.PriceTo);
             }
 
-            if (queryDto.LatestNews.HasValue && queryDto.LatestNews == true)
+            if (request.LatestNews.HasValue && request.LatestNews == true)
             {
                 query = query.OrderByDescending(x => x.Year);
             }
 
-            if (queryDto.LowestPrice.HasValue && queryDto.LowestPrice == true)
+            if (request.LowestPrice.HasValue && request.LowestPrice == true)
             {
                 query = query.OrderBy(x => x.Price);
             }
 
             var totalRecords = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling((double)totalRecords / queryDto.PageSize);
-            var items = await query.Select(p => new ProductDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Brand = p.Brand.Name,
-                Category = p.Category,
-                Color = p.Color,
-                Description = p.Description,
-                FuelType = p.FuelType.ToString(),
-                HasInstallment = p.HasInstallment,
-                KmDriven = p.KmDriven,
-                MadeIn = p.MadeIn,
-                Model = p.Model,
-                OwnerId = p.OwnerId.ToString(),
-                Price = p.Price,
-                SeatingCapacity = p.SeatingCapacity,
-                Transmission = p.Transmission.ToString(),
-                Verified = p.Verified,
-                Year = p.Year,
-                Active = p.Active,
-                Created = p.Created,
-                Updated = p.Updated,
-                Images = p.Images != null ? p.Images.ToArray() : Array.Empty<string>(),
-            })
-                .Skip((queryDto.Page - 1) * queryDto.PageSize)
-                .Take(queryDto.PageSize)
+            var totalPages = (int)Math.Ceiling((double)totalRecords / request.PageSize);
+            var items = await query
+                .Select(p => new ProductDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Brand = p.Brand.Name,
+                    Category = p.Category,
+                    Color = p.Color,
+                    Description = p.Description,
+                    FuelType = p.FuelType.ToString(),
+                    HasInstallment = p.HasInstallment,
+                    KmDriven = p.KmDriven,
+                    MadeIn = p.MadeIn,
+                    Model = p.Model,
+                    OwnerId = p.OwnerId.ToString(),
+                    Price = p.Price,
+                    SeatingCapacity = p.SeatingCapacity,
+                    Transmission = p.Transmission.ToString(),
+                    Verified = p.Verified,
+                    Year = p.Year,
+                    Active = p.Active,
+                    Created = p.Created,
+                    Updated = p.Updated,
+                    Images = p.Images != null ? p.Images.ToArray() : Array.Empty<string>(),
+                })
+                .Skip((request.Page - 1) * request.PageSize)
+                .Take(request.PageSize)
                 .ToArrayAsync();
 
-            return ListResultModel<ProductDto>.Create(items, totalPages, queryDto.Page, queryDto.PageSize);
+            return ListResultModel<ProductDto>.Create(items, totalPages, request.Page, request.PageSize);
         }
     }
 }

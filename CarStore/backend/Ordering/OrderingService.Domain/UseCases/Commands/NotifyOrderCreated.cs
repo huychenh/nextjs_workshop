@@ -1,8 +1,8 @@
-﻿using CarStore.AppContracts.Dtos;
-using CarStore.IntegrationEvents.Notification;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using N8T.Core.Domain;
+using NotificationService.Shared.DTO;
+using NotificationService.Shared.Events;
 using OrderingService.AppCore.Constants;
 using OrderingService.AppCore.Helpers;
 
