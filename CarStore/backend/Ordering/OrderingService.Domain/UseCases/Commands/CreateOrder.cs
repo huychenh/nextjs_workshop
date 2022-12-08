@@ -4,25 +4,34 @@ using Microsoft.AspNetCore.Http;
 using N8T.Core.Domain;
 using OrderingService.AppCore.Core;
 using OrderingService.AppCore.Services;
-using OrderingService.Shared.DTO;
 
 namespace OrderingService.AppCore.UseCases.Commands
 {
-    public class CreateOrder : ICreateCommand<CreateOrderDto, Guid>
+    public class CreateOrder : ICommand<Guid>
     {
-        public CreateOrderDto Model { get; init; } = default!;
+        public Guid ProductId { get; set; }
+
+        public decimal Price { get; set; }
+
+        public string? ProductName { get; set; }
+
+        public Guid OwnerId { get; set; }
+
+        public string? BuyerEmail { get; set; }
+
+        public string? PictureUrl { get; set; }
 
         internal class Validator : AbstractValidator<CreateOrder>
         {
             public Validator()
             {
-                RuleFor(v => v.Model.ProductId)
+                RuleFor(v => v.ProductId)
                     .NotEmpty();
 
-                RuleFor(v => v.Model.Price)
+                RuleFor(v => v.Price)
                     .NotEmpty();
 
-                RuleFor(v => v.Model.OwnerId)
+                RuleFor(v => v.OwnerId)
                     .NotEmpty();
             }
         }
@@ -45,7 +54,7 @@ namespace OrderingService.AppCore.UseCases.Commands
                 string? ownerEmail;
                 try
                 {
-                    ownerEmail = await _userInfoService.GetUserEmail(request.Model.OwnerId);
+                    ownerEmail = await _userInfoService.GetUserEmail(request.OwnerId);
                 }
                 catch
                 {
@@ -55,7 +64,15 @@ namespace OrderingService.AppCore.UseCases.Commands
 
                 var buyerId = GetCurrentUserId();
 
-                var order = Order.Create(request.Model, buyerId, ownerEmail);
+                var order = Order.Create(
+                    request.ProductId,
+                    request.ProductName,
+                    request.Price,
+                    request.OwnerId,
+                    ownerEmail,
+                    request.PictureUrl,
+                    buyerId, 
+                    request.BuyerEmail);
 
                 var id = await _repository.Add(order);
 

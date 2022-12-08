@@ -9,7 +9,7 @@ export default class OrderService {
       accessToken,
       {
         method: "POST",
-        body: JSON.stringify({ model: request }),
+        body: JSON.stringify(request),
       }
     );
 
