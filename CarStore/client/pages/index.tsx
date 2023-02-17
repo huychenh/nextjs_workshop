@@ -6,9 +6,9 @@ import ProductService from "../services/ProductService";
 import SearchBox from "../components/SearchBox";
 import BrandSelector from "../components/Brand";
 import BrandService from "../services/BrandService";
-import Pagination from "@material-ui/lab/Pagination";
 import { Models } from "../models/product";
 import { SearchModel, modelSearchDefault } from "../components/Modal/Model";
+import { Pagination } from "@mui/material";
 
 const Home: NextPage = (props: any) => {
   const { brands } = props;

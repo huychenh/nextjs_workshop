@@ -6,8 +6,18 @@ import { SessionProvider } from "next-auth/react";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { useState } from "react";
+import { ThemeProvider } from "@mui/material";
+import theme from "../styles/theme";
+import createEmotionCache from "../lib/createEmotionCache";
+import { CacheProvider } from "@emotion/react";
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+const clientSideEmotionCache = createEmotionCache();
+
+function MyApp({
+  Component,
+  emotionCache = clientSideEmotionCache,
+  pageProps: { session, ...pageProps } }: AppProps
+) {
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles) {
@@ -25,7 +35,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         <SessionProvider session={session}>
-          <Component {...pageProps} />
+          <CacheProvider value={emotionCache}>
+            <ThemeProvider theme={theme}>
+              <Component {...pageProps} />
+            </ThemeProvider>
+          </CacheProvider>
         </SessionProvider>
         <ReactQueryDevtools initialIsOpen={false}></ReactQueryDevtools>
       </Hydrate>

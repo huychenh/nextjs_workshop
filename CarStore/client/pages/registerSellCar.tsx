@@ -197,7 +197,7 @@ const RegisterSellCar: NextPage = (props: any) => {
               Back
             </Button>
             <Button
-              variant="outlined"
+              variant="contained"
               onClick={handleSubmit}
             >
               Submit

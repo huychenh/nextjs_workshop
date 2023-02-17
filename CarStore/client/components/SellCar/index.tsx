@@ -121,7 +121,7 @@ const SellCar = (props: any) => {
                     </Button>)}
                 {(step >= 0) && (
                     <Button type="submit"
-                        variant="outlined"
+                        variant="contained"
                         onClick={handleNext}
                     >
                         Next

@@ -1,6 +1,4 @@
-import { Avatar, Grid, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText } from "@material-ui/core";
-import { Label, LocalGasStation, Palette, Public, Speed, Today } from "@material-ui/icons";
-import { Button } from "@mui/material";
+import { Avatar, Button, Grid, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText } from "@mui/material";
 import React from "react";
 import { Models } from "../../../models/product";
 import styles from './CarDetail.module.css';
@@ -8,6 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { Autoplay, Pagination, Navigation } from "swiper";
 import { formatCurrency } from "../../../lib/formatCurrency";
+import { Label, LocalGasStation, Palette, Public, Speed, Today } from "@mui/icons-material";
 
 export class CarDetailProps {
   detail?: Models.Product

@@ -30,7 +30,7 @@ function Layout({ children, title }: any) {
           <Container>
             <Toolbar>
               <Typography variant="h5" sx={useStyles.title}>
-                <Link href="/"><a>Car Store</a></Link>
+                <Link href="/">Car Store</Link>
               </Typography>
               {status === SessionStatus.AUTHENTICATED && (
                   <div className={styles.menu}>
