@@ -3,3 +3,5 @@ CarStore/.vs/
 .vscode/tasks.json
 db-data/
 /.vs
+CarStore/db-data/
+CarStore/order-data/
