@@ -1,11 +1,8 @@
 import styles from "./Brand.module.css";
-
 import { Container } from '@mui/material';
 import Link from 'next/link';
 import { SwiperSlide } from "swiper/react";
-
 import BrandSwiper from './BrandSwiper';
-
 
 const BrandIconRootFolder = "/HomePage/Brand";
 
@@ -66,9 +63,7 @@ const BrandIcon = ({ src, brand, brandTitle }: any) => {
     return (
         <div className={styles.brandLogo} title={brandTitle}>
             <Link href={`/brand/${brand.toLowerCase()}`}>
-                <a>
-                    <img src={src} className={styles.brandImage} alt={brandTitle} />
-                </a>
+                <img src={src} className={styles.brandImage} alt={brandTitle} />
             </Link>
         </div >
     )

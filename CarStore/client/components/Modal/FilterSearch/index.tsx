@@ -3,11 +3,11 @@ import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import CheckboxesTags from "../../UI/DropDownMultiChoice";
 import MinimumDistanceSlider from "../../UI/Slider";
-import { AccessTime, LocalOffer } from "@material-ui/icons";
 import styles from "./FilterResult.module.css";
 import RadioButtonsGroup from "../../UI/Radio";
 import Modal from "..";
 import { ModalProps, SearchModel, modelSearchDefault } from "../Model";
+import { AccessTime, LocalOffer } from "@mui/icons-material";
 const FilterSearch = (props: ModalProps) => {
   const { flag, searchBox, title, handleOnOff, onSearchFilter } = props;
   const [value2, setValue2] = React.useState<number[]>([5000, 50000]);
@@ -51,6 +51,7 @@ const FilterSearch = (props: ModalProps) => {
       LatestNews: valueLastedNew ? true : false,
       LowestPrice: valueLowestPrice ? true : false,
       pageIndex: 0,
+      pageSize: 100, // hack
     };
     onSearchFilter?.(modelFilter);
     handleOnOff();
@@ -64,7 +65,7 @@ const FilterSearch = (props: ModalProps) => {
   };
   return (
     <Modal {...modalProps}>
-      <DialogContent style={{ height: 380 }} dividers>
+      <DialogContent  dividers>
         <Typography gutterBottom>
           <b>Category</b>
         </Typography>
